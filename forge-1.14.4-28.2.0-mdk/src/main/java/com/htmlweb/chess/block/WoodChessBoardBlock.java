@@ -9,11 +9,11 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
-public class ChessBoardBlock extends GlassBlock {
+public class WoodChessBoardBlock extends GlassBlock {
 	protected static final VoxelShape BOARD = Block.makeCuboidShape(0.0D, 12.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 	protected static final VoxelShape STAND = Block.makeCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 12.0D, 10.0D);
 	protected static final VoxelShape ALL =   VoxelShapes.or(BOARD, STAND);
-	public ChessBoardBlock(Properties properties) {
+	public WoodChessBoardBlock(Properties properties) {
 		super(properties);
 	}
 
@@ -26,6 +26,4 @@ public class ChessBoardBlock extends GlassBlock {
 		return false;
 	}
 
-	
-	
 }

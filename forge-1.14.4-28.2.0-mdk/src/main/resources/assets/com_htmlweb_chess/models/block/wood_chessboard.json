@@ -1,8 +1,8 @@
 {
 	"__comment": "Designed by Sthiel with Cubik Studio - https://cubik.studio",
 	"textures": {
-		"particle": "blocks/lapis_block",
-		"texture": "com_htmlweb_chess:block/chessboard",
+		"particle": "minecraft:block/stripped_spruce_log",
+		"texture": "com_htmlweb_chess:block/chessboardtop",
 		"wood": "minecraft:block/stripped_spruce_log"
 	},
 	"elements": [ 	 

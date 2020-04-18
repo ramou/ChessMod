@@ -1,7 +1,0 @@
-{
-	"variants": {
-		"": {
-			"model": "com_htmlweb_chess:block/chessboard"
-		}
-	}
-}
