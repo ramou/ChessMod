@@ -25,7 +25,7 @@ public class ModItemGroups {
 				synchronized (MOD_ITEM_GROUP) {
 					if(internal==null) {
 						internal = new ItemStack(
-							ModItems.EXAMPLE_SHINYEGG.get()
+								ModBlocks.MOD_WOOD_CHESSBOARD.get()
 						);
 					}
 				}
