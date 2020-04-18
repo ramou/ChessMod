@@ -13,6 +13,13 @@ Here are some of the resources I've been using:
  * https://minecraft.gamepedia.com/Tutorials/Creating_a_resource_pack
  * https://mcforge.readthedocs.io/en/1.14.x/
  * https://cadiboo.github.io/tutorials/1.14.4/forge/
+ * http://greyminecraftcoder.blogspot.com/2014/12/block-models-texturing-quads-faces.html
+ * https://bedrockminer.jimdofree.com/modding-tutorials/advanced-modding/tile-entity-special-renderer/
+ 
+Here are resources I've considered looking at eventually:
+ * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/resource-packs/1226039-must-read-title-formatting-tutorials-and-faq
+ * http://www.songho.ca/opengl/gl_sphere.html
+ 
  
 == Architecture ==
 Everything revolves around the MODID. Everything has to refer back to it, directory structures for the assets rely on it. I should write more about this here at some point.

@@ -1,5 +1,7 @@
 package com.htmlweb.chess;
 
+import com.htmlweb.chess.block.ChessBoardBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -25,7 +27,7 @@ public class ModEventSubscriber {
 	@SubscribeEvent
 	public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
 		event.getRegistry().registerAll(
-				setup(new Block(Block.Properties.create(Material.WOOD).hardnessAndResistance(3.0F, 3.0F)), "chessboard")
+				setup(new ChessBoardBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(3.0F, 3.0F)), "chessboard")
 			);
 	}
 	
