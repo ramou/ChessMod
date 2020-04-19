@@ -7,6 +7,13 @@ The biggest fix I need to do often is run this:
 ```
 in the workspace directory.
 
+To get a final build, use
+```
+.\gradlew build
+```
+
+The `.jar` that isn't a .sources can be stuck in a mod folder.
+
 Here are some of the resources I've been using:
  * https://github.com/ramou/FirstMod/tree/master/forge-1.14.4-28.2.0-mdk
  * http://greyminecraftcoder.blogspot.com/p/list-of-topics-1144.html
@@ -22,8 +29,9 @@ Here are resources around Gradle usage in this context
 Here are resources I've considered looking at eventually:
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/resource-packs/1226039-must-read-title-formatting-tutorials-and-faq
  * http://www.songho.ca/opengl/gl_sphere.html
+ * https://wiki.mcjty.eu/modding/index.php?title=Render_Block_Baked_Model-1.12
  
- 
+
 == Architecture ==
 Everything revolves around the MODID. Everything has to refer back to it, directory structures for the assets rely on it. I should write more about this here at some point.
 
@@ -36,10 +44,21 @@ Some usefull pages:
  * https://mcforge.readthedocs.io/en/latest/utilities/recipes/
  * https://minecraft.gamepedia.com/Tag#Item_Tags
 
+== Forge ==
+Use the right version of forge! I really must change my structure so it doesn't look like I'm tied to a specific version... but I really kinda am. It should work when recompiled in later Forge until they change something.
+
 === building jar ===
 I had to manually set my `JAVA_HOME` to a JDK since it was defaulting to the JRE. I don't know how to make it pull this from eclipse like seems sensible, so I did:
 ```
-$Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_151"
+$Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_251"
+
 ```
+
+== Chess ==
+And of course, what I'm basing the actual chess off:
+ * https://github.com/pippinbarr/chesses
+ * https://github.com/jhlywa/chess.js
+ * https://github.com/dgurkaynak/chess-ai
+
 
 
