@@ -16,10 +16,10 @@ The `.jar` that isn't a .sources can be stuck in a mod folder.
 
 Here are some of the resources I've been using:
  * https://github.com/ramou/FirstMod/tree/master/forge-1.14.4-28.2.0-mdk
+ * https://cadiboo.github.io/tutorials/1.14.4/forge/
+ * https://mcforge.readthedocs.io/en/1.14.x/
  * http://greyminecraftcoder.blogspot.com/p/list-of-topics-1144.html
  * https://minecraft.gamepedia.com/Tutorials/Creating_a_resource_pack
- * https://mcforge.readthedocs.io/en/1.14.x/
- * https://cadiboo.github.io/tutorials/1.14.4/forge/
  * http://greyminecraftcoder.blogspot.com/2014/12/block-models-texturing-quads-faces.html
  * https://bedrockminer.jimdofree.com/modding-tutorials/advanced-modding/tile-entity-special-renderer/
  

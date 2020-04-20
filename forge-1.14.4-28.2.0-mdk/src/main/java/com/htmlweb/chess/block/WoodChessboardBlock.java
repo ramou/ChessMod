@@ -1,16 +1,21 @@
 package com.htmlweb.chess.block;
 
+import javax.annotation.Nullable;
+
+import com.htmlweb.chess.init.ModTileEntityTypes;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GlassBlock;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
-public class WoodChessBoardBlock extends GlassBlock {
-	public WoodChessBoardBlock(Properties properties) {
+public class WoodChessboardBlock extends GlassBlock {
+	public WoodChessboardBlock(Properties properties) {
 		super(properties);
 	}
 
@@ -27,4 +32,16 @@ public class WoodChessBoardBlock extends GlassBlock {
 		return false;
 	}
 
+	@Override
+	public boolean hasTileEntity(final BlockState state) {
+		return true;
+	}
+	
+	@Nullable
+	@Override
+	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
+		// Always use TileEntityType#create to allow registry overrides to work.
+		return ModTileEntityTypes.WOOD_CHESSBOARD.create();
+	}
+	
 }

@@ -16,25 +16,10 @@ import net.minecraft.item.ItemStack;
  * 
  */
 public class ModItemGroups {
-	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(ChessMod.MODID, 
-		new Supplier<ItemStack>() {
-			private ItemStack internal = null;
+	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(ChessMod.MODID, () -> new ItemStack(
+			ModBlocks.WOOD_CHESSBOARD.asItem()
+	));
 		
-			@Override
-			public ItemStack get() {
-				synchronized (MOD_ITEM_GROUP) {
-					if(internal==null) {
-						internal = new ItemStack(
-								ModBlocks.MOD_WOOD_CHESSBOARD.get()
-						);
-					}
-				}
-				
-				return internal;
-			};
-	
-		});
-
 	public static final class ModItemGroup extends ItemGroup {
 
 		@Nonnull
