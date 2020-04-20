@@ -22,6 +22,7 @@ Here are some of the resources I've been using:
  * https://minecraft.gamepedia.com/Tutorials/Creating_a_resource_pack
  * http://greyminecraftcoder.blogspot.com/2014/12/block-models-texturing-quads-faces.html
  * https://bedrockminer.jimdofree.com/modding-tutorials/advanced-modding/tile-entity-special-renderer/
+ * https://www.minecraftforge.net/forum/topic/68473-1122-drawing-cube-through-tileentityspecialrenderer/?do=findComment&comment=330870
  
 Here are resources around Gradle usage in this context
  * https://forgegradle.readthedocs.io/en/latest/reference/tasks/
