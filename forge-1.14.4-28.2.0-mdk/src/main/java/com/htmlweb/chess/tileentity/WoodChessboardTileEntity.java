@@ -6,19 +6,21 @@ import javax.annotation.Nullable;
 import com.htmlweb.chess.client.render.WoodChessboard;
 import com.htmlweb.chess.init.ModTileEntityTypes;
 
-import net.minecraft.client.renderer.entity.ArmorStandRenderer;
-import net.minecraft.client.renderer.entity.model.ArmorStandModel;
-import net.minecraft.entity.item.ArmorStandEntity;
-import net.minecraft.item.ArmorStandItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerChunkProvider;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class WoodChessboardTileEntity extends TileEntity {
+public class WoodChessboardTileEntity extends TileEntity implements ITickableTileEntity {
 	
 	@Nullable // May be accessed before onLoad
 	// @OnlyIn(Dist.CLIENT) Makes it so this field will be removed from the class on the PHYSICAL SERVER
@@ -55,7 +57,17 @@ public class WoodChessboardTileEntity extends TileEntity {
 	}
 	
 	//in FEN notation
-	private String state = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	private String state = "rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR";
+
+	public String getBoardState() {
+	
+		return state;
+	}
+
+	public void setBoardState(String state) {
+		
+		this.state = state;
+	}
 
 	/**
 	 * Read saved data from disk into the tile.
@@ -77,6 +89,21 @@ public class WoodChessboardTileEntity extends TileEntity {
 		return compound;
 	}
 
+	@Override
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT tag = new CompoundNBT();
+		write(tag);
+		return new SUpdateTileEntityPacket(getPos(), 1, tag);
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+		super.onDataPacket(net, pkt);
+		CompoundNBT tag = pkt.getNbtCompound();
+		read(tag);
+	}
+	
+	
 	/**
 	 * Get an NBT compound to sync to the client with SPacketChunkData, used for initial loading of the
 	 * chunk or when many blocks change at once.
@@ -87,6 +114,16 @@ public class WoodChessboardTileEntity extends TileEntity {
 	@Nonnull
 	public CompoundNBT getUpdateTag() {
 		return this.write(new CompoundNBT());
+	}
+
+	@Override
+	public void tick() {
+		SUpdateTileEntityPacket packet = getUpdatePacket();
+		if (packet != null && getWorld() instanceof ServerWorld) {
+			((ServerChunkProvider) getWorld().getChunkProvider()).chunkManager
+			.getTrackingPlayers(new ChunkPos(pos), false)
+			.forEach(e -> e.connection.sendPacket(packet));
+		}
 	}
 	
 	

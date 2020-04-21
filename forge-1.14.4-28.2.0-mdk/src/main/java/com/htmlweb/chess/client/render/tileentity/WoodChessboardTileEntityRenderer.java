@@ -1,29 +1,18 @@
 package com.htmlweb.chess.client.render.tileentity;
 
-import static com.htmlweb.chess.client.render.WoodChessboard.BLOCK_RENDER_LAYERS;
-
-import java.nio.ByteBuffer;
-import java.util.List;
-
 import org.lwjgl.opengl.GL11;
 
 import com.htmlweb.chess.tileentity.WoodChessboardTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RegionRenderCacheBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.chunk.CompiledChunk;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 
 /**
  * Renders a model of the surrounding blocks.
@@ -39,14 +28,18 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
 	 */
 	@Override
 	public void render(final WoodChessboardTileEntity tileEntityIn, final double x, final double y, final double z, final float partialTicks, final int destroyStage) {
-		//BlockPos blockpos = tileEntityIn.getPos();
-		//BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         ResourceLocation black = new ResourceLocation("com_htmlweb_chess", "textures/block/obsidian.png");
         ResourceLocation white = new ResourceLocation("com_htmlweb_chess", "textures/block/glowstone.png");
-		
-
+        
+        char[] squares = tileEntityIn.getBoardState().toCharArray();		
+        
+        //The board state is corrupt
+        if(squares.length != 64) {
+        	return;
+        }
+        
         GlStateManager.pushMatrix();
 
         RenderHelper.disableStandardItemLighting();
@@ -62,23 +55,34 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
          bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
 
          this.bindTexture(black);
-         drawRook(0, 0, bufferbuilder, x, y, z);
-         drawKnight(0, 1, false, bufferbuilder, x, y, z);
-         drawBishop(0, 2, bufferbuilder, x, y, z);
-         drawKing(0, 3, bufferbuilder, x, y, z);
-         drawQueen(0, 4, bufferbuilder, x, y, z);
-         drawBishop(0, 5, bufferbuilder, x, y, z);
-         drawKnight(0, 6, false, bufferbuilder, x, y, z);
-         drawRook(0, 7, bufferbuilder, x, y, z);
-         
-         drawPawn(1, 0, bufferbuilder, x, y, z);
-         drawPawn(1, 1, bufferbuilder, x, y, z);
-         drawPawn(1, 2, bufferbuilder, x, y, z);
-         drawPawn(1, 3, bufferbuilder, x, y, z);
-         drawPawn(1, 4, bufferbuilder, x, y, z);
-         drawPawn(1, 5, bufferbuilder, x, y, z);
-         drawPawn(1, 6, bufferbuilder, x, y, z);
-         drawPawn(1, 7, bufferbuilder, x, y, z);
+
+         //"rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR"
+         for(int by = 0; by < 8; by++) { 
+        	 for(int bx = 0; bx < 8; bx++) {
+        		 
+	        	 switch(squares[by*8+bx]) {
+	        	 	case 'r':
+	        	 		drawRook(bx, by, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	case 'n':
+	        	 		drawKnight(bx, by, false, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	case 'b':
+	        	 		drawBishop(bx, by, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	case 'q':
+	        	 		drawQueen(bx, by, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	case 'k':
+	        	 		drawKing(bx, by, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	case 'p':
+	        	 		drawPawn(bx, by, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	default:
+	        	 }
+        	 }
+         }
     
          bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
          tessellator.draw();
@@ -86,23 +90,32 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
          bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
          this.bindTexture(white);
          
-         drawPawn(6, 0, bufferbuilder, x, y, z);
-         drawPawn(6, 1, bufferbuilder, x, y, z);
-         drawPawn(6, 2, bufferbuilder, x, y, z);
-         drawPawn(6, 3, bufferbuilder, x, y, z);
-         drawPawn(6, 4, bufferbuilder, x, y, z);
-         drawPawn(6, 5, bufferbuilder, x, y, z);
-         drawPawn(6, 6, bufferbuilder, x, y, z);
-         drawPawn(6, 7, bufferbuilder, x, y, z);
-         
-         drawRook(7, 0, bufferbuilder, x, y, z);
-         drawKnight(7, 1, true, bufferbuilder, x, y, z);
-         drawBishop(7, 2, bufferbuilder, x, y, z);
-         drawKing(7, 3, bufferbuilder, x, y, z);
-         drawQueen(7, 4, bufferbuilder, x, y, z);
-         drawBishop(7, 5, bufferbuilder, x, y, z);
-         drawKnight(7, 6, true, bufferbuilder, x, y, z);
-         drawRook(7, 7, bufferbuilder, x, y, z);
+         for(int by = 0; by < 8; by++) { 
+        	 for(int bx = 0; bx < 8; bx++) {
+        		 
+	        	 switch(squares[by*8+bx]) {
+	        	 	case 'R':
+	        	 		drawRook(bx, by, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	case 'N':
+	        	 		drawKnight(bx, by, true, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	case 'B':
+	        	 		drawBishop(bx, by, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	case 'Q':
+	        	 		drawQueen(bx, by, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	case 'K':
+	        	 		drawKing(bx, by, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	case 'P':
+	        	 		drawPawn(bx, by, bufferbuilder, x, y, z);
+	        	 		break;
+	        	 	default:
+	        	 }
+        	 }
+         }
          
          bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
          tessellator.draw();
@@ -193,53 +206,6 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
 	@Override
 	public boolean isGlobalRenderer(final WoodChessboardTileEntity te) {
 		return true;
-	}
-
-	/**
-	 * Loops through every non-empty {@link BufferBuilder} in buffers and renders the buffer without resetting it
-	 *
-	 * @param buffers       The {@link RegionRenderCacheBuilder} to get {@link BufferBuilder}s from
-	 * @param compiledChunk The {@link CompiledChunk} to use to check if a layer has any rendered blocks
-	 */
-	private void renderChunkBuffers(final RegionRenderCacheBuilder buffers, final CompiledChunk compiledChunk) {
-		final int length = BLOCK_RENDER_LAYERS.length;
-		// Render each buffer that has been used
-		for (int layerOrdinal = 0; layerOrdinal < length; ++layerOrdinal) {
-			if (!compiledChunk.isLayerEmpty(BLOCK_RENDER_LAYERS[layerOrdinal])) {
-				drawBufferWithoutResetting(buffers.getBuilder(layerOrdinal));
-			}
-		}
-	}
-
-	/**
-	 * Copy of net.minecraft.client.renderer.WorldVertexBufferUploader#draw(net.minecraft.client.renderer.BufferBuilder)
-	 * The only difference is that it does NOT reset the buffer after drawing it
-	 *
-	 * @param bufferBuilderIn the buffer builder to draw
-	 */
-	private void drawBufferWithoutResetting(final BufferBuilder bufferBuilderIn) {
-		if (bufferBuilderIn.getVertexCount() > 0) {
-			VertexFormat vertexformat = bufferBuilderIn.getVertexFormat();
-			int i = vertexformat.getSize();
-			ByteBuffer bytebuffer = bufferBuilderIn.getByteBuffer();
-			List<VertexFormatElement> list = vertexformat.getElements();
-
-			for (int j = 0; j < list.size(); ++j) {
-				VertexFormatElement vertexformatelement = list.get(j);
-				vertexformatelement.getUsage().preDraw(vertexformat, j, i, bytebuffer); // moved to VertexFormatElement.preDraw
-			}
-
-			GlStateManager.drawArrays(bufferBuilderIn.getDrawMode(), 0, bufferBuilderIn.getVertexCount());
-			int i1 = 0;
-
-			for (int j1 = list.size(); i1 < j1; ++i1) {
-				VertexFormatElement vertexformatelement1 = list.get(i1);
-				vertexformatelement1.getUsage().postDraw(vertexformat, i1, i, bytebuffer); // moved to VertexFormatElement.postDraw
-			}
-		}
-
-		// Commented out - don't reset the buffer
-//		bufferBuilderIn.reset();
 	}
 
 }
