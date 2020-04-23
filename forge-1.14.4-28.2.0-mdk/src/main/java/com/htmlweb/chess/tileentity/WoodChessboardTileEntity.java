@@ -57,16 +57,25 @@ public class WoodChessboardTileEntity extends TileEntity implements ITickableTil
 	}
 	
 	//in FEN notation
-	private String state = "rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR";
+	private char[][] boardState = {
+			{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'}, 
+			{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'}, 
+			{'.', '.', '.', '.', '.', '.', '.', '.'}, 
+			{'.', '.', '.', '.', '.', '.', '.', '.'}, 
+			{'.', '.', '.', '.', '.', '.', '.', '.'}, 
+			{'.', '.', '.', '.', '.', '.', '.', '.'}, 
+			{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'}, 
+			{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'} 
+	};
 
-	public String getBoardState() {
+	public char[][] getBoardState() {
 	
-		return state;
+		return boardState;
 	}
 
-	public void setBoardState(String state) {
+	public void setBoardState(char[][] boardState) {
 		
-		this.state = state;
+		this.boardState = boardState;
 	}
 
 	/**
@@ -75,7 +84,12 @@ public class WoodChessboardTileEntity extends TileEntity implements ITickableTil
 	@Override
 	public void read(final CompoundNBT compound) {
 		super.read(compound);
-		this.state = compound.getString("state");
+		String s = compound.getString("boardState");
+		for(int y = 0; y < 8; y++) {
+			for(int x = 0; x < 8; x++) {
+				boardState[y][x] = s.charAt(y*8+x);
+			}
+		}
 	}
 
 	/**
@@ -85,7 +99,11 @@ public class WoodChessboardTileEntity extends TileEntity implements ITickableTil
 	@Override
 	public CompoundNBT write(final CompoundNBT compound) {
 		super.write(compound);
-		compound.putString("state", this.state);
+		StringBuilder sb = new StringBuilder();
+		for(int y = 0; y < 8; y++) {
+			sb.append(boardState[y]);
+		}
+		compound.putString("boardState", sb.toString());
 		return compound;
 	}
 

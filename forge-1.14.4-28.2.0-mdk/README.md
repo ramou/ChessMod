@@ -23,6 +23,7 @@ Here are some of the resources I've been using:
  * http://greyminecraftcoder.blogspot.com/2014/12/block-models-texturing-quads-faces.html
  * https://bedrockminer.jimdofree.com/modding-tutorials/advanced-modding/tile-entity-special-renderer/
  * https://www.minecraftforge.net/forum/topic/68473-1122-drawing-cube-through-tileentityspecialrenderer/?do=findComment&comment=330870
+ * https://forum.islandearth.net/d/10-forge-modding-tutorial-1-14-creating-custom-guis-1-3
  
 Here are resources around Gradle usage in this context
  * https://forgegradle.readthedocs.io/en/latest/reference/tasks/
@@ -31,6 +32,7 @@ Here are resources I've considered looking at eventually:
  * https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/resource-packs/1226039-must-read-title-formatting-tutorials-and-faq
  * http://www.songho.ca/opengl/gl_sphere.html
  * https://wiki.mcjty.eu/modding/index.php?title=Render_Block_Baked_Model-1.12
+ 
  
 
 == Architecture ==
@@ -61,5 +63,8 @@ And of course, what I'm basing the actual chess off:
  * https://github.com/jhlywa/chess.js
  * https://github.com/dgurkaynak/chess-ai
 
+== Licensing ==
+ * I grabbed my 2D chess pieces from: https://commons.wikimedia.org/wiki/Category:PNG_chess_pieces/Standard_transparent 
+ *  under the commons license!
 
 

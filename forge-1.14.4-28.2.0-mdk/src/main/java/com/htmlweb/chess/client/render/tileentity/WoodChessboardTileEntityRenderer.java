@@ -33,12 +33,7 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
         ResourceLocation black = new ResourceLocation("com_htmlweb_chess", "textures/block/obsidian.png");
         ResourceLocation white = new ResourceLocation("com_htmlweb_chess", "textures/block/glowstone.png");
         
-        char[] squares = tileEntityIn.getBoardState().toCharArray();		
-        
-        //The board state is corrupt
-        if(squares.length != 64) {
-        	return;
-        }
+        char[][] squares = tileEntityIn.getBoardState();
         
         GlStateManager.pushMatrix();
 
@@ -59,8 +54,7 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
          //"rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR"
          for(int by = 0; by < 8; by++) { 
         	 for(int bx = 0; bx < 8; bx++) {
-        		 
-	        	 switch(squares[by*8+bx]) {
+	        	 switch(squares[by][bx]) {
 	        	 	case 'r':
 	        	 		drawRook(bx, by, bufferbuilder, x, y, z);
 	        	 		break;
@@ -83,7 +77,7 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
 	        	 }
         	 }
          }
-    
+
          bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
          tessellator.draw();
          
@@ -93,7 +87,7 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
          for(int by = 0; by < 8; by++) { 
         	 for(int bx = 0; bx < 8; bx++) {
         		 
-	        	 switch(squares[by*8+bx]) {
+	        	 switch(squares[by][bx]) {
 	        	 	case 'R':
 	        	 		drawRook(bx, by, bufferbuilder, x, y, z);
 	        	 		break;
