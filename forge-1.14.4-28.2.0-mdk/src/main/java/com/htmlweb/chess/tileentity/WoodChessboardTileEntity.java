@@ -3,13 +3,13 @@ package com.htmlweb.chess.tileentity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.htmlweb.chess.ChessMod;
 import com.htmlweb.chess.client.render.WoodChessboard;
 import com.htmlweb.chess.init.ModTileEntityTypes;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -19,8 +19,10 @@ import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.Mod;
 
-public class WoodChessboardTileEntity extends TileEntity implements ITickableTileEntity {
+@Mod.EventBusSubscriber(modid = ChessMod.MODID)
+public class WoodChessboardTileEntity extends TileEntity{
 	
 	@Nullable // May be accessed before onLoad
 	// @OnlyIn(Dist.CLIENT) Makes it so this field will be removed from the class on the PHYSICAL SERVER
@@ -111,7 +113,7 @@ public class WoodChessboardTileEntity extends TileEntity implements ITickableTil
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT tag = new CompoundNBT();
 		write(tag);
-		return new SUpdateTileEntityPacket(getPos(), 1, tag);
+		return new SUpdateTileEntityPacket(getPos(), 42, tag); //What minecraft uses... cause 42.
 	}
 	
 	@Override
@@ -120,22 +122,19 @@ public class WoodChessboardTileEntity extends TileEntity implements ITickableTil
 		CompoundNBT tag = pkt.getNbtCompound();
 		read(tag);
 	}
-	
-	
-	/**
-	 * Get an NBT compound to sync to the client with SPacketChunkData, used for initial loading of the
-	 * chunk or when many blocks change at once.
-	 * This compound comes back to you client-side in {@link #handleUpdateTag}
-	 * The default implementation ({@link TileEntity#handleUpdateTag}) calls {@link #writeInternal)}
-	 * which doesn't save any of our extra data so we override it to call {@link #write} instead
-	 */
+
 	@Nonnull
 	public CompoundNBT getUpdateTag() {
-		return this.write(new CompoundNBT());
+		CompoundNBT tag = super.getUpdateTag();
+		this.write(tag);
+		return tag;
 	}
-
 	@Override
-	public void tick() {
+	public void handleUpdateTag(CompoundNBT tag) {
+		this.read(tag);
+	}
+	
+	public void notifyClientOfMove() {
 		SUpdateTileEntityPacket packet = getUpdatePacket();
 		if (packet != null && getWorld() instanceof ServerWorld) {
 			((ServerChunkProvider) getWorld().getChunkProvider()).chunkManager
@@ -143,6 +142,5 @@ public class WoodChessboardTileEntity extends TileEntity implements ITickableTil
 			.forEach(e -> e.connection.sendPacket(packet));
 		}
 	}
-	
 	
 }

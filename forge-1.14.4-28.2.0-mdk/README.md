@@ -24,6 +24,9 @@ Here are some of the resources I've been using:
  * https://bedrockminer.jimdofree.com/modding-tutorials/advanced-modding/tile-entity-special-renderer/
  * https://www.minecraftforge.net/forum/topic/68473-1122-drawing-cube-through-tileentityspecialrenderer/?do=findComment&comment=330870
  * https://forum.islandearth.net/d/10-forge-modding-tutorial-1-14-creating-custom-guis-1-3
+ * https://github.com/TheGreyGhost/MinecraftByExample/tree/master/src/main/java/minecraftbyexample/mbe20_tileentity_data
+ * https://github.com/TheGreyGhost/MinecraftByExample/blob/master/src/main/java/minecraftbyexample/mbe20_tileentity_data/TileEntityData.java
+ * https://github.com/Vazkii/Botania
  
 Here are resources around Gradle usage in this context
  * https://forgegradle.readthedocs.io/en/latest/reference/tasks/

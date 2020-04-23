@@ -3,6 +3,7 @@ package com.htmlweb.chess;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.htmlweb.chess.common.network.PacketHandler;
 import com.htmlweb.chess.config.ConfigHolder;
 
 import net.minecraftforge.fml.ModLoadingContext;
@@ -19,9 +20,13 @@ public class ChessMod {
 		LOGGER.debug("So, you want to play some chesses?");
 
 		final ModLoadingContext modLoadingContext = ModLoadingContext.get();
+		
+		PacketHandler.init();
+		
 		// Register Configs
 		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
 		modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC);
+		
 	}
 	
 }

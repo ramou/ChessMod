@@ -7,17 +7,21 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Preconditions;
 import com.htmlweb.chess.block.WoodChessboardBlock;
+import com.htmlweb.chess.client.gui.entity.WoodChessBoardGUI;
 import com.htmlweb.chess.init.ModBlocks;
 import com.htmlweb.chess.init.ModItemGroups;
 import com.htmlweb.chess.tileentity.WoodChessboardTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.ForgeRegistries;

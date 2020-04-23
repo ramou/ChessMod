@@ -20,6 +20,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public class WoodChessboardBlock extends GlassBlock {
 	public WoodChessboardBlock(Properties properties) {
@@ -50,20 +53,23 @@ public class WoodChessboardBlock extends GlassBlock {
 		// Always use TileEntityType#create to allow registry overrides to work.
 		return ModTileEntityTypes.WOOD_CHESSBOARD.create();
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
-		if (!worldIn.isRemote) {
-			final TileEntity tileEntity = worldIn.getTileEntity(pos);
-			if (tileEntity instanceof WoodChessboardTileEntity) {
-				Minecraft.getInstance().displayGuiScreen(new WoodChessBoardGUI((WoodChessboardTileEntity)tileEntity));
-			}
-			
-		}
+		// Only open the gui on the physical client
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> openGui(worldIn, pos));
 		return true;
 	}
-	
-	
+
+	// @OnlyIn(Dist.CLIENT) Makes it so this method will be removed from the class on the PHYSICAL SERVER
+	// This is because we only want to handle opening the GUI on the physical client.
+	@OnlyIn(Dist.CLIENT)
+	private void openGui(final World worldIn, final BlockPos pos) {
+		final TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (tileEntity instanceof WoodChessboardTileEntity) {
+			Minecraft.getInstance().displayGuiScreen(new WoodChessBoardGUI((WoodChessboardTileEntity)tileEntity));
+		}
+	}
 	
 	
 }
