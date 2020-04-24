@@ -27,6 +27,7 @@ public final class PacketHandler {
 		int id = 0;
 
 		HANDLER.registerMessage(id++, ChessPlay.class, ChessPlay::encode, ChessPlay::decode, ChessPlay.Handler::handle);
+		HANDLER.registerMessage(id++, ChessPromotion.class, ChessPromotion::encode, ChessPromotion::decode, ChessPromotion.Handler::handle);
 
 		
 	}
