@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import javax.vecmath.Point2i;
 
-import com.htmlweb.chess.ChessMod;
 import com.htmlweb.chess.tileentity.WoodChessboardTileEntity;
 
 import net.minecraft.network.PacketBuffer;
@@ -49,21 +48,14 @@ public class ChessPromotion {
 
 	public static class Handler {
 		public static void handle(final ChessPromotion message, final Supplier<NetworkEvent.Context> ctx) {
-
-			ChessMod.LOGGER.debug("Getting a ChessMove message...");
-			
 			if (ctx.get().getDirection().getReceptionSide().isServer()) {
 				ctx.get().enqueueWork(new Runnable() {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
-						System.out.println("Queuing a change in move.");
-						//EntityPlayerMP sender = ctx.get().getSender();
-
-
 						World world = ctx.get().getSender().world;
 						BlockPos pos = new BlockPos(message.x, message.y, message.z);
-						if(world.isBlockLoaded(pos)) {
+						if(world.isAreaLoaded(pos, 1)) {
 							TileEntity tileEntity = world.getTileEntity(pos);
 							if (tileEntity instanceof WoodChessboardTileEntity) {
 								((WoodChessboardTileEntity)tileEntity).getBoardState()[message.target.y][message.target.x]=message.piece;

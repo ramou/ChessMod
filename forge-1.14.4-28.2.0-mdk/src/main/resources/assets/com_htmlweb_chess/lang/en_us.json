@@ -1,0 +1,10 @@
+{
+  "itemGroup.com_htmlweb_chess": "Chess Mod",
+  "com_htmlweb_chess.landing": "Do you like playing Chess? Do you like playing Chesses? This mod allows a variety of Minecraft chess playing.",
+  "com_htmlweb_chess.desc": "A mod incorporating Chess into Minecraft.",
+  
+  "block.com_htmlweb_chess.wood_chessboard": "A Wooden Chess Board",
+  
+  "advancement.com_htmlweb_chess:woodChessboardPickup": "Getting Board!",
+  "advancement.com_htmlweb_chess:woodChessboardPickup.desc": "Pick up a Chess Board from the world"
+}
