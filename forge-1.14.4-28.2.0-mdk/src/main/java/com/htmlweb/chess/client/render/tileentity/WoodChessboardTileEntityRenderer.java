@@ -34,10 +34,10 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
         ResourceLocation white = new ResourceLocation("com_htmlweb_chess", "textures/block/glowstone.png");
         
         char[][] squares = tileEntityIn.getBoardState();
-        
+
         GlStateManager.pushMatrix();
 
-        RenderHelper.disableStandardItemLighting();
+        //RenderHelper.disableStandardItemLighting();
         GlStateManager.disableCull();
 		if (Minecraft.isAmbientOcclusionEnabled()) {
 			GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -47,7 +47,8 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
 
          BlockModelRenderer.enableCache();
          
-         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+         
+         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
          this.bindTexture(black);
 
@@ -81,7 +82,7 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
          bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
          tessellator.draw();
          
-         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
          this.bindTexture(white);
          
          for(int by = 0; by < 8; by++) { 
@@ -119,7 +120,7 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
          
          GlStateManager.enableCull();
          
-         RenderHelper.enableStandardItemLighting();
+         //RenderHelper.enableStandardItemLighting();
          GlStateManager.popMatrix();
 	}
 	
@@ -153,42 +154,49 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
 
 	private void drawPiece(float size, int bx, int bz, BufferBuilder bufferbuilder, final double x, final double y, final double z) {
          bufferbuilder.setTranslation(x + 2.75D/16D + bx*1.5D/16D, y +1+size, z + 2.75D/16D + bz*1.5D/16D);
-         //south side [pos z] [parent x]
+
          double textureScale = 4*size/0.03;
-		 bufferbuilder.pos(-size, +size, +size).tex(0,textureScale).endVertex();
-         bufferbuilder.pos(-size, -size, +size).tex(0,0).endVertex();
-         bufferbuilder.pos(+size, -size, +size).tex(textureScale,0).endVertex();
-         bufferbuilder.pos(+size, +size, +size).tex(textureScale,textureScale).endVertex();
+         
+         //south side [pos z] [parent x]
+         bufferbuilder.pos(+size, -size, +size).tex(textureScale,textureScale).normal(0, 0, 1).endVertex();
+         bufferbuilder.pos(+size, +size, +size).tex(textureScale,0).normal(0, 0, 1).endVertex();
+         bufferbuilder.pos(-size, +size, +size).tex(0,0).normal(0, 0, 1).endVertex();
+         bufferbuilder.pos(-size, -size, +size).tex(0,textureScale).normal(0, 0, 1).endVertex();
 
          //north side [neg z] [parent x]
-         bufferbuilder.pos(-size, +size, -size).tex(0,textureScale).endVertex();
-         bufferbuilder.pos(-size, -size, -size).tex(0,0).endVertex();
-         bufferbuilder.pos(+size, -size, -size).tex(textureScale,0).endVertex();
-         bufferbuilder.pos(+size, +size, -size).tex(textureScale,textureScale).endVertex();
+         bufferbuilder.pos(-size, -size, -size).tex(textureScale,textureScale).normal(0, 0, -1).endVertex();
+         bufferbuilder.pos(-size, +size, -size).tex(textureScale,0).normal(0, 0, -1).endVertex();
+         bufferbuilder.pos(+size, +size, -size).tex(0,0).normal(0, 0, -1).endVertex();
+         bufferbuilder.pos(+size, -size, -size).tex(0,textureScale).normal(0, 0, -1).endVertex();
+         
 
          //east side [pos x] [parent z]
-         bufferbuilder.pos(+size, +size, -size).tex(textureScale,0).endVertex();
-         bufferbuilder.pos(+size, -size, -size).tex(0,0).endVertex();
-         bufferbuilder.pos(+size, -size, +size).tex(0,textureScale).endVertex();
-         bufferbuilder.pos(+size, +size, +size).tex(textureScale,textureScale).endVertex();
+         bufferbuilder.pos(+size, -size, -size).tex(textureScale,textureScale).normal(1, 0, 0).endVertex();
+         bufferbuilder.pos(+size, -size, +size).tex(textureScale,0).normal(1, 0, 0).endVertex();
+         bufferbuilder.pos(+size, +size, +size).tex(0,0).normal(1, 0, 0).endVertex();
+         bufferbuilder.pos(+size, +size, -size).tex(0,textureScale).normal(1, 0, 0).endVertex();
+         
 
          //west side [neg x] [parent z]
-         bufferbuilder.pos(-size, -size, +size).tex(0,textureScale).endVertex();
-         bufferbuilder.pos(-size, -size, -size).tex(0,0).endVertex();
-         bufferbuilder.pos(-size, +size, -size).tex(textureScale,0).endVertex();
-         bufferbuilder.pos(-size, +size, +size).tex(textureScale,textureScale).endVertex();
+         bufferbuilder.pos(-size, -size, +size).tex(textureScale,textureScale).normal(-1, 0, 0).endVertex();
+         bufferbuilder.pos(-size, +size, +size).tex(textureScale,0).normal(-1, 0, 0).endVertex();
+         bufferbuilder.pos(-size, +size, -size).tex(0,0).normal(-1, 0, 0).endVertex();
+         bufferbuilder.pos(-size, -size, -size).tex(0,textureScale).normal(-1, 0, 0).endVertex();
+         
+
 
          //top [pos y] [parent x & y]
-         bufferbuilder.pos(+size, +size, -size).tex(textureScale,0).endVertex();
-         bufferbuilder.pos(+size, +size, +size).tex(textureScale,textureScale).endVertex();
-         bufferbuilder.pos(-size, +size, +size).tex(0,textureScale).endVertex();
-         bufferbuilder.pos(-size, +size, -size).tex(0,0).endVertex();
+         bufferbuilder.pos(+size, +size, -size).tex(textureScale,textureScale).normal(0, 1, 0).endVertex();
+         bufferbuilder.pos(-size, +size, -size).tex(textureScale,0).normal(0, 1, 0).endVertex();
+         bufferbuilder.pos(-size, +size, +size).tex(0,0).normal(0, 1, 0).endVertex();
+         bufferbuilder.pos(+size, +size, +size).tex(0,textureScale).normal(0, 1, 0).endVertex();
 
          //bottom [neg y] [parent x & y]
-         bufferbuilder.pos(+size, -size, -size).tex(textureScale,0).endVertex();
-         bufferbuilder.pos(+size, -size, +size).tex(textureScale,textureScale).endVertex();
-         bufferbuilder.pos(-size, -size, +size).tex(0,textureScale).endVertex();
-         bufferbuilder.pos(-size, -size, -size).tex(0,0).endVertex();
+         bufferbuilder.pos(-size, -size, -size).tex(textureScale,textureScale).normal(0, -1, 0).endVertex();
+         bufferbuilder.pos(+size, -size, -size).tex(textureScale,0).normal(0, -1, 0).endVertex();
+         bufferbuilder.pos(+size, -size, +size).tex(0,0).normal(0, -1, 0).endVertex();
+         bufferbuilder.pos(-size, -size, +size).tex(0,textureScale).normal(0, -1, 0).endVertex();
+         
 	}
 
 	/**

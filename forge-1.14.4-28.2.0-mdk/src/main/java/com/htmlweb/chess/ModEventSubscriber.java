@@ -40,7 +40,7 @@ public class ModEventSubscriber {
 	public static void onRegisterBlocks(final RegistryEvent.Register<Block> event) {
 		// Register all your blocks inside this registerAll call		
 		event.getRegistry().registerAll(
-				setup(new WoodChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "wood_chessboard")
+				setup(new WoodChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "wood_chessboard")
 		);
 		LOGGER.debug("Registered Blocks");
 	}

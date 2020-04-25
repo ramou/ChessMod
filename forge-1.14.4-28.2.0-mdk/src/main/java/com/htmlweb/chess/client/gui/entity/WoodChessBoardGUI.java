@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import javax.vecmath.Point2i;
 
+import org.lwjgl.opengl.GL11;
+
 import com.htmlweb.chess.ChessMod;
 import com.htmlweb.chess.common.network.ChessPlay;
 import com.htmlweb.chess.common.network.ChessPromotion;
@@ -228,7 +230,7 @@ public class WoodChessBoardGUI extends Screen {
 
 	private void drawBackground() {
 		this.minecraft.getTextureManager().bindTexture(background);
-		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		float myHeight=Math.min(height, 256);
 		float x1 = width/2f - 128;
 		float x2 = x1+256;
@@ -253,7 +255,7 @@ public class WoodChessBoardGUI extends Screen {
 		float y1 = height/2f - myHeight/2f+(32+selected.y*24)*myHeight/256f;
 		float y2 = y1+24*myHeight/256f;
 		  
-		bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		bufferbuilder.pos(x1, y2, blitOffset).endVertex();
 		bufferbuilder.pos(x2, y2, blitOffset).endVertex();
 		bufferbuilder.pos(x2, y1, blitOffset).endVertex();
@@ -275,7 +277,7 @@ public class WoodChessBoardGUI extends Screen {
 		float y1 = height/2f - myHeight/2f+(32+sideBoardSelected.index*24)*myHeight/256f;
 		float y2 = y1+24*myHeight/256f;
 		  
-		bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		bufferbuilder.pos(x1, y2, blitOffset).endVertex();
 		bufferbuilder.pos(x2, y2, blitOffset).endVertex();
 		bufferbuilder.pos(x2, y1, blitOffset).endVertex();
@@ -288,7 +290,7 @@ public class WoodChessBoardGUI extends Screen {
 	private void drawPiece(int bx, int by, ResourceLocation piece) {
 		float myHeight=Math.min(height, 256);
 		this.minecraft.getTextureManager().bindTexture(piece);
-		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		float x1 = width/2f - 128+32+bx*24;
 		float x2 = x1+24;
 		float y1 = height/2f - myHeight/2f+(32+by*24)*myHeight/256f;
@@ -310,7 +312,7 @@ public class WoodChessBoardGUI extends Screen {
 		float y2 = y1+24*myHeight/256f;
 		
 		
-		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		bufferbuilder.pos(x1, y2, blitOffset).tex(0,1).endVertex();
 		bufferbuilder.pos(x2, y2, blitOffset).tex(1,1).endVertex();

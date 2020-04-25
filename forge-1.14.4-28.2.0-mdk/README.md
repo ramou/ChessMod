@@ -27,6 +27,8 @@ Here are some of the resources I've been using:
  * https://github.com/TheGreyGhost/MinecraftByExample/tree/master/src/main/java/minecraftbyexample/mbe20_tileentity_data
  * https://github.com/TheGreyGhost/MinecraftByExample/blob/master/src/main/java/minecraftbyexample/mbe20_tileentity_data/TileEntityData.java
  * https://github.com/Vazkii/Botania
+ * https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
+ * http://greyminecraftcoder.blogspot.com/2013/08/the-tessellator.html
  
 Here are resources around Gradle usage in this context
  * https://forgegradle.readthedocs.io/en/latest/reference/tasks/
