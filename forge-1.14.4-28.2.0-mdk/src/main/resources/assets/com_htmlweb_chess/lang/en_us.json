@@ -3,6 +3,11 @@
   "com_htmlweb_chess.landing": "Do you like playing Chess? Do you like playing Chesses? This mod allows a variety of Minecraft chess playing.",
   "com_htmlweb_chess.desc": "A mod incorporating Chess into Minecraft.",
   
+  "com_htmlweb_chess.subtitle.slide_piece": "Chess piece slides",
+  "com_htmlweb_chess.subtitle.slide_piece_take": "Chess piece slides into piece",
+  "com_htmlweb_chess.subtitle.place_piece": "Chess piece placed",
+  "com_htmlweb_chess.subtitle.place_piece_take": "Chess piece placed against piece",
+  
   "block.com_htmlweb_chess.wood_chessboard": "A Wooden Chess Board",
   
   "advancement.com_htmlweb_chess:woodChessboardPickup": "Getting Board!",

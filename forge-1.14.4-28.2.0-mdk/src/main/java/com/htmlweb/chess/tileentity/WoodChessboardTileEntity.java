@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 
 import com.htmlweb.chess.ChessMod;
 import com.htmlweb.chess.client.render.WoodChessboard;
+import com.htmlweb.chess.init.ModSounds;
 import com.htmlweb.chess.init.ModTileEntityTypes;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -12,6 +13,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;

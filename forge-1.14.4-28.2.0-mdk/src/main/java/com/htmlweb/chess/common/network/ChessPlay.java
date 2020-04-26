@@ -4,10 +4,12 @@ import java.util.function.Supplier;
 
 import javax.vecmath.Point2i;
 
+import com.htmlweb.chess.init.ModSounds;
 import com.htmlweb.chess.tileentity.WoodChessboardTileEntity;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -61,11 +63,28 @@ public class ChessPlay {
 						World world = ctx.get().getSender().world;
 						BlockPos pos = new BlockPos(message.x, message.y, message.z);
 						if(world.isAreaLoaded(pos, 1)) {
+							
 							TileEntity tileEntity = world.getTileEntity(pos);
 							if (tileEntity instanceof WoodChessboardTileEntity) {
+								
+								
 								char c = ((WoodChessboardTileEntity)tileEntity).getBoardState()[message.source.y][message.source.x];
+								char t = ((WoodChessboardTileEntity)tileEntity).getBoardState()[message.target.y][message.target.x]; 
 								((WoodChessboardTileEntity)tileEntity).getBoardState()[message.source.y][message.source.x]='.';
 								((WoodChessboardTileEntity)tileEntity).getBoardState()[message.target.y][message.target.x]=c;
+								if(c=='n' || c=='N') {
+									if(t=='.') {
+										world.playSound(null, pos, ModSounds.placePiece, SoundCategory.BLOCKS, 1F, 1F);
+									} else {
+										world.playSound(null, pos, ModSounds.placePieceTake, SoundCategory.BLOCKS, 1F, 1F);
+									}
+								} else {
+									if(t=='.') {
+										world.playSound(null, pos, ModSounds.slidePiece, SoundCategory.BLOCKS, 1F, 1F);
+									} else {
+										world.playSound(null, pos, ModSounds.slidePieceTake, SoundCategory.BLOCKS, 1F, 1F);
+									}									
+								}
 								((WoodChessboardTileEntity)tileEntity).notifyClientOfMove();
 							}
 							

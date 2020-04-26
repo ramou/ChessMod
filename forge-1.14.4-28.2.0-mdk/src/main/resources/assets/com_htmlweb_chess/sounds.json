@@ -1,0 +1,22 @@
+{
+  "slide_piece": {
+    "category": "block",
+    "subtitle": "com_htmlweb_chess.subtitle.slide_piece",
+    "sounds": [ "com_htmlweb_chess:slide_piece" ]
+  },
+  "slide_piece_take": {
+    "category": "block",
+    "subtitle": "com_htmlweb_chess.subtitle.slide_piece_take",
+    "sounds": [ "com_htmlweb_chess:slide_piece_take" ]
+  },
+  "place_piece": {
+    "category": "block",
+    "subtitle": "com_htmlweb_chess.subtitle.place_piece",
+    "sounds": [ "com_htmlweb_chess:place_piece" ]
+  },
+  "place_piece_take": {
+    "category": "block",
+    "subtitle": "com_htmlweb_chess.subtitle.place_piece_take",
+    "sounds": [ "com_htmlweb_chess:place_piece_take" ]
+  }
+}
