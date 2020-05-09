@@ -2,7 +2,9 @@ package com.htmlweb.chess.client.render.tileentity;
 
 import org.lwjgl.opengl.GL11;
 
-import com.htmlweb.chess.tileentity.WoodChessboardTileEntity;
+import com.htmlweb.chess.common.dom.model.chess.Point;
+import com.htmlweb.chess.common.dom.model.chess.piece.Piece;
+import com.htmlweb.chess.tileentity.ChessboardTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
@@ -13,27 +15,18 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
-/**
- * Renders a model of the surrounding blocks.
- * This should really probably not be in an ChessMod for beginners,
- * but I added comments to it so its all good
- *
- * @author Cadiboo
- */
-public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChessboardTileEntity> {
+public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardTileEntity> {
 
 	/**
 	 * Render our TileEntity
 	 */
 	@Override
-	public void render(final WoodChessboardTileEntity tileEntityIn, final double x, final double y, final double z, final float partialTicks, final int destroyStage) {
+	public void render(final ChessboardTileEntity tileEntityIn, final double x, final double y, final double z, final float partialTicks, final int destroyStage) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         ResourceLocation black = new ResourceLocation("com_htmlweb_chess", "textures/block/black.png");
         ResourceLocation white = new ResourceLocation("com_htmlweb_chess", "textures/block/white.png");
         
-        char[][] squares = tileEntityIn.getBoardState();
-
         GlStateManager.pushMatrix();
 
         //RenderHelper.disableStandardItemLighting();
@@ -48,8 +41,6 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
          
          this.bindTexture(black);
 
-         
-         
          bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
          double textureScale = 3;
          GL11.glEnable(GL11.GL_BLEND); 
@@ -63,12 +54,11 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
 
          bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
-         
-         
-         //"rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR"
+
          for(int by = 0; by < 8; by++) { 
         	 for(int bx = 0; bx < 8; bx++) {
-	        	 switch(squares[by][bx]) {
+        		 Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(bx, by));
+        		 if(piece != null) switch(piece.getCharacter()) {
 	        	 	case 'r':
 	        	 		drawRook(bx, by, bufferbuilder, x, y, z);
 	        	 		break;
@@ -100,8 +90,8 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
          
          for(int by = 0; by < 8; by++) { 
         	 for(int bx = 0; bx < 8; bx++) {
-        		 
-	        	 switch(squares[by][bx]) {
+        		 Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(bx, by));
+        		 if(piece != null) switch(tileEntityIn.getBoard().pieceAt(Point.create(bx, by)).getCharacter()) {
 	        	 	case 'R':
 	        	 		drawRook(bx, by, bufferbuilder, x, y, z);
 	        	 		break;
@@ -216,7 +206,7 @@ public class WoodChessboardTileEntityRenderer extends TileEntityRenderer<WoodChe
 	 * The Beacon's beam is also a global renderer
 	 */
 	@Override
-	public boolean isGlobalRenderer(final WoodChessboardTileEntity te) {
+	public boolean isGlobalRenderer(final ChessboardTileEntity te) {
 		return true;
 	}
 

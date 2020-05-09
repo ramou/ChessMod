@@ -15,7 +15,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public final class PacketHandler {
-	private static final String PROTOCOL = "1";
+	private static final String PROTOCOL = "2";
 	public static final SimpleChannel HANDLER = NetworkRegistry.newSimpleChannel(
 			new ResourceLocation(ChessMod.MODID, "chan"),
 			() -> PROTOCOL,
@@ -27,7 +27,7 @@ public final class PacketHandler {
 		int id = 0;
 
 		HANDLER.registerMessage(id++, ChessPlay.class, ChessPlay::encode, ChessPlay::decode, ChessPlay.Handler::handle);
-		HANDLER.registerMessage(id++, ChessPromotion.class, ChessPromotion::encode, ChessPromotion::decode, ChessPromotion.Handler::handle);
+		HANDLER.registerMessage(id++, ArbitraryPlacement.class, ArbitraryPlacement::encode, ArbitraryPlacement::decode, ArbitraryPlacement.Handler::handle);
 
 		
 	}

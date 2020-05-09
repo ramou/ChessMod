@@ -9,6 +9,7 @@
   "com_htmlweb_chess.subtitle.place_piece_take": "Chess piece placed against piece",
   
   "block.com_htmlweb_chess.wood_chessboard": "A Wooden Chess Board",
+  "block.com_htmlweb_chess.gold_chessboard": "A Golden Chess Board",
   
   "advancement.com_htmlweb_chess:woodChessboardPickup": "Getting Board!",
   "advancement.com_htmlweb_chess:woodChessboardPickup.desc": "Pick up a Chess Board from the world"

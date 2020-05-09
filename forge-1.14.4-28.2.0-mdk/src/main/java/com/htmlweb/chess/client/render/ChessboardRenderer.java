@@ -9,7 +9,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-public class WoodChessboard {
+public class ChessboardRenderer {
 
 	// Cache the result of BlockRenderLayer.values() instead of calling BlockRenderLayer.values()
 	// each time (because each call creates a new BlockRenderLayer[] which is wasteful)
@@ -21,19 +21,19 @@ public class WoodChessboard {
 	public ChunkRenderTask generator;
 	private boolean isBuilt = false;
 
-	private WoodChessboard(final ChunkRender chunkRender, final RegionRenderCacheBuilder regionRenderCacheBuilder) {
+	private ChessboardRenderer(final ChunkRender chunkRender, final RegionRenderCacheBuilder regionRenderCacheBuilder) {
 		this.chunkRender = chunkRender;
 		this.regionRenderCacheBuilder = regionRenderCacheBuilder;
 	}
 
-	public static WoodChessboard forTileEntity(final TileEntity tileEntity) {
+	public static ChessboardRenderer forTileEntity(final TileEntity tileEntity) {
 		final ChunkRender chunkRender = new ChunkRender(tileEntity.getWorld(), Minecraft.getInstance().worldRenderer);
 		final BlockPos pos = tileEntity.getPos();
 
 		// We want to render everything in a 16x16x16 radius, with the centre being the TileEntity
 		chunkRender.setPosition(pos.getX() - 8, pos.getY() - 8, pos.getZ() - 8);
 
-		return new WoodChessboard(chunkRender, new RegionRenderCacheBuilder());
+		return new ChessboardRenderer(chunkRender, new RegionRenderCacheBuilder());
 	}
 
 	/**

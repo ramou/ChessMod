@@ -6,22 +6,20 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Preconditions;
+import com.htmlweb.chess.block.GoldChessboardBlock;
 import com.htmlweb.chess.block.WoodChessboardBlock;
-import com.htmlweb.chess.client.gui.entity.WoodChessBoardGUI;
 import com.htmlweb.chess.init.ModBlocks;
 import com.htmlweb.chess.init.ModItemGroups;
+import com.htmlweb.chess.tileentity.GoldChessBoardTileEntity;
 import com.htmlweb.chess.tileentity.WoodChessboardTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -40,7 +38,8 @@ public class ModEventSubscriber {
 	public static void onRegisterBlocks(final RegistryEvent.Register<Block> event) {
 		// Register all your blocks inside this registerAll call		
 		event.getRegistry().registerAll(
-				setup(new WoodChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "wood_chessboard")
+				setup(new WoodChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "wood_chessboard"),
+				setup(new GoldChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "gold_chessboard")
 		);
 		LOGGER.debug("Registered Blocks");
 	}
@@ -91,10 +90,15 @@ public class ModEventSubscriber {
 		event.getRegistry().registerAll(
 				// We don't have a datafixer for our TileEntity, so we pass null into build
 				setup(
-					TileEntityType.Builder.create(
-						WoodChessboardTileEntity::new, 
-						ModBlocks.WOOD_CHESSBOARD
-					).build(null), "wood_chessboard")
+						TileEntityType.Builder.create(
+								WoodChessboardTileEntity::new, 
+								ModBlocks.WOOD_CHESSBOARD
+							).build(null), "wood_chessboard"),
+				setup(
+						TileEntityType.Builder.create(
+								GoldChessBoardTileEntity::new, 
+								ModBlocks.GOLD_CHESSBOARD
+							).build(null), "gold_chessboard")
 		);
 		LOGGER.debug("Registered TileEntityTypes");
 	}

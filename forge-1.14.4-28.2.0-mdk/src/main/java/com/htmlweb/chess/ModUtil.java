@@ -11,7 +11,6 @@ public class ModUtil {
 	 */
 	@Nonnull
 	// Get rid of "Returning null from Nonnull method" warnings
-	@SuppressWarnings("ConstantConditions")
 	public static <T> T _null() {
 		return null;
 	}
