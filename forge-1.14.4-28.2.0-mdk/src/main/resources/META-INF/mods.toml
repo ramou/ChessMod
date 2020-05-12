@@ -12,9 +12,9 @@ issueTrackerURL="http://my.issue.tracker/" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="com_htmlweb_chess" #mandatory
+modId="chessmod" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="0.56" #mandatory
+version="0.60" #mandatory
  # A display name for the mod
 displayName="Chess Mod" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
@@ -22,7 +22,7 @@ displayName="Chess Mod" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="http://example.com/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="com_htmlweb_chess.png" #optional
+logoFile="chessmod.png" #optional
 # A text field displayed in the mod UI
 credits="Written by Stuart Thiel, Inspired by Pippin Barr" #optional
 # A text field displayed in the mod UI
@@ -32,7 +32,7 @@ description='''
 A mod to learn modding as well as to implement Pippin Barr's very cool Chesses in MC.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.com_htmlweb_chess]] #optional
+[[dependencies.chessmod]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -44,7 +44,7 @@ A mod to learn modding as well as to implement Pippin Barr's very cool Chesses i
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.com_htmlweb_chess]]
+[[dependencies.chessmod]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.14.4]"

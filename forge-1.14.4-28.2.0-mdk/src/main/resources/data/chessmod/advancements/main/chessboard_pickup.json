@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "chessmod:wood_chessboard"
+    },
+    "title": {
+      "translate": "advancement.chessmod:woodChessboardPickup"
+    },
+    "description": {
+      "translate": "advancement.chessmod:woodChessboardPickup.desc"
+    }
+  },
+  "parent": "chessmod:main/root",
+  "criteria": {
+    "board": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "chessmod:wood_chessboard"
+          }
+        ]
+      }
+    }
+  }
+}

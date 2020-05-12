@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "chessmod:wood_chessboard"
+    },
+    "title": {
+      "translate": "itemGroup.chessmod"
+    },
+    "description": {
+      "translate": "chessmod.desc"
+    },
+    "background": "chessmod:textures/block/chessboardtop.png",
+    "show_toast": false,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "board": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "chessmod:wood_chessboard"
+          }
+        ]
+      }
+    }
+  }
+}

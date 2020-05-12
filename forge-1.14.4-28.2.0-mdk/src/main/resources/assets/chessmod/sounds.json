@@ -1,0 +1,22 @@
+{
+  "slide_piece": {
+    "category": "block",
+    "subtitle": "chessmod.subtitle.slide_piece",
+    "sounds": [ "chessmod:slide_piece" ]
+  },
+  "slide_piece_take": {
+    "category": "block",
+    "subtitle": "chessmod.subtitle.slide_piece_take",
+    "sounds": [ "chessmod:slide_piece_take" ]
+  },
+  "place_piece": {
+    "category": "block",
+    "subtitle": "chessmod.subtitle.place_piece",
+    "sounds": [ "chessmod:place_piece" ]
+  },
+  "place_piece_take": {
+    "category": "block",
+    "subtitle": "chessmod.subtitle.place_piece_take",
+    "sounds": [ "chessmod:place_piece_take" ]
+  }
+}

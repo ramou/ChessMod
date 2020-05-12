@@ -8,18 +8,18 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.htmlweb.chess.common.dom.model.chess.Move;
-import com.htmlweb.chess.common.dom.model.chess.PieceInitializer;
-import com.htmlweb.chess.common.dom.model.chess.Point;
-import com.htmlweb.chess.common.dom.model.chess.Side;
-import com.htmlweb.chess.common.dom.model.chess.board.Board;
-import com.htmlweb.chess.common.dom.model.chess.board.BoardFactory;
-import com.htmlweb.chess.common.dom.model.chess.piece.InvalidMoveException;
-import com.htmlweb.chess.common.dom.model.chess.piece.Knight;
-import com.htmlweb.chess.common.dom.model.chess.piece.Pawn;
-import com.htmlweb.chess.common.dom.model.chess.piece.Piece;
-import com.htmlweb.chess.common.dom.model.chess.piece.Queen;
-import com.htmlweb.chess.common.dom.model.chess.piece.Rook;
+import chessmod.common.dom.model.chess.Move;
+import chessmod.common.dom.model.chess.PieceInitializer;
+import chessmod.common.dom.model.chess.Point;
+import chessmod.common.dom.model.chess.Side;
+import chessmod.common.dom.model.chess.board.Board;
+import chessmod.common.dom.model.chess.board.BoardFactory;
+import chessmod.common.dom.model.chess.piece.InvalidMoveException;
+import chessmod.common.dom.model.chess.piece.Knight;
+import chessmod.common.dom.model.chess.piece.Pawn;
+import chessmod.common.dom.model.chess.piece.Piece;
+import chessmod.common.dom.model.chess.piece.Queen;
+import chessmod.common.dom.model.chess.piece.Rook;
 
 class TestBoard {
 
