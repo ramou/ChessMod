@@ -47,3 +47,11 @@ Focus on extending the chess experience
 ### 1.3
 Focus on a cosmetic pass
  * [ ] Add chess-themed decorations to build #31
+ 
+## Other Chess in Minecraft
+I'll post these as I find them or they're brought to my attention:
+ * https://github.com/AtomicBlom/ChessMod (unsure where it's at, didn't find docs, found it by accident for obv reasons)
+ * https://www.youtube.com/watch?v=a6M3kYEBG9Y (vanilla 1.8 via commandblock, no check/checkmate)
+ * https://www.youtube.com/watch?v=rivY2fboL9A (vanilla 1.8 via commandblock, rougher, but had good explanation)
+ * https://www.youtube.com/watch?v=72RovJnqNbM (vanilla 1.14 via commandblock (I think), has world download, modern. 3:30, you can't castle through check!)
+ 

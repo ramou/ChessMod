@@ -27,6 +27,7 @@ public class ChessboardRenderer {
 	}
 
 	public static ChessboardRenderer forTileEntity(final TileEntity tileEntity) {
+		@SuppressWarnings("resource") //It's a singleton, don't mess with it
 		final ChunkRender chunkRender = new ChunkRender(tileEntity.getWorld(), Minecraft.getInstance().worldRenderer);
 		final BlockPos pos = tileEntity.getPos();
 
