@@ -42,17 +42,6 @@ public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardT
          this.bindTexture(black);
 
          bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
-         double textureScale = 3;
-         GL11.glEnable(GL11.GL_BLEND); 
-         GL11.glBlendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
-         bufferbuilder.pos(x+1-3D/32D, y+1.001, z+3D/32D).tex(textureScale,textureScale).normal(0, 1, 0).endVertex();
-         bufferbuilder.pos(x+3D/32D, y+1.001, z+3D/32D).tex(textureScale,0).normal(0, 1, 0).endVertex();
-         bufferbuilder.pos(x+3D/32D, y+1.001, z+1-3D/32D).tex(0,0).normal(0, 1, 0).endVertex();
-         bufferbuilder.pos(x+1-3D/32D, y+1.001, z+1-3D/32D).tex(0,textureScale).normal(0, 1, 0).endVertex();
-         tessellator.draw();
-         GL11.glDisable(GL11.GL_BLEND);
-
-         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
 
          for(int by = 0; by < 8; by++) { 
