@@ -27,14 +27,13 @@ forge*changelog.txt
 # Logs
 *.log
 
-/gradle/
-/CREDITS.txt
-/LICENSE.txt
-/README.txt
+CREDITS.txt
+LICENSE.txt
+README.txt
 /changelog.txt
-/gradle.properties
-/gradlew
-/gradlew.bat
+gradle.properties
+gradlew
+gradlew.bat
 /hs_err_pid24648.log
 /replay_pid24648.log
 /run2/
