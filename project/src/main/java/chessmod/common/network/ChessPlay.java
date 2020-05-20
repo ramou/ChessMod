@@ -9,7 +9,7 @@ import chessmod.common.dom.model.chess.piece.InvalidMoveException;
 import chessmod.common.dom.model.chess.piece.Knight;
 import chessmod.init.ModSounds;
 import chessmod.tileentity.ChessboardTileEntity;
-import chessmod.tileentity.GoldChessBoardTileEntity;
+import chessmod.tileentity.GoldChessboardTileEntity;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -86,7 +86,7 @@ public class ChessPlay {
 								}
 
 								try { //On GoldChessBoard confirm that it is a valid move!
-									if (tileEntity instanceof GoldChessBoardTileEntity) {
+									if (tileEntity instanceof GoldChessboardTileEntity) {
 										board.moveSafely(m);
 									} else {
 										board.move(m);

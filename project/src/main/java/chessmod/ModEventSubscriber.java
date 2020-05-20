@@ -10,7 +10,7 @@ import chessmod.block.GoldChessboardBlock;
 import chessmod.block.WoodChessboardBlock;
 import chessmod.init.ModBlocks;
 import chessmod.init.ModItemGroups;
-import chessmod.tileentity.GoldChessBoardTileEntity;
+import chessmod.tileentity.GoldChessboardTileEntity;
 import chessmod.tileentity.WoodChessboardTileEntity;
 
 import net.minecraft.block.Block;
@@ -96,7 +96,7 @@ public class ModEventSubscriber {
 							).build(null), "wood_chessboard"),
 				setup(
 						TileEntityType.Builder.create(
-								GoldChessBoardTileEntity::new, 
+								GoldChessboardTileEntity::new, 
 								ModBlocks.GOLD_CHESSBOARD
 							).build(null), "gold_chessboard")
 		);

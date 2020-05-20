@@ -5,9 +5,8 @@ import org.apache.logging.log4j.Logger;
 
 import chessmod.ChessMod;
 import chessmod.client.render.tileentity.ChessboardTileEntityRenderer;
-import chessmod.tileentity.GoldChessBoardTileEntity;
+import chessmod.tileentity.GoldChessboardTileEntity;
 import chessmod.tileentity.WoodChessboardTileEntity;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -33,8 +32,8 @@ public final class ClientModEventSubscriber {
 	public static void onFMLClientSetupEvent(final FMLClientSetupEvent event) {
 
 		// Register TileEntity Renderers
-		ClientRegistry.bindTileEntitySpecialRenderer(WoodChessboardTileEntity.class, new ChessboardTileEntityRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(GoldChessBoardTileEntity.class, new ChessboardTileEntityRenderer());
+		ClientRegistry.bindTileEntityRenderer(GoldChessboardTileEntity.TYPE, ChessboardTileEntityRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(WoodChessboardTileEntity.TYPE, ChessboardTileEntityRenderer::new);
 		LOGGER.debug("Registered TileEntity Renderers");
 
 	}
