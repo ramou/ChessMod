@@ -163,10 +163,9 @@ public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardT
 
          //east side [pos x] [parent z]
          bufferbuilder.pos(+size, -size, -size).tex(textureScale,textureScale).normal(1, 0, 0).endVertex();
-         bufferbuilder.pos(+size, -size, +size).tex(textureScale,0).normal(1, 0, 0).endVertex();
+         bufferbuilder.pos(+size, +size, -size).tex(textureScale,textureScale).normal(1, 0, 0).endVertex();
          bufferbuilder.pos(+size, +size, +size).tex(0,0).normal(1, 0, 0).endVertex();
-         bufferbuilder.pos(+size, +size, -size).tex(0,textureScale).normal(1, 0, 0).endVertex();
-         
+         bufferbuilder.pos(+size, -size, +size).tex(0,textureScale).normal(1, 0, 0).endVertex();
 
          //west side [neg x] [parent z]
          bufferbuilder.pos(-size, -size, +size).tex(textureScale,textureScale).normal(-1, 0, 0).endVertex();
