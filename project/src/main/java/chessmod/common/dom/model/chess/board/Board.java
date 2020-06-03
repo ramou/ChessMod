@@ -21,7 +21,7 @@ import chessmod.common.dom.model.chess.piece.Piece;
 public class Board {
 	
 	public Side getCurrentPlayer() {
-		return (moves.size()%2==0)?Side.WHITE:Side.BLACK;
+		return (moves.size()%2==0)?Side.BLACK:Side.WHITE;
 	}
 	
 	Piece[][] pieces = new Piece[8][8];

@@ -126,7 +126,7 @@ public class GoldChessboardGui extends ChessboardGUI {
 				Move m = getMoveSelectedMove(selected, maybeSelected);
 				if(m != null) {
 					//Check if there is pawn promotion required, otherwise just do the move
-					int progressionRow = b.getCurrentPlayer().equals(Side.WHITE)?0:7;
+					int progressionRow = b.getCurrentPlayer().equals(Side.BLACK)?0:7;
 					if(piece instanceof Pawn && maybeSelected.y == progressionRow) {
 						promotionPosition = maybeSelected;
 					} else {

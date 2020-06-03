@@ -166,12 +166,12 @@ class TestBoard {
 			castle(b, 4, 0, 6, 0);//black castles
 			Piece r1 = b.pieceAt(5, 0);
 			assert(r1 instanceof Rook);
-			assert(r1.getSide().equals(Side.BLACK));
+			assert(r1.getSide().equals(Side.WHITE));
 			castle(b, 4, 7, 2, 7);//white queen castles
 			Piece r2 = b.pieceAt(3, 7);
 			b.showBoard();
 			assert(r2 instanceof Rook);
-			assert(r2.getSide().equals(Side.WHITE));
+			assert(r2.getSide().equals(Side.BLACK));
 		} catch (InvalidMoveException e) {
 			e.printStackTrace();
 			fail();
@@ -195,7 +195,7 @@ class TestBoard {
 		} catch (InvalidMoveException e) {
 			Piece queen = b.pieceAt(3, 6);
 			assert(queen instanceof Queen);
-			assertEquals(queen.getSide(), Side.WHITE);
+			assertEquals(queen.getSide(), Side.BLACK);
 		}
 	}
 	
@@ -217,7 +217,7 @@ class TestBoard {
 		} catch (InvalidMoveException e) {
 			Piece knight = b.pieceAt(7, 2);
 			assert(knight instanceof Knight);
-			assertEquals(knight.getSide(), Side.BLACK);
+			assertEquals(knight.getSide(), Side.WHITE);
 		}
 	}
 	
@@ -253,7 +253,7 @@ class TestBoard {
 			
 			Piece q = b.pieceAt(1, 0);
 			assert(q instanceof Queen);
-			assert(q.getSide().equals(Side.WHITE));
+			assert(q.getSide().equals(Side.BLACK));
 			
 		} catch (InvalidMoveException e) {
 			e.printStackTrace();
