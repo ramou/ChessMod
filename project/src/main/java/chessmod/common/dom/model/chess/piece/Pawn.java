@@ -20,8 +20,8 @@ public class Pawn extends Piece {
 	public Pawn(Point position, Side side) {
 		super(position, side);
 		
-		this.singleAdvance = side.equals(Side.WHITE)?-1:1;
-		this.doubleAdvance = side.equals(Side.WHITE)?-2:2;
+		this.singleAdvance = side.equals(Side.BLACK)?-1:1;
+		this.doubleAdvance = side.equals(Side.BLACK)?-2:2;
 	}
 
 	int singleAdvance;
@@ -42,7 +42,7 @@ public class Pawn extends Piece {
 		//Can they do a regular advance?
 		b.findTargettablePoint(this, MoveType.MOVE_ONLY, 0, singleAdvance).forEach(
 				p -> {
-					if(p.y == (getSide().equals(Side.WHITE)?Point.MIN:Point.MAX)) {
+					if(p.y == (getSide().equals(Side.BLACK)?Point.MIN:Point.MAX)) {
 						//Pawn Promotion
 						possible.add(createPromotionMove(b, p, null));
 					} else {
@@ -110,7 +110,7 @@ public class Pawn extends Piece {
 			return Move.createEnPassant(this, t);
 		} else if (!hasMoved() && getPosition().toY(getDoubleAdvance()).y == t.y) { //Double Advance 
 			return Move.createPawnDoubleAdvance(this);
-		} else if(t.y == (getSide().equals(Side.WHITE)?Point.MIN:Point.MAX)) { //Pawn Promotion
+		} else if(t.y == (getSide().equals(Side.BLACK)?Point.MIN:Point.MAX)) { //Pawn Promotion
 			return createPromotionMove(b, t, null);
 		} else { //Regular Move
 			return super.createMove(b, t);
