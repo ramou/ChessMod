@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import chessmod.common.dom.model.chess.Move;
-import chessmod.common.dom.model.chess.PieceInitializer;
+import chessmod.common.dom.model.chess.PieceType;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.board.Board;
@@ -249,7 +249,7 @@ class TestBoard {
 			regularMove(b, 3, 4, 3, 5);
 			regularMove(b, 3, 2, 2, 1);
 			regularMove(b, 3, 5, 2, 6);
-			promotion(b, 2, 1, 1, 0, PieceInitializer.Q);
+			promotion(b, 2, 1, 1, 0, PieceType.Q);
 			
 			Piece q = b.pieceAt(1, 0);
 			assert(q instanceof Queen);
@@ -267,7 +267,7 @@ class TestBoard {
 		regularMove(b, x1, y1, x2, y2);
 	}
 	
-	private void promotion(Board b, int x1, int y1, int x2, int y2, PieceInitializer pi) throws InvalidMoveException {
+	private void promotion(Board b, int x1, int y1, int x2, int y2, PieceType pi) throws InvalidMoveException {
 		Pawn pawn = (Pawn)b.pieceAt(x1, y1);
 		Point target = Point.create(x2, y2);
 		Move m = pawn.createPromotionMove(b, target, pi.create(target, pawn.getSide()));

@@ -7,7 +7,7 @@ import chessmod.common.dom.model.chess.Point.Directions;
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.board.Board.MoveType;
 import chessmod.common.dom.model.chess.Move;
-import chessmod.common.dom.model.chess.PieceInitializer;
+import chessmod.common.dom.model.chess.PieceType;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Side;
 
@@ -75,7 +75,7 @@ public class King extends Piece {
 	
 	@Override
 	public int serialize() {
-		int ser = hasMoved()?PieceInitializer.mK.ordinal():PieceInitializer.nmK.ordinal();
+		int ser = hasMoved()? PieceType.mK.ordinal(): PieceType.nmK.ordinal();
 		ser <<=1;
 		ser |= getSide().ordinal();
 		return ser;

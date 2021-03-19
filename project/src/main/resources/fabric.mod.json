@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "chessmod",
+  "version": "${version}",
+  "name": "Chess mod",
+  "author": "Stuart Thiel, Inspired by Pippin Barr",
+  "icon": "chessmod.png",
+  "entrypoints": {
+    "main": [
+      "chessmod.ChessMod"
+    ],
+    "client": []
+  },
+  "accessWidener": "chessmod.aw"
+}

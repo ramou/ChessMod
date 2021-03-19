@@ -1,6 +1,6 @@
 package chessmod;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ModUtil {
 	/**
@@ -9,7 +9,8 @@ public class ModUtil {
 	 *
 	 * @return null
 	 */
-	@Nonnull
+	@SuppressWarnings("ConstantConditions")
+	@NotNull
 	// Get rid of "Returning null from Nonnull method" warnings
 	public static <T> T _null() {
 		return null;

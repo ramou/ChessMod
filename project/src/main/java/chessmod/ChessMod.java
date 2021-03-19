@@ -1,20 +1,24 @@
 package chessmod;
 
+import chessmod.common.network.PacketHandler;
+import chessmod.init.ModBlocks;
+import chessmod.init.ModSounds;
+import chessmod.init.ModBlockEntityTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import chessmod.common.network.PacketHandler;
-import net.minecraftforge.fml.common.Mod;
+import net.fabricmc.api.ModInitializer;
 
-@Mod(ChessMod.MODID)
-public class ChessMod {
+public class ChessMod implements ModInitializer {
 	public static final String MODID = "chessmod";
-	
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
-	
-	public ChessMod() {
-		LOGGER.debug("So, you want to play some chesses?");
-		PacketHandler.init();		
+
+	@Override
+	public void onInitialize() {
+		LOGGER.info("So, you want to play some chesses?");
+		PacketHandler.init();
+		ModBlocks.init();
+		ModBlockEntityTypes.init();
+		ModSounds.init();
 	}
-	
 }

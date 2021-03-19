@@ -8,42 +8,30 @@ import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.common.dom.model.chess.piece.Queen;
 import chessmod.common.dom.model.chess.piece.Rook;
 
-public enum PieceInitializer {
-	P((p, s) -> {
-		return new Pawn(p, s);
-	}),
-	B((p, s) -> {
-		return new Bishop(p, s);
-	}),
-	N((p, s) -> {
-		return new Knight(p, s);
-	}),
-	Q((p, s) -> {
-		return new Queen(p, s);
-	}),
-	nmR((p, s) -> {
-		return new Rook(p, s);
-	}),
+public enum PieceType {
+	P(Pawn::new),
+	B(Bishop::new),
+	N(Knight::new),
+	Q(Queen::new),
+	nmR(Rook::new),
 	mR((p, s) -> {
 		Rook r = new Rook(p, s);
 		r.setMoved(true);
 		return r;
 	}),
-	nmK((p, s) -> {
-		return new King(p, s);
-	}),
+	nmK(King::new),
 	mK((p, s) -> {
 		King k = new King(p, s);
 		k.setMoved(true);
 		return k;
 	});
-	
-	interface PieceCreatorInterface {
+
+	interface PieceFactory {
 		Piece create(Point p, Side s);
 	}
 	
-	PieceInitializer.PieceCreatorInterface creator;
-	private PieceInitializer(PieceInitializer.PieceCreatorInterface creator) {
+	PieceFactory creator;
+	PieceType(PieceFactory creator) {
 		this.creator = creator;
 	}
 	
@@ -52,6 +40,6 @@ public enum PieceInitializer {
 	}
 	
 	public static Piece create(Point target, int serialized) {
-		return PieceInitializer.values()[(serialized>>>1)&0b111].create(target, Side.values()[serialized & 1]);
+		return PieceType.values()[(serialized>>>1)&0b111].create(target, Side.values()[serialized & 1]);
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.Move.PawnDoubleAdvance;
-import chessmod.common.dom.model.chess.PieceInitializer;
+import chessmod.common.dom.model.chess.PieceType;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Point.InvalidPoint;
 import chessmod.common.dom.model.chess.board.Board;
@@ -98,7 +98,7 @@ public class Pawn extends Piece {
 
 	@Override
 	public int serialize() {
-		int ser = PieceInitializer.P.ordinal();
+		int ser = PieceType.P.ordinal();
 		ser <<=1;
 		ser |= getSide().ordinal();
 		return ser;

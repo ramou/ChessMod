@@ -1,21 +1,24 @@
 package chessmod.common.network;
 
-import java.util.function.Supplier;
-
-import chessmod.common.dom.model.chess.PieceInitializer;
+import chessmod.common.dom.model.chess.PieceType;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.init.ModSounds;
-import chessmod.tileentity.ChessboardTileEntity;
-import chessmod.tileentity.WoodChessboardTileEntity;
+import chessmod.block.entity.ChessboardBlockEntity;
+import chessmod.block.entity.WoodChessboardBlockEntity;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkEvent;
+
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public class ArbitraryPlacement {
 	private final int point;
@@ -23,7 +26,6 @@ public class ArbitraryPlacement {
 	private final double x;
 	private final double y;
 	private final double z;
-	
 
 	public ArbitraryPlacement(Piece piece, BlockPos pos) {
 		this(piece.getPosition().serialize(), piece.serialize(), pos.getX(), pos.getY(), pos.getZ());
@@ -37,7 +39,7 @@ public class ArbitraryPlacement {
 		this.z = z;
 	}
 
-	public static ArbitraryPlacement decode(PacketBuffer buf) {
+	public static ArbitraryPlacement decode(PacketByteBuf buf) {
 		int point  = buf.readInt();
 		int piece  = buf.readInt();
 		double x = buf.readDouble();
@@ -46,41 +48,36 @@ public class ArbitraryPlacement {
 		return new ArbitraryPlacement(point, piece, x, y, z);
 	}
 
-	public static void encode(ArbitraryPlacement msg, PacketBuffer buf) {
+	public static PacketByteBuf encode(ArbitraryPlacement msg, PacketByteBuf buf) {
 		buf.writeInt(msg.point);
 		buf.writeInt(msg.piece);
 		buf.writeDouble(msg.x);
 		buf.writeDouble(msg.y);
 		buf.writeDouble(msg.z);
+		return buf;
 	}
 
-	public static class Handler {
-		public static void handle(final ArbitraryPlacement message, final Supplier<NetworkEvent.Context> ctx) {
-			if (ctx.get().getDirection().getReceptionSide().isServer()) {
-				ctx.get().enqueueWork(new Runnable() {
-					// Use anon - lambda causes classloading issues
-					@Override
-					public void run() {
-						World world = ctx.get().getSender().world;
-						BlockPos pos = new BlockPos(message.x, message.y, message.z);
-						if(world.isAreaLoaded(pos, 1)) {
-							
-							TileEntity tileEntity = world.getTileEntity(pos);
-							if (tileEntity instanceof WoodChessboardTileEntity) { //If we want this stuff for other boards, we have to reconsider move format.
-								Board board = ((ChessboardTileEntity)tileEntity).getBoard();
-								Point point = Point.create(message.point);
-								Piece piece = PieceInitializer.create(point, message.piece);
-								board.setPiece(piece, point);
-								((ChessboardTileEntity)tileEntity).notifyClientOfBoardChange();
-								world.playSound(null, pos, ModSounds.placePiece, SoundCategory.BLOCKS, 1F, 1F);
-							}
-							
-						}
-					}
-				});
-			}
+	public static class Handler implements ServerPlayNetworking.PlayChannelHandler {
+		public static final ServerPlayNetworking.PlayChannelHandler INSTANCE = new Handler();
 
-			ctx.get().setPacketHandled(true);
+		@Override
+		public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+			ArbitraryPlacement placement = ArbitraryPlacement.decode(buf);
+			server.execute(() -> {
+				World world = player.world;
+				BlockPos pos = new BlockPos(placement.x, placement.y, placement.z);
+				if(world.isChunkLoaded(pos)) {
+					BlockEntity tileEntity = world.getBlockEntity(pos);
+					if (tileEntity instanceof WoodChessboardBlockEntity) { //If we want this stuff for other boards, we have to reconsider move format.
+						Board board = ((ChessboardBlockEntity)tileEntity).getBoard();
+						Point point = Point.create(placement.point);
+						Piece piece = PieceType.create(point, placement.piece);
+						board.setPiece(piece, point);
+						((ChessboardBlockEntity)tileEntity).notifyClientOfBoardChange();
+						world.playSound(null, pos, ModSounds.placePiece, SoundCategory.BLOCKS, 1F, 1F);
+					}
+				}
+			});
 		}
 	}
 }

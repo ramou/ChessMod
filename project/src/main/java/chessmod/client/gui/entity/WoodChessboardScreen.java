@@ -2,26 +2,27 @@ package chessmod.client.gui.entity;
 
 import java.util.HashMap;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
-
+import chessmod.ChessMod;
+import chessmod.block.entity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Point.InvalidPoint;
 import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.common.network.ArbitraryPlacement;
-import chessmod.common.network.PacketHandler;
-import chessmod.tileentity.ChessboardTileEntity;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import com.mojang.blaze3d.platform.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
-@OnlyIn(Dist.CLIENT)
-public class WoodChessboardGUI extends ChessboardGUI {
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
 
-	public WoodChessboardGUI(ChessboardTileEntity board) {
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+
+public class WoodChessboardScreen extends ChessboardScreen {
+
+	public WoodChessboardScreen(ChessboardBlockEntity board) {
 		super(board);
 		
 		for(TilePiece p: TilePiece.values()) {
@@ -36,7 +37,7 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	protected static HashMap<Integer, TilePiece> whiteSideboardMap = new HashMap<Integer, TilePiece>();
 	
 	@Override
-	public void render(int par1, int par2, float par3) {
+	public void render(MatrixStack matrixStack, int par1, int par2, float par3) {
 	    //Draw the background
 		drawBackground();
 		
@@ -56,7 +57,7 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	protected void highlightSideBoardSelected() {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture();
-		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA.field_22545, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA.field_22528, GlStateManager.SrcFactor.ONE.field_22545, GlStateManager.DstFactor.ZERO.field_22528);
 		GlStateManager.color4f(0.5f, 0.8f, 0.5f, 0.5f);
 		  
 		float myHeight=Math.min(height, 256);
@@ -65,11 +66,11 @@ public class WoodChessboardGUI extends ChessboardGUI {
 		float y1 = height/2f - myHeight/2f+(32+sideBoardSelected.index*24)*myHeight/256f;
 		float y2 = y1+24*myHeight/256f;
 		  
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		bufferbuilder.pos(x1, y2, blitOffset).endVertex();
-		bufferbuilder.pos(x2, y2, blitOffset).endVertex();
-		bufferbuilder.pos(x2, y1, blitOffset).endVertex();
-		bufferbuilder.pos(x1, y1, blitOffset).endVertex();
+		bufferbuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION);
+		bufferbuilder.vertex(x1, y2, getZOffset()).next();
+		bufferbuilder.vertex(x2, y2, getZOffset()).next();
+		bufferbuilder.vertex(x2, y1, getZOffset()).next();
+		bufferbuilder.vertex(x1, y1, getZOffset()).next();
 		tessellator.draw();
 		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();
@@ -121,6 +122,6 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	}
 	
 	protected void notifyServerOfArbitraryPlacement(Piece pi) {
-		PacketHandler.sendToServer(new ArbitraryPlacement(pi, board.getPos()));
+		ClientPlayNetworking.send(new Identifier(ChessMod.MODID, "ap"), ArbitraryPlacement.encode(new ArbitraryPlacement(pi, board.getPos()), PacketByteBufs.create()));
 	}
 }

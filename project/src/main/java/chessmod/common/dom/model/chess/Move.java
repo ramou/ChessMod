@@ -36,7 +36,7 @@ public class Move {
 			if(source.y == target.y) { //Castle
 				return createCastle(source, target);
 			} else if (target.y == Point.MIN || target.y == Point.MAX) { //Promotion {
-				Piece p = PieceInitializer.create(target, serialized);
+				Piece p = PieceType.create(target, serialized);
 				return createPawnPromotion(source, target, p);
 			} else if (Math.abs(source.y-target.y) == 2) { //Double Pawn Advance
 				return createPawnDoubleAdvance(source, target);
