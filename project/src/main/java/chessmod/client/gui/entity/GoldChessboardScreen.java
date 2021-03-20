@@ -75,6 +75,7 @@ public class GoldChessboardScreen extends ChessboardScreen {
 			kingPoint = board.getBoard().getCheck();
 			if(kingPoint != null) highlightSquare(kingPoint, Color4f.CHECK);
 		} else highlightSquare(kingPoint, Color4f.CHECKMATE);
+		renderSelected(mouseX, mouseY);
 	}
 
 	private void highlightPossibleMoves() {

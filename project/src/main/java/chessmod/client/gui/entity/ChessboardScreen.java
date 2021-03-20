@@ -12,6 +12,8 @@ import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.common.network.ChessPlay;
 import chessmod.block.entity.ChessboardBlockEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
+import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -32,6 +34,7 @@ public abstract class ChessboardScreen extends Screen {
 	Tessellator tessellator = Tessellator.getInstance();
 	BufferBuilder bufferbuilder = tessellator.getBuffer();
 	protected Point selected = null;
+	protected final WPlainPanel dummy = new WPlainPanel();
 
 	protected static HashMap<Character, TilePiece> pieceMap = new HashMap<Character, TilePiece>();
 
@@ -50,7 +53,7 @@ public abstract class ChessboardScreen extends Screen {
 		BLACK_PAWN(5, Side.BLACK, PieceType.P, 'p', new Identifier(ChessMod.MODID, "textures/gui/bp.png"));
 	
 		public void draw(ChessboardScreen current, int x, int y) {
-			current.drawPiece(x, y, tile);
+			current.drawPiece(x, y, texture);
 		}
 		
 		public char getPiece() {
@@ -77,18 +80,18 @@ public abstract class ChessboardScreen extends Screen {
 		Side side;
 		char piece;
 		PieceType pi;
-		Identifier tile;
+		Identifier texture;
 		
-		public Identifier getTile() {
-			return tile;
+		public Identifier getTexture() {
+			return texture;
 		}
 	
-		TilePiece(int i, Side s, PieceType pi, char c, Identifier tile) {
+		TilePiece(int i, Side s, PieceType pi, char c, Identifier texture) {
 			this.index=i;
 			this.side=s;
 			this.pi=pi;
 			this.piece=c;
-			this.tile=tile;
+			this.texture = texture;
 			pieceMap.put(c, this);
 		}
 		
@@ -130,13 +133,17 @@ public abstract class ChessboardScreen extends Screen {
 	}
 
 	protected void drawBackground() {
-		this.client.getTextureManager().bindTexture(background);
-		bufferbuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
 		float myHeight=Math.min(height, 256);
 		float x1 = width/2f - 128;
 		float x2 = x1+256;
 		float y1 = height/2f - myHeight/2F;
 		float y2 = y1+myHeight;
+		dummy.setSize((int) (x2 - x1) + 100, (int) (y2 - y1) + 10);
+		dummy.setLocation((int) (x1 - 50), (int) (y1 - 5));
+		BackgroundPainter.VANILLA.paintBackground(dummy.getX(), dummy.getY(), dummy);
+
+		this.client.getTextureManager().bindTexture(background);
+		bufferbuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
 		bufferbuilder.vertex(x1, y2, getZOffset()).texture(0,1).next();
 		bufferbuilder.vertex(x2, y2, getZOffset()).texture(1,1).next();
 		bufferbuilder.vertex(x2, y1, getZOffset()).texture(1,0).next();
@@ -155,7 +162,7 @@ public abstract class ChessboardScreen extends Screen {
 			this.b = b;
 			this.a = a;
 		}
-		
+
 		public static Color4f SELECTED = new Color4f(0.5F, 0.5F, 0.8F, 0.5F);
 		public static Color4f POSSIBLE = new Color4f(0.5F, 0.8F, 0.5F, 0.5F);
 		public static Color4f CHECK = new Color4f(0.9F, 0.1F, 0.1F, 0.5F);
@@ -166,7 +173,13 @@ public abstract class ChessboardScreen extends Screen {
 			GlStateManager.color4f(r, g, b, a);
 		}
 	}
-	
+
+	public void renderSelected(int mouseX, int mouseY) {
+		if (selected != null) {
+			this.drawPiece(mouseX, mouseY, pieceMap.get(board.getBoard().pieceAt(selected).getCharacter()).texture);
+		}
+	}
+
 	protected void highlightSelected() {
 		highlightSquare(selected, Color4f.SELECTED);
 	}
@@ -225,7 +238,7 @@ public abstract class ChessboardScreen extends Screen {
 
 	protected void drawSideboardPiece(TilePiece piece) {
 		float myHeight=Math.min(height, 256);
-		this.client.getTextureManager().bindTexture(piece.tile);
+		this.client.getTextureManager().bindTexture(piece.texture);
 	
 		float x1 = width/2f - 128+(piece.side.equals(Side.BLACK)?0:16+9*24);
 		float x2 = x1+24;
@@ -254,5 +267,4 @@ public abstract class ChessboardScreen extends Screen {
 			}
 	    }
 	}
-
 }

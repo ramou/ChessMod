@@ -38,6 +38,14 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+	maven {
+		name = "CottonMC"
+		url = "https://server.bbkr.space/artifactory/libs-release"
+	}
+	maven {
+		name = "Terraformers Maven"
+		url = "https://maven.terraformersmc.com/releases"
+	}
 }
 
 dependencies {
@@ -47,6 +55,8 @@ dependencies {
 	testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 	modImplementation "net.fabricmc.fabric-api:fabric-api:0.32.0+1.16"
+	modImplementation include("io.github.cottonmc:LibGui:3.3.5+1.16.5")
+	modImplementation "com.terraformersmc:modmenu:1.16.8"
 }
 
 processResources {

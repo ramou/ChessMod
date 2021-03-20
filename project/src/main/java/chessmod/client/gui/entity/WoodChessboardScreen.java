@@ -37,10 +37,10 @@ public class WoodChessboardScreen extends ChessboardScreen {
 	protected static HashMap<Integer, TilePiece> whiteSideboardMap = new HashMap<Integer, TilePiece>();
 	
 	@Override
-	public void render(MatrixStack matrixStack, int par1, int par2, float par3) {
+	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float tickDelta) {
 	    //Draw the background
 		drawBackground();
-		
+
 		//Draw sideboard
 		//Also, if we don't use p, it doesn't get loaded and things get weird fast!
 		for(TilePiece p: TilePiece.values()) drawSideboardPiece(p);
@@ -51,6 +51,7 @@ public class WoodChessboardScreen extends ChessboardScreen {
 	    //Test highlighting squares
 	    if(selected!=null)highlightSelected();
 	    if(sideBoardSelected!=null)highlightSideBoardSelected();
+		renderSelected(mouseX, mouseY);
 
 	}
 
