@@ -3,7 +3,7 @@ package chessmod.common.dom.model.chess.piece;
 import java.util.HashSet;
 import java.util.Set;
 
-import chessmod.common.dom.model.chess.PieceInitializer;
+import chessmod.common.dom.model.chess.PieceType;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Point.Directions;
 import chessmod.common.dom.model.chess.board.Board;
@@ -35,7 +35,7 @@ public class Bishop extends Piece {
 
 	@Override
 	public int serialize() {
-		int ser = PieceInitializer.B.ordinal();
+		int ser = PieceType.B.ordinal();
 		ser <<=1;
 		ser |= getSide().ordinal();
 		return ser;

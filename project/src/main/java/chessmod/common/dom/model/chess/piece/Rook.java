@@ -3,7 +3,7 @@ package chessmod.common.dom.model.chess.piece;
 import java.util.HashSet;
 import java.util.Set;
 
-import chessmod.common.dom.model.chess.PieceInitializer;
+import chessmod.common.dom.model.chess.PieceType;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.Point.Directions;
@@ -33,7 +33,7 @@ public class Rook extends Piece {
 
 	@Override
 	public int serialize() {
-		int ser = hasMoved()?PieceInitializer.mR.ordinal():PieceInitializer.nmR.ordinal();
+		int ser = hasMoved()? PieceType.mR.ordinal(): PieceType.nmR.ordinal();
 		ser <<=1;
 		ser |= getSide().ordinal();
 		return ser;

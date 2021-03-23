@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
 import chessmod.common.dom.model.chess.Move;
-import chessmod.common.dom.model.chess.PieceInitializer;
+import chessmod.common.dom.model.chess.PieceType;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.piece.Piece;
@@ -129,7 +129,7 @@ public class SerializedBoard {
 			long pieceBits = (piecesSet.get(i*4, (i+1)*4).toLongArray().length==1)?piecesSet.get(i*4, (i+1)*4).toLongArray()[0]:0;
 			Side s = Side.values()[(int)(pieceBits & 0b0001)];
 			Point p = new Point((7-(index%8)), 7-(index>>>3));
-			Piece piece = PieceInitializer.values()[(int)(pieceBits & 0b1110)>>>1].create(p, s);
+			Piece piece = PieceType.values()[(int)(pieceBits & 0b1110)>>>1].create(p, s);
 			b.setPiece(piece, p);
 			index = pieceMaskSet.nextSetBit(index+1);
 		}

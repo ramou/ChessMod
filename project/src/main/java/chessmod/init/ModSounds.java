@@ -2,8 +2,9 @@ package chessmod.init;
 
 import chessmod.ChessMod;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class ModSounds {
 	public static final SoundEvent slidePiece = createRegisteredSoundEvent("slide_piece");
@@ -12,7 +13,10 @@ public class ModSounds {
 	public static final SoundEvent placePieceTake = createRegisteredSoundEvent("place_piece_take");
 
 	private static SoundEvent createRegisteredSoundEvent(String soundEvent) {
-		ResourceLocation loc = new ResourceLocation(ChessMod.MODID, soundEvent);
-		return new SoundEvent(loc).setRegistryName(loc);
+		Identifier loc = new Identifier(ChessMod.MODID, soundEvent);
+		return Registry.register(Registry.SOUND_EVENT, loc, new SoundEvent(loc));
+	}
+
+	public static void init() {
 	}
 }

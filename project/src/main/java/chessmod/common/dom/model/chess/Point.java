@@ -1,7 +1,7 @@
 package chessmod.common.dom.model.chess;
 
 public class Point {
-	public static enum Directions {
+	public enum Directions {
 		NORTH(0,1),
 		NORTH_EAST(1,1),
 		EAST(1,0),
@@ -16,7 +16,7 @@ public class Point {
 		
 		public int x;
 		public int y;
-		private Directions(int x, int y) {
+		Directions(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}

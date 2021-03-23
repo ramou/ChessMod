@@ -3,7 +3,7 @@ package chessmod.common.dom.model.chess.piece;
 import java.util.HashSet;
 import java.util.Set;
 
-import chessmod.common.dom.model.chess.PieceInitializer;
+import chessmod.common.dom.model.chess.PieceType;
 import chessmod.common.dom.model.chess.Point;
 import static chessmod.common.dom.model.chess.Point.Directions.*;
 import chessmod.common.dom.model.chess.Side;
@@ -40,7 +40,7 @@ public class Knight extends Piece {
 
 	@Override
 	public int serialize() {
-		int ser = PieceInitializer.N.ordinal();
+		int ser = PieceType.N.ordinal();
 		ser <<=1;
 		ser |= getSide().ordinal();
 		return ser;

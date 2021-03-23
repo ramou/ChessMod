@@ -5,10 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
-
 import chessmod.ChessMod;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.Point;
@@ -18,12 +14,16 @@ import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.InvalidMoveException;
 import chessmod.common.dom.model.chess.piece.Pawn;
 import chessmod.common.dom.model.chess.piece.Piece;
-import chessmod.tileentity.ChessboardTileEntity;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import chessmod.block.entity.ChessboardBlockEntity;
+import com.mojang.blaze3d.platform.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
-public class GoldChessboardGui extends ChessboardGUI {
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.util.math.MatrixStack;
 
-	public GoldChessboardGui(ChessboardTileEntity board) {
+public class GoldChessboardScreen extends ChessboardScreen {
+
+	public GoldChessboardScreen(ChessboardBlockEntity board) {
 		super(board);
 
 		//I find that if I don't do this, Pieces
@@ -42,30 +42,31 @@ public class GoldChessboardGui extends ChessboardGUI {
 	protected static HashMap<Integer, TilePiece> blackSideboardMap = new HashMap<Integer, TilePiece>();
 	protected static HashMap<Integer, TilePiece> whiteSideboardMap = new HashMap<Integer, TilePiece>();
 	Point promotionPosition = null;
-	
+
 	@Override
-	public void render(int par1, int par2, float par3) {
-	    //Draw the background
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+		super.render(matrices, mouseX, mouseY, delta);
+		//Draw the background
 		drawBackground();
 		showTurnColor();
 
 		//Draw the existing pieces
 		drawPieces();
-	    
-	    //Test highlighting squares
-	    if(selected!=null)highlightSelected();
-	
-	    
-	    //Draw highlights of any selected pieces and their valid moves
+
+		//Test highlighting squares
+		if(selected!=null)highlightSelected();
+
+
+		//Draw highlights of any selected pieces and their valid moves
 		highlightPossibleMoves();
-	    
-		
+
+
 		//Show sideboard for current player if they're trying to promote
 		if(promotionPosition != null) {
 			Map<Integer, TilePiece> map = board.getBoard().getCurrentPlayer().equals(Side.WHITE)?whiteSideboardMap:blackSideboardMap;
 			for(TilePiece p: map.values()) {
 				drawSideboardPiece(p);
-			} 
+			}
 		}
 
 		//Draw highlights of any King under threat and the pieces threatening it
@@ -74,7 +75,7 @@ public class GoldChessboardGui extends ChessboardGUI {
 			kingPoint = board.getBoard().getCheck();
 			if(kingPoint != null) highlightSquare(kingPoint, Color4f.CHECK);
 		} else highlightSquare(kingPoint, Color4f.CHECKMATE);
-		
+		renderSelected(mouseX, mouseY);
 	}
 
 	private void highlightPossibleMoves() {
@@ -193,39 +194,41 @@ public class GoldChessboardGui extends ChessboardGUI {
 
 	protected void showTurnColor() {
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.blendFunc(GlStateManager.SrcFactor.ONE.field_22545, GlStateManager.DstFactor.ZERO.field_22528);
 		GlStateManager.disableTexture();
-		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) GlStateManager.color4f(1f, 1f, 1f, 1f);
-		else GlStateManager.color4f(0f, 0f, 0f, 1f);
-		
+		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE))
+			GlStateManager.color4f(1f, 1f, 1f, 1f);
+		else
+			GlStateManager.color4f(0f, 0f, 0f, 1f);
+
 		float myHeight=Math.min(height, 256);
 		final float boardOriginX = width/2f - 128;
 		final float boardOriginY = height/2f - myHeight/2f;
 		  
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+		bufferbuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION);
 		//top
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+30F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+30F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.vertex(boardOriginX+26, boardOriginY+26F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+26, boardOriginY+30F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+256-26, boardOriginY+30F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, getZOffset()).next();
 
 		//left
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+30, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+30, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.vertex(boardOriginX+26, boardOriginY+26F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+30, boardOriginY+myHeight-26F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+30, boardOriginY+26F*myHeight/256F, getZOffset()).next();
 
 		//right
-		bufferbuilder.pos(boardOriginX+256-30, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-30, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();		
+		bufferbuilder.vertex(boardOriginX+256-30, boardOriginY+26F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+256-30, boardOriginY+myHeight-26F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, getZOffset()).next();		
 		
 		//bottom
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-30F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-30F*myHeight/256F, blitOffset).endVertex();		
+		bufferbuilder.vertex(boardOriginX+26, boardOriginY+myHeight-30F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, getZOffset()).next();
+		bufferbuilder.vertex(boardOriginX+256-26, boardOriginY+myHeight-30F*myHeight/256F, getZOffset()).next();		
 		tessellator.draw();
 		
 		GlStateManager.color4f(1f, 1f, 1f, 1f);
