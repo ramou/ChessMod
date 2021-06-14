@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.16.5-0.608'
+version = '1.16.5-0.609'
 group = 'com.stuartthiel.chessmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'ChessMod'
 
@@ -152,6 +152,7 @@ test {
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
+	exclude('**/PieceTexture.psd') 
     manifest {
         attributes([
             "Specification-Title": "chessmod",
