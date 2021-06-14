@@ -7,18 +7,17 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import chessmod.ChessMod;
-import chessmod.client.gui.entity.ChessboardGUI.Color4f;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.tileentity.ChessboardTileEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Matrix4f;
 
 public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardTileEntity> {
 	public static final ResourceLocation black = new ResourceLocation("chessmod", "textures/block/black.png");
@@ -54,7 +53,6 @@ public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardT
         GlStateManager.enableTexture();
         //Minecraft.getInstance().textureManager.bindTexture(black);
         matrixStackIn.push();
-        Color4f.WHITE.apply();
         IVertexBuilder bufferbuilder = b.getBuffer(BLACK_PIECE);
 
         
@@ -89,7 +87,6 @@ public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardT
          matrixStackIn.pop();
 
          matrixStackIn.push();
-         Color4f.WHITE.apply();
          bufferbuilder = b.getBuffer(WHITE_PIECE);
          //Minecraft.getInstance().getTextureManager().bindTexture(white);
          

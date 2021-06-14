@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 import chessmod.client.gui.entity.WoodChessboardGUI;
 import chessmod.init.ModTileEntityTypes;
 import chessmod.tileentity.ChessboardTileEntity;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -16,8 +15,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class WoodChessboardBlock extends ChessboardBlock {
-	public WoodChessboardBlock(Properties properties) {
-		super(properties);
+	public WoodChessboardBlock() {
+		super();
 	}
 
 	@Nullable

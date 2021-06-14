@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -39,14 +40,15 @@ public final class PacketHandler {
 		if(world instanceof ServerWorld) {
 			ServerWorld ws = (ServerWorld) world;
 
-			ws.getChunkProvider().chunkManager.getTrackingPlayers(new ChunkPos(pos), false)
+			ServerChunkProvider chunkProvider = ws.getChunkProvider();
+			chunkProvider.chunkManager.getTrackingPlayers(new ChunkPos(pos), false)
 					.filter(p -> p.getDistanceSq(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)
 					.forEach(p -> HANDLER.send(PacketDistributor.PLAYER.with(() -> p), toSend));
 		}
 	}
 
 	public static void sendToNearby(World world, Entity e, Object toSend) {
-		sendToNearby(world, new BlockPos(e), toSend);
+		sendToNearby(world, new BlockPos(e.getPositionVec()), toSend);
 	}
 
 	public static void sendTo(ServerPlayerEntity playerMP, Object toSend) {

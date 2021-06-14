@@ -5,6 +5,7 @@
 # Find more information on toml format here:  https://github.com/toml-lang/toml
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml" #mandatory
+license="MIT License"
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
 loaderVersion="[28,)" #mandatory (28 is current forge version)
 # A URL to refer people to when problems occur with this mod
@@ -14,7 +15,7 @@ issueTrackerURL="http://my.issue.tracker/" #optional
 # The modid of the mod
 modId="chessmod" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="1.15.2-0.606" #mandatory
+version="1.16.5-0.608" #mandatory
  # A display name for the mod
 displayName="Chess Mod" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
@@ -38,7 +39,7 @@ A mod to learn modding as well as to implement Pippin Barr's very cool Chesses i
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[28,)" #mandatory
+    versionRange="[36,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -47,6 +48,6 @@ A mod to learn modding as well as to implement Pippin Barr's very cool Chesses i
 [[dependencies.chessmod]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.5]"
     ordering="NONE"
     side="BOTH"

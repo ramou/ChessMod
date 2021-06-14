@@ -15,6 +15,7 @@ To get a final build, use
 The `.jar` that isn't a .sources can be stuck in a mod folder.
 
 Here are some of the resources I've been using:
+ * https://leo3418.github.io/2021/02/06/forge-mod-migrate-to-1-16.html
  * https://cadiboo.github.io/tutorials/1.15.2/forge/
  * https://mcforge.readthedocs.io/en/1.15.x/
  * https://wiki.mcjty.eu/modding/index.php?title=Tut15_Ep14
@@ -58,7 +59,7 @@ Use the right version of forge! I really must change my structure so it doesn't 
 === building jar ===
 I had to manually set my `JAVA_HOME` to a JDK since it was defaulting to the JRE. I don't know how to make it pull this from eclipse like seems sensible, so I did:
 ```
-$Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_251"
+$Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_281"
 
 ```
 

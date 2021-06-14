@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.board.BoardFactory;
 import chessmod.common.dom.model.chess.board.SerializedBoard;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -46,8 +47,8 @@ public abstract class ChessboardTileEntity extends TileEntity {
 	 * Read saved data from disk into the tile.
 	 */
 	@Override
-	public void read(final CompoundNBT compound) {
-		super.read(compound);
+	public void read(BlockState state, final CompoundNBT compound) {
+		super.read(state, compound);
 		long pieceMask = compound.getLong("piece_mask");
 		long[] pieces = compound.getLongArray("pieces");
 		long[] moves = compound.getLongArray("moves");
@@ -80,7 +81,7 @@ public abstract class ChessboardTileEntity extends TileEntity {
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
 		CompoundNBT tag = pkt.getNbtCompound();
-		read(tag);
+		read(getBlockState(), tag);
 	}
 
 	@Nonnull
@@ -91,16 +92,17 @@ public abstract class ChessboardTileEntity extends TileEntity {
 	}
 
 	@Override
-	public void handleUpdateTag(CompoundNBT tag) {
-		this.read(tag);
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+		this.read(getBlockState(), tag);
 	}
+
 
 	@SuppressWarnings("resource")
 	public void notifyClientOfBoardChange() {
 		SUpdateTileEntityPacket packet = getUpdatePacket();
 		if (packet != null && getWorld() instanceof ServerWorld) {
 			((ServerChunkProvider) getWorld().getChunkProvider()).chunkManager
-			.getTrackingPlayers(new ChunkPos(pos), false)
+			.getTrackingPlayers(new ChunkPos(this.getPos()), false)
 			.forEach(e -> e.connection.sendPacket(packet));
 		}
 	}

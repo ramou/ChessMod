@@ -3,8 +3,15 @@ package chessmod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import chessmod.block.GoldChessboardBlock;
+import chessmod.block.WoodChessboardBlock;
 import chessmod.common.network.PacketHandler;
+import net.minecraft.block.Block;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod(ChessMod.MODID)
 public class ChessMod {
@@ -12,9 +19,16 @@ public class ChessMod {
 	
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 	
+
+	private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
+	public static final RegistryObject<Block> WOOD_CHESSBOARD = BLOCKS.register("wood_chessboard", () -> new WoodChessboardBlock());
+	public static final RegistryObject<Block> GOLD_CHESSBOARD = BLOCKS.register("gold_chessboard", () -> new GoldChessboardBlock());
+	
+
 	public ChessMod() {
 		LOGGER.debug("So, you want to play some chesses?");
-		PacketHandler.init();		
+		BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		PacketHandler.init();
 	}
 	
 }

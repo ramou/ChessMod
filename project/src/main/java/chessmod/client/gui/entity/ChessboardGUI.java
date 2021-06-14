@@ -162,11 +162,16 @@ public abstract class ChessboardGUI extends Screen {
 		public static Color4f CHECK = new Color4f(0.9F, 0.1F, 0.1F, 0.5F);
 		public static Color4f CHECKMATE = new Color4f(0.9F, 0.1F, 0.1F, 0.9F);
 		public static Color4f WHITE = new Color4f(1F, 1F, 1F, 1F);
-		public static Color4f BLACK = new Color4f(0F, 0F, 0F, 0F);
+		public static Color4f BLACK = new Color4f(0F, 0F, 0F, 1F);
+
 		
-		public void apply() {
-			RenderSystem.color4f(r, g, b, a);
+		public void draw2DRect(BufferBuilder bufferbuilder, Point2f p1, Point2f p2) {
+			bufferbuilder.addVertex(p1.x, p2.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
+			bufferbuilder.addVertex(p2.x, p2.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
+			bufferbuilder.addVertex(p2.x, p1.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
+			bufferbuilder.addVertex(p1.x, p1.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
 		}
+		
 	}
 	
 	protected void highlightSelected() {
@@ -191,18 +196,10 @@ public abstract class ChessboardGUI extends Screen {
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
 		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		
-		c.apply();
-		  
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		bufferbuilder.pos(p1.x, p2.y, getBlitOffset()).endVertex();
-		bufferbuilder.pos(p2.x, p2.y, getBlitOffset()).endVertex();
-		bufferbuilder.pos(p2.x, p1.y, getBlitOffset()).endVertex();
-		bufferbuilder.pos(p1.x, p1.y, getBlitOffset()).endVertex();
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		c.draw2DRect(bufferbuilder, p1, p2);
 		tessellator.draw();
-		RenderSystem.enableTexture();
-		
-		Color4f.WHITE.apply();
+		RenderSystem.enableTexture();		
 		RenderSystem.disableBlend();
 	}
 

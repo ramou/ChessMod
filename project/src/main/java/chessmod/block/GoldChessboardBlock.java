@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 import chessmod.client.gui.entity.GoldChessboardGui;
 import chessmod.init.ModTileEntityTypes;
 import chessmod.tileentity.ChessboardTileEntity;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -16,8 +15,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GoldChessboardBlock extends ChessboardBlock {
-	public GoldChessboardBlock(Properties properties) {
-		super(properties);
+	public GoldChessboardBlock() {
+		super();
 	}
 	
 	@Nullable

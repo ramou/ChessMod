@@ -6,15 +6,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Preconditions;
-import chessmod.block.GoldChessboardBlock;
-import chessmod.block.WoodChessboardBlock;
+
 import chessmod.init.ModBlocks;
 import chessmod.init.ModItemGroups;
 import chessmod.tileentity.GoldChessboardTileEntity;
 import chessmod.tileentity.WoodChessboardTileEntity;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
@@ -30,19 +27,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 public class ModEventSubscriber {
 	private static final Logger LOGGER = LogManager.getLogger(ChessMod.MODID + " Mod Event Subscriber");
 	
-	/**
-	 * This method will be called by Forge when it is time for the mod to register its Blocks.
-	 * This method will always be called before the Item registry method.
-	 */
-	@SubscribeEvent
-	public static void onRegisterBlocks(final RegistryEvent.Register<Block> event) {
-		// Register all your blocks inside this registerAll call		
-		event.getRegistry().registerAll(
-				setup(new WoodChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "wood_chessboard"),
-				setup(new GoldChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "gold_chessboard")
-		);
-		LOGGER.debug("Registered Blocks");
-	}
+
 	
 	/**
 	 * This method will be called by Forge when it is time for the mod to register its Items.
