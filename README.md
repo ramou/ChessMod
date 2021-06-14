@@ -13,7 +13,7 @@ So many things to take us to a solid 1.0. Lots of cool features suggested by the
 Focus on low-level mechanics for the chessboard.
  * [ ] Finish the board heirarchy [18]
   * [ ] This means the tournament board (including [28])
-  * [ ] This means bound boards (linking baords at a distance, ender pearls)
+  * [ ] This means bound boards (linking boards at a distance, ender pearls)
   * [ ] This means a Chesses board (with no Chesses)
   * [ ] This means an AI board (with no AI)
 
