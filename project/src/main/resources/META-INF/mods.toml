@@ -19,8 +19,7 @@ version="1.16.5-0.610" #mandatory
  # A display name for the mod
 displayName="Chess Mod" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-#updateJSONURL="https://github.com/ramou/ChessMod/blob/1.16.5/project/mod/update.json?raw=true"
-updateJSONURL="http://enurai.encs.concordia.ca/mc/update.json"
+updateJSONURL="https://raw.githubusercontent.com/ramou/ChessMod/1.16.5/project/mod/update.json"
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://www.curseforge.com/minecraft/mc-mods/chessmod" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
