@@ -122,8 +122,11 @@ public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardT
 	}
 
 	private void drawKnight(int bx, int bz, boolean flip, MatrixStack matrixStackIn, IVertexBuilder bufferbuilder, int combinedLightIn, int combinedOverlayIn) {
-		drawPiece(0.02f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, 0, 0, 0);        
-		drawPiece(0.02f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, 0.02*((flip)?-1:1), 0.04, 0);
+		float x = flip?0.01f:-0.01f;
+		float z = flip?-0.01f:0.01f;
+		
+		drawPiece(0.02f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, 0, z);        
+		drawPiece(0.02f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, -x, 0.04, -z);	
 	}
 	
 	private void drawRook(int bx, int bz, MatrixStack matrixStackIn, IVertexBuilder bufferbuilder, int combinedLightIn, int combinedOverlayIn) {

@@ -9,6 +9,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(ChessMod.MODID)
 public final class ModTileEntityTypes {
-	public static final TileEntityType<WoodChessboardTileEntity> WOOD_CHESSBOARD = ModUtil._null();
-	public static final TileEntityType<WoodChessboardTileEntity> GOLD_CHESSBOARD = ModUtil._null();
+	public static final TileEntityType<WoodChessboardTileEntity> wood_chessboard = ModUtil._null();
+	public static final TileEntityType<WoodChessboardTileEntity> gold_chessboard = ModUtil._null();
 }

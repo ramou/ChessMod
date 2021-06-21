@@ -23,7 +23,7 @@ public class GoldChessboardBlock extends ChessboardBlock {
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
 		// Always use TileEntityType#create to allow registry overrides to work.
-		return ModTileEntityTypes.GOLD_CHESSBOARD.create();
+		return ModTileEntityTypes.gold_chessboard.create();
 	}
 	
 	@OnlyIn(Dist.CLIENT)

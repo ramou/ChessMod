@@ -77,12 +77,12 @@ public class ModEventSubscriber {
 				setup(
 						TileEntityType.Builder.create(
 								WoodChessboardTileEntity::new, 
-								ModBlocks.WOOD_CHESSBOARD
+								ModBlocks.wood_chessboard
 							).build(null), "wood_chessboard"),
 				setup(
 						TileEntityType.Builder.create(
 								GoldChessboardTileEntity::new, 
-								ModBlocks.GOLD_CHESSBOARD
+								ModBlocks.gold_chessboard
 							).build(null), "gold_chessboard")
 		);
 		LOGGER.debug("Registered TileEntityTypes");

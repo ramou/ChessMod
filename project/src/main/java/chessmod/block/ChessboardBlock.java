@@ -47,7 +47,6 @@ public abstract class ChessboardBlock extends GlassBlock {
 		return ActionResultType.PASS;
 	}
 	
-	
 	protected abstract void openGui(final World worldIn, final BlockPos pos);
 
 }

@@ -21,8 +21,8 @@ public class ChessMod {
 	
 
 	private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
-	public static final RegistryObject<Block> WOOD_CHESSBOARD = BLOCKS.register("wood_chessboard", () -> new WoodChessboardBlock());
-	public static final RegistryObject<Block> GOLD_CHESSBOARD = BLOCKS.register("gold_chessboard", () -> new GoldChessboardBlock());
+	public static final RegistryObject<Block> wood_chessboard = BLOCKS.register("wood_chessboard", () -> new WoodChessboardBlock());
+	public static final RegistryObject<Block> gold_chessboard = BLOCKS.register("gold_chessboard", () -> new GoldChessboardBlock());
 	
 
 	public ChessMod() {

@@ -73,15 +73,15 @@ public class ChessPlay {
 								SoundEvent sound = null;
 								if(board.pieceAt(m.getSource()) instanceof Knight) {
 									if(board.pieceAt(m.getTarget()) == null) {
-										sound = ModSounds.placePiece;
+										sound = ModSounds.place_piece;
 									} else {
-										sound = ModSounds.placePieceTake;
+										sound = ModSounds.place_piece_take;
 									}
 								} else {
 									if(board.pieceAt(m.getTarget()) == null) {
-										sound = ModSounds.slidePiece;
+										sound = ModSounds.slide_piece;
 									} else {
-										sound = ModSounds.slidePieceTake;
+										sound = ModSounds.slide_piece_take;
 									}
 								}
 
