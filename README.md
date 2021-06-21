@@ -11,11 +11,11 @@ So many things to take us to a solid 1.0. Lots of cool features suggested by the
 
 ### 0.7
 Focus on low-level mechanics for the chessboard.
- * [ ] Finish the board heirarchy [18]
-  * [ ] This means the tournament board (including [28])
-  * [ ] This means bound boards (linking boards at a distance, ender pearls)
-  * [ ] This means a Chesses board (with no Chesses)
-  * [ ] This means an AI board (with no AI)
+ * [ ] Finish the board heirarchy [13]
+  * [ ] This means the tournament board [49]
+  * [ ] This means bound boards [66] (linking boards at a distance, ender pearls)
+  * [ ] This means a Chesses board [67] (with no Chesses)
+  * [ ] This means an AI board [68] (with no AI)
 
 ### 0.8
 Focus on feedback, core visuals and optimizing the code/textures around visuals
@@ -91,4 +91,8 @@ I'll post these as I find them or they're brought to my attention:
 [41]: https://github.com/ramou/ChessMod/issues/41
 [42]: https://github.com/ramou/ChessMod/issues/42
 [43]: https://github.com/ramou/ChessMod/issues/43
+[49]: https://github.com/ramou/ChessMod/issues/49
+[66]: https://github.com/ramou/ChessMod/issues/66
+[67]: https://github.com/ramou/ChessMod/issues/67
+[68]: https://github.com/ramou/ChessMod/issues/68
  
