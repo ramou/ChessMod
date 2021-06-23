@@ -85,6 +85,7 @@ public abstract class ChessboardTileEntity extends TileEntity {
 	}
 
 	@Nonnull
+	@Override
 	public CompoundNBT getUpdateTag() {
 		CompoundNBT tag = super.getUpdateTag();
 		this.write(tag);

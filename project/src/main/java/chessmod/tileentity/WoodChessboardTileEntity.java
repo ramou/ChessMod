@@ -9,7 +9,9 @@ import net.minecraftforge.registries.ObjectHolder;
 @Mod.EventBusSubscriber(modid = ChessMod.MODID)
 public class WoodChessboardTileEntity extends ChessboardTileEntity{
 	
-	@ObjectHolder(ChessMod.MODID+ ":" + "woodchessboard") public static TileEntityType<WoodChessboardTileEntity> TYPE;
+	@ObjectHolder(ChessMod.MODID+ ":" + "wood_chessboard") 
+	public static TileEntityType<WoodChessboardTileEntity> TYPE;
+	
 	public WoodChessboardTileEntity(TileEntityType<?> type) {
 		super(type);
 	}

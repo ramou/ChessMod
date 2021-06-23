@@ -34,5 +34,5 @@ public class GoldChessboardBlock extends ChessboardBlock {
 			Minecraft.getInstance().displayGuiScreen(new GoldChessboardGui((ChessboardTileEntity)tileEntity));
 		}
 	}
-
+	
 }
