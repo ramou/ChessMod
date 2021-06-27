@@ -10,5 +10,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModBlocks {
 	public static final Block wood_chessboard = ModUtil._null();
 	public static final Block gold_chessboard = ModUtil._null();
+	public static final Block chesses_chessboard = ModUtil._null();
+	public static final Block ai_chessboard = ModUtil._null();
 	
 }

@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"": {
+			"model": "chessmod:block/chesses_chessboard"
+		}
+	}
+}

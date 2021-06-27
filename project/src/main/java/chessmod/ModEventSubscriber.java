@@ -9,6 +9,8 @@ import com.google.common.base.Preconditions;
 
 import chessmod.init.ModBlocks;
 import chessmod.init.ModItemGroups;
+import chessmod.tileentity.AIChessboardTileEntity;
+import chessmod.tileentity.ChessesChessboardTileEntity;
 import chessmod.tileentity.GoldChessboardTileEntity;
 import chessmod.tileentity.WoodChessboardTileEntity;
 import net.minecraft.block.Block;
@@ -83,7 +85,17 @@ public class ModEventSubscriber {
 						TileEntityType.Builder.create(
 								GoldChessboardTileEntity::new, 
 								ModBlocks.gold_chessboard
-							).build(null), "gold_chessboard")
+							).build(null), "gold_chessboard"),
+				setup(
+						TileEntityType.Builder.create(
+								ChessesChessboardTileEntity::new, 
+								ModBlocks.chesses_chessboard
+							).build(null), "chesses_chessboard"),
+				setup(
+						TileEntityType.Builder.create(
+								AIChessboardTileEntity::new, 
+								ModBlocks.ai_chessboard
+							).build(null), "ai_chessboard")
 		);
 		LOGGER.debug("Registered TileEntityTypes");
 	}

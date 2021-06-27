@@ -3,7 +3,7 @@
 	"textures": {
 		"particle": "minecraft:block/gold_block",
 		"texture": "chessmod:block/chessboardtop",
-		"stand": "minecraft:block/gold_block"
+		"stand": "minecraft:block/bone_block_side"
 	},
 	"elements": [ 	 
 		{

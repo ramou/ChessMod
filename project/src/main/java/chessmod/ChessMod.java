@@ -3,6 +3,8 @@ package chessmod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import chessmod.block.AIChessboardBlock;
+import chessmod.block.ChessesChessboardBlock;
 import chessmod.block.GoldChessboardBlock;
 import chessmod.block.WoodChessboardBlock;
 import chessmod.common.network.PacketHandler;
@@ -23,6 +25,8 @@ public class ChessMod {
 	private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
 	public static final RegistryObject<Block> wood_chessboard = BLOCKS.register("wood_chessboard", () -> new WoodChessboardBlock());
 	public static final RegistryObject<Block> gold_chessboard = BLOCKS.register("gold_chessboard", () -> new GoldChessboardBlock());
+	public static final RegistryObject<Block> chesses_chessboard = BLOCKS.register("chesses_chessboard", () -> new ChessesChessboardBlock());
+	public static final RegistryObject<Block> ai_chessboard = BLOCKS.register("ai_chessboard", () -> new AIChessboardBlock());
 	
 
 	public ChessMod() {
