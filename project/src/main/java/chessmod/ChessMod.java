@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import chessmod.block.AIChessboardBlock;
 import chessmod.block.ChessesChessboardBlock;
 import chessmod.block.GoldChessboardBlock;
+import chessmod.block.PuzzleChessboardBlock;
 import chessmod.block.WoodChessboardBlock;
 import chessmod.common.network.PacketHandler;
 import net.minecraft.block.Block;
@@ -27,6 +28,7 @@ public class ChessMod {
 	public static final RegistryObject<Block> gold_chessboard = BLOCKS.register("gold_chessboard", () -> new GoldChessboardBlock());
 	public static final RegistryObject<Block> chesses_chessboard = BLOCKS.register("chesses_chessboard", () -> new ChessesChessboardBlock());
 	public static final RegistryObject<Block> ai_chessboard = BLOCKS.register("ai_chessboard", () -> new AIChessboardBlock());
+	public static final RegistryObject<Block> puzzle_chessboard = BLOCKS.register("puzzle_chessboard", () -> new PuzzleChessboardBlock());
 	
 
 	public ChessMod() {

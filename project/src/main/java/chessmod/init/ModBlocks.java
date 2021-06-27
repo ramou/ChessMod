@@ -12,5 +12,6 @@ public class ModBlocks {
 	public static final Block gold_chessboard = ModUtil._null();
 	public static final Block chesses_chessboard = ModUtil._null();
 	public static final Block ai_chessboard = ModUtil._null();
+	public static final Block puzzle_chessboard = ModUtil._null();
 	
 }

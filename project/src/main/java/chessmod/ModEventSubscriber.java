@@ -12,6 +12,7 @@ import chessmod.init.ModItemGroups;
 import chessmod.tileentity.AIChessboardTileEntity;
 import chessmod.tileentity.ChessesChessboardTileEntity;
 import chessmod.tileentity.GoldChessboardTileEntity;
+import chessmod.tileentity.PuzzleChessboardTileEntity;
 import chessmod.tileentity.WoodChessboardTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -95,7 +96,12 @@ public class ModEventSubscriber {
 						TileEntityType.Builder.create(
 								AIChessboardTileEntity::new, 
 								ModBlocks.ai_chessboard
-							).build(null), "ai_chessboard")
+							).build(null), "ai_chessboard"),
+				setup(
+						TileEntityType.Builder.create(
+								PuzzleChessboardTileEntity::new, 
+								ModBlocks.puzzle_chessboard
+							).build(null), "puzzle_chessboard")
 		);
 		LOGGER.debug("Registered TileEntityTypes");
 	}

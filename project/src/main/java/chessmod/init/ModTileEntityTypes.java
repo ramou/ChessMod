@@ -15,4 +15,5 @@ public final class ModTileEntityTypes {
 	public static final TileEntityType<GoldChessboardTileEntity> gold_chessboard = ModUtil._null();
 	public static final TileEntityType<ChessesChessboardTileEntity> chesses_chessboard = ModUtil._null();
 	public static final TileEntityType<AIChessboardTileEntity> ai_chessboard = ModUtil._null();
+	public static final TileEntityType<AIChessboardTileEntity> puzzle_chessboard = ModUtil._null();
 }

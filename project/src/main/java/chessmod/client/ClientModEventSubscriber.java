@@ -8,6 +8,7 @@ import chessmod.client.render.tileentity.ChessboardTileEntityRenderer;
 import chessmod.tileentity.AIChessboardTileEntity;
 import chessmod.tileentity.ChessesChessboardTileEntity;
 import chessmod.tileentity.GoldChessboardTileEntity;
+import chessmod.tileentity.PuzzleChessboardTileEntity;
 import chessmod.tileentity.WoodChessboardTileEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,6 +39,7 @@ public final class ClientModEventSubscriber {
 		ClientRegistry.bindTileEntityRenderer(GoldChessboardTileEntity.TYPE, ChessboardTileEntityRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ChessesChessboardTileEntity.TYPE, ChessboardTileEntityRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(AIChessboardTileEntity.TYPE, ChessboardTileEntityRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(PuzzleChessboardTileEntity.TYPE, ChessboardTileEntityRenderer::new);
 		LOGGER.debug("Registered TileEntity Renderers");
 
 	}
