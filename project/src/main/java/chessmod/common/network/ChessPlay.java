@@ -1,8 +1,12 @@
 package chessmod.common.network;
 
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 import chessmod.ChessMod;
+import chessmod.common.capability.elo.Elo;
+import chessmod.common.capability.elo.EloCapability;
+import chessmod.common.capability.elo.IElo;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.InvalidMoveException;
@@ -10,7 +14,6 @@ import chessmod.common.dom.model.chess.piece.Knight;
 import chessmod.init.ModSounds;
 import chessmod.tileentity.ChessboardTileEntity;
 import chessmod.tileentity.GoldChessboardTileEntity;
-
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
@@ -88,6 +91,10 @@ public class ChessPlay {
 								try { //On GoldChessBoard confirm that it is a valid move!
 									if (tileEntity instanceof GoldChessboardTileEntity) {
 										board.moveSafely(m);
+										if(board.getCheckMate() != null) {
+											Logger.getGlobal().info(ctx.get().getSender().getName().getString() + " has won a chess game with themselves!");
+											Elo.updateElo(ctx.get().getSender(), ctx.get().getSender(), true);
+										}
 									} else {
 										board.move(m);
 									}

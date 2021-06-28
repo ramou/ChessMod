@@ -151,6 +151,7 @@ public class GoldChessboardGui extends ChessboardGUI {
 					
 					try {
 						possibleMoves.addAll(targetPiece.getAllowedMoves(b));
+						System.out.println(targetPiece + " has moves: " + possibleMoves);
 					} catch (InvalidMoveException e) {
 						ChessMod.LOGGER.debug(e.getMessage());
 						possibleMoves.clear();

@@ -8,10 +8,12 @@ import chessmod.block.ChessesChessboardBlock;
 import chessmod.block.GoldChessboardBlock;
 import chessmod.block.PuzzleChessboardBlock;
 import chessmod.block.WoodChessboardBlock;
+import chessmod.common.capability.elo.EloCapability;
 import chessmod.common.network.PacketHandler;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -35,6 +37,11 @@ public class ChessMod {
 		LOGGER.debug("So, you want to play some chesses?");
 		BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
 		PacketHandler.init();
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupAdditional);
 	}
+	
+    public void setupAdditional (final FMLCommonSetupEvent event){
+        EloCapability.register();
+    }
 	
 }

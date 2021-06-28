@@ -121,5 +121,9 @@ public class Pawn extends Piece {
 		return Move.createPawnPromotion(this, t, p);
 	}
 	
-
+	@Override
+	public boolean hasMoved() {
+		return getSide().equals(Side.BLACK)?getPosition().y != 6:getPosition().y != 1;
+	}
+	
 }
