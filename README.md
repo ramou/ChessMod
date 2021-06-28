@@ -14,8 +14,9 @@ Focus on low-level mechanics for the chessboard.
  * [ ] Finish the board heirarchy [13]
   * [ ] This means the tournament board [49]
   * [ ] This means bound boards [66] (linking boards at a distance, ender pearls)
-  * [ ] This means a Chesses board [67] (with no Chesses)
-  * [ ] This means an AI board [68] (with no AI)
+  * [x] This means a Chesses board [67] (with no Chesses)
+  * [x] This means an AI board [68] (with no AI)
+  * [x] This means a Puzzle board [43] (with no Puzzles)
 
 ### 0.8
 Focus on feedback, core visuals and optimizing the code/textures around visuals
@@ -41,7 +42,7 @@ Focus on extending the chess universe
  
 ### 1.2
 Focus on extending the chess experience
- * [ ] Add Chess Challenges [43]
+ * [ ] Add initial Chess Challenges (e.g. [84])
  * [ ] Add Achievements Tree
  
 ### 1.3
@@ -95,4 +96,5 @@ I'll post these as I find them or they're brought to my attention:
 [66]: https://github.com/ramou/ChessMod/issues/66
 [67]: https://github.com/ramou/ChessMod/issues/67
 [68]: https://github.com/ramou/ChessMod/issues/68
+[84]: https://github.com/ramou/ChessMod/issues/84
  
