@@ -50,6 +50,8 @@ jobs:
       # run tests!
       - run: 
           command: |
+            cd project
+            chmod 700 gradlew
             echo $PWD
             chmod 700 gradlew
             ./gradlew --version
