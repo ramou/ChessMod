@@ -27,7 +27,6 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -41,7 +40,7 @@ jobs:
 
       - save_cache:
           paths:
-            - ~/.gradle
+            - ~/project
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
