@@ -36,6 +36,6 @@ jobs:
           command: |
             cd project
             echo $PWD
-            gradle --version
-            gradle dependencies
-            gradle test
+            gradlew --version
+            gradlew dependencies
+            gradlew test
