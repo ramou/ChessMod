@@ -1,6 +1,6 @@
 # Java Gradle CircleCI 2.0 configuration file
 # See: https://circleci.com/docs/2.0/language-java/
-version: 2
+version: 2.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -10,7 +10,7 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
       # specify the version you desire here
-      - image: circleci/openjdk:8.0.272
+      - image: circleci/openjdk:8-jdk
       
 
       # Specify service dependencies here if necessary
@@ -35,4 +35,5 @@ jobs:
       - run: 
           command: |
             cd project
+            gradle dependencies
             gradle test
