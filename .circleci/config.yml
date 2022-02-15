@@ -36,6 +36,7 @@ jobs:
           command: |
             cd project
             echo $PWD
+            chmod 700 gradlew
             ./gradlew --version
             ./gradlew dependencies
             ./gradlew test
