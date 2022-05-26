@@ -60,9 +60,10 @@ Use the right version of forge! I really must change my structure so it doesn't 
 === building jar ===
 I had to manually set my `JAVA_HOME` to a JDK since it was defaulting to the JRE. I don't know how to make it pull this from eclipse like seems sensible, so I did:
 ```
-$Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_281"
-
+$Env:JAVA_HOME = "C:\Program Files\Java\jdk-17.0.1"
 ```
+Note that you do need Java 17 for MC 1.18.2. I heard 16 works, but why bother checking?
+
 
 == Chess ==
 And of course, what I'm basing the actual chess off:
