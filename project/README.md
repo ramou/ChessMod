@@ -1,8 +1,12 @@
 = My First Crappy Mod =
 
 
-The biggest fix I need to do often is run this:
+The biggest fix I need to do often is run these (I'm sure there's some redundancy):
 ```
+.\gradlew clean
+.\gradlew cleanEclipse
+.\gradlew --refresh-dependencies
+.\gradlew eclipse
 .\gradlew genEclipseRuns
 ```
 in the workspace directory.
