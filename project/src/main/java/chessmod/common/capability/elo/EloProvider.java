@@ -1,78 +1,65 @@
 package chessmod.common.capability.elo;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class EloProvider implements ICapabilityProvider, INBTSerializable<INBT> {
+public class EloProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
-    protected final Capability<IElo> capability;
-    protected final Direction facing;
-    protected final IElo instance;
-    protected final LazyOptional<IElo> lazyOptional;
+    protected static Capability<Elo> capability;
+    protected Elo instance = null;
+    protected final LazyOptional<Elo> lazyOptional = LazyOptional.of(this::createElo);
 
-	protected EloProvider(final Capability<IElo> capability, @Nullable final Direction facing, @Nullable final IElo instance) {
-		super();
-		this.capability = capability;
-		this.facing = facing;
-		this.instance = instance;
-		
-        if (this.instance != null) {
-            lazyOptional = LazyOptional.of(() -> this.instance);
-        } else {
-            lazyOptional = LazyOptional.empty();
-        }
-	}
-
-	@Override
-	public INBT serializeNBT() {
-		final IElo instance = getInstance();
-
+    @Nonnull
+    private Elo createElo() {
         if (instance == null) {
-            return null;
+        	instance = new Elo(1000);
         }
-        if(getCapability() == null)
-            return new CompoundNBT();
-        return getCapability().writeNBT(instance, getFacing());
-	}
+        return instance;
+    }
 
-	@Override
-	public void deserializeNBT(INBT nbt) {
-        final IElo instance = getInstance();
-
-        if (instance == null) {
-            return;
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
+        if (cap == capability) {
+            return lazyOptional.cast();
         }
-
-        getCapability().readNBT(instance, getFacing(), nbt);
-	}
+        return LazyOptional.empty();
+    }
+	
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        return getCapability(cap);
+    }
+	
+	
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        createElo().saveNBTData(nbt);
+        return nbt;
+    }
 
     @Override
-    public <T> LazyOptional<T> getCapability(final Capability<T> capability, @Nullable final Direction facing) {
-        if(getCapability() == null)
-            return LazyOptional.empty();
-        return getCapability().orEmpty(capability, lazyOptional);
+    public void deserializeNBT(CompoundTag nbt) {
+    	createElo().loadNBTData(nbt);
     }
 
 
-    public final Capability<IElo> getCapability() {
+    public final Capability<Elo> getCapability() {
         return capability;
     }
 
 
     @Nullable
-    public Direction getFacing() {
-        return facing;
-    }
-
-    @Nullable
-    public final IElo getInstance() {
+    public final Elo getInstance() {
         return instance;
     }
     
