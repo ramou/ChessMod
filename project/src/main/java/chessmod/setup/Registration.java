@@ -106,6 +106,8 @@ public class Registration {
         .add();
 		//PacketHandler.HANDLER.registerMessage(id++, ChessPlay.class, ChessPlay::encode, ChessPlay::decode, ChessPlay.Handler::handle);
 		//PacketHandler.HANDLER.registerMessage(id++, ArbitraryPlacement.class, ArbitraryPlacement::encode, ArbitraryPlacement::decode, ArbitraryPlacement.Handler::handle);
+        
+        
     }
 	
     // Conveniance function: Take a RegistryObject<Block> and make a corresponding RegistryObject<Item> from it
