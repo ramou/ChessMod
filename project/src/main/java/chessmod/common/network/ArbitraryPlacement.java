@@ -22,7 +22,10 @@ public class ArbitraryPlacement {
 	private final double x;
 	private final double y;
 	private final double z;
-	
+
+	public int getPiece() {
+		return piece;
+	}
 
 	public ArbitraryPlacement(Piece piece, BlockPos pos) {
 		this(piece.getPosition().serialize(), piece.serialize(), pos.getX(), pos.getY(), pos.getZ());

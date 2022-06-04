@@ -7,8 +7,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.Move;
+import chessmod.common.dom.model.chess.PieceInitializer;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Point.InvalidPoint;
+import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.common.network.ArbitraryPlacement;
@@ -115,6 +117,16 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	}
 	
 	protected void notifyServerOfArbitraryPlacement(Piece pi) {
-		PacketHandler.sendToServer(new ArbitraryPlacement(pi, board.getBlockPos()));
+		ArbitraryPlacement move = new ArbitraryPlacement(pi, board.getBlockPos());
+		
+		//When running on a local server the client update doesn't happen till
+		//you "unpause" by closing the gui, so this fudges things.
+		if(getMinecraft().isLocalServer()) {
+			Piece piece = PieceInitializer.create(pi.getPosition(), move.getPiece());
+			board.getBoard().setPiece(piece, pi.getPosition());
+		}
+
+		
+		PacketHandler.sendToServer(move);
 	}
 }

@@ -45,6 +45,7 @@ public class GoldChessboardGui extends ChessboardGUI {
 	
 	@Override
 	public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+				
 	    //Draw the background
 		drawBackground(poseStack);
 		showTurnColor(poseStack);
@@ -146,7 +147,6 @@ public class GoldChessboardGui extends ChessboardGUI {
 					
 					try {
 						possibleMoves.addAll(targetPiece.getAllowedMoves(b));
-						System.out.println(targetPiece + " has moves: " + possibleMoves);
 					} catch (InvalidMoveException e) {
 						ChessMod.LOGGER.debug(e.getMessage());
 						possibleMoves.clear();

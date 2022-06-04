@@ -1,8 +1,11 @@
 package chessmod.blockentity;
 
+import com.google.j2objc.annotations.ReflectionSupport.Level;
+
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.board.BoardFactory;
 import chessmod.common.dom.model.chess.board.SerializedBoard;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -23,7 +26,6 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 		
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void onLoad() {
 		super.onLoad();
@@ -45,6 +47,7 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 
 	@Override
 	protected void saveAdditional(CompoundTag pTag) {
+		super.saveAdditional(pTag);
 		SerializedBoard sb = SerializedBoard.serialize(board);
 		pTag.putLong("piece_mask", sb.piece_mask);
 		pTag.putLongArray("pieces", sb.pieces);
@@ -84,18 +87,17 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 
 	@Override
 	public void handleUpdateTag(CompoundTag tag) {
-		
+		super.handleUpdateTag(tag);
 		load(tag);
 	}
 
 
 	public void notifyClientOfBoardChange() {
 		ClientboundBlockEntityDataPacket packet = getUpdatePacket();
-		System.out.println("Setting stuff as changed");
 		setChanged();
 		if (packet != null) {
-			
 			getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL_IMMEDIATE);
+			getLevel().blockEntityChanged(getBlockPos());
 		}
 	}
 

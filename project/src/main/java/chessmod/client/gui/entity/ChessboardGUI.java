@@ -103,7 +103,7 @@ public abstract class ChessboardGUI extends Screen {
 		this.board = board;
 	}
 
-
+	
 	@Override
 	public Component getNarrationMessage() {
 		return new TextComponent("");
@@ -130,6 +130,12 @@ public abstract class ChessboardGUI extends Screen {
 	}
 	
 	protected void notifyServerOfMove(Move m) {
+		//When running on a local server the client update doesn't happen till
+		//you "unpause" by closing the gui, so this fudges things.
+		if(getMinecraft().isLocalServer()) {
+			m.doMove(board.getBoard());
+		}
+		
 		PacketHandler.sendToServer(new ChessPlay(m.serialize(), board.getBlockPos()));
 	}
 
