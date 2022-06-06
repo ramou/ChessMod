@@ -23,7 +23,6 @@ public class GoldChessboardGui extends ChessboardGUI {
 
 	public GoldChessboardGui(ChessboardBlockEntity board) {
 		super(board);
-		
 
 		//I find that if I don't do this, Pieces
 		//don't get loaded and pieceMap doesn't get filled.

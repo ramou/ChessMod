@@ -1,11 +1,8 @@
 package chessmod.blockentity;
 
-import com.google.j2objc.annotations.ReflectionSupport.Level;
-
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.board.BoardFactory;
 import chessmod.common.dom.model.chess.board.SerializedBoard;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -15,15 +12,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class ChessboardBlockEntity extends BlockEntity {
 	protected Board board = BoardFactory.createBoard();
 	
 	public Board getBoard() {
 		return board;
-		
 	}
 
 	@Override

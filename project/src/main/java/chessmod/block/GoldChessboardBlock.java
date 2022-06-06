@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GoldChessboardBlock extends ChessboardBlock {
 	public GoldChessboardBlock() {
-		super();
+		super();	
 	}
 	
 	@Nullable
@@ -32,5 +32,6 @@ public class GoldChessboardBlock extends ChessboardBlock {
 			Minecraft.getInstance().setScreen(new GoldChessboardGui((ChessboardBlockEntity)blockEntity));
 		}
 	}
+
 	
 }

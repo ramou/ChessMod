@@ -5,7 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 
+import chessmod.block.ChessboardBlock;
 import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.blockentity.GoldChessboardBlockEntity;
 import chessmod.client.gui.entity.ChessboardGUI;
@@ -14,13 +16,11 @@ import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.setup.Registration;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<ChessboardBlockEntity> {
@@ -94,16 +94,14 @@ public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<Chessb
 	@Override
 	public void render(ChessboardBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack,
 			MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-        
-        
-        
-        
+
 		if(pBlockEntity instanceof GoldChessboardBlockEntity) {
 	        //Draw current-turn indicator:
 	        showTurnColor(pBufferSource, pPoseStack, pBlockEntity.getBoard().getCurrentPlayer(), pPackedLight, pPackedOverlay);
 		}
 
         pPoseStack.pushPose();
+        rotateForBoardFacing(pBlockEntity, pPoseStack);
         VertexConsumer bufferbuilder = pBufferSource.getBuffer(RenderType.entityCutout(black));
         RenderSystem.setShaderTexture(0, black);
          for(int by = 0; by < 8; by++) { 
@@ -136,6 +134,7 @@ public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<Chessb
 
          
          pPoseStack.pushPose();
+         rotateForBoardFacing(pBlockEntity, pPoseStack);
          bufferbuilder = pBufferSource.getBuffer(RenderType.entityCutout(white));
          RenderSystem.setShaderTexture(0, white);
          
@@ -169,6 +168,29 @@ public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<Chessb
 
          pPoseStack.popPose();
          
+	}
+
+	private void rotateForBoardFacing(ChessboardBlockEntity pBlockEntity, PoseStack pPoseStack) {
+		switch (pBlockEntity.getBlockState().getValue(ChessboardBlock.FACING)) {
+			case UP  -> {//We should never have this cse, but it'll look like SOUTH if we do  
+	        }
+			case DOWN  -> {//We should never have this cse, but it'll look like SOUTH if we do  
+	        }
+	        case NORTH -> { 
+	        	pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
+	        	pPoseStack.translate(-1.0D, 0.0D, -1.0D);
+	        }
+	        case EAST ->  { 
+	        	pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90.0F));
+	        	pPoseStack.translate(-1.0D, 0.0D, 0.0D);
+	        }
+	        case SOUTH -> {  
+	        }
+	        case WEST ->  { 
+	        	pPoseStack.mulPose(Vector3f.YP.rotationDegrees(270.0F));
+	        	pPoseStack.translate(0.0D, 0.0D, -1.0D);
+	        }
+        }
 	}
 	
 	
