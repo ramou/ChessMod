@@ -14,14 +14,14 @@ Focus on low-level mechanics for the chessboard.
  * [ ] Finish the board heirarchy [13]
   * [ ] This means the tournament board [49]
   * [ ] This means bound boards [66] (linking boards at a distance, ender pearls)
-  * [x] This means a Chesses board [67] (with no Chesses)
-  * [x] This means an AI board [68] (with no AI)
-  * [x] This means a Puzzle board [43] (with no Puzzles)
+  * [x] This means a Chesses board ~[67]~ (with no Chesses)
+  * [x] This means an AI board ~[68]~ (with no AI)
+  * [x] This means a Puzzle board ~[43]~ (with no Puzzles)
 
 ### 0.8
 Focus on feedback, core visuals and optimizing the code/textures around visuals
  * [ ] Make the Patchouli book for chesses [26]
- * [ ] Add orientation to the board [23] [24]
+ * [ ] Add orientation to the board ~[23]~ [24]
  * [ ] Add mechanism for free-piece setup [32]
  * [ ] Visuals code cleanup [12] [9] (and maybe [2])
 
