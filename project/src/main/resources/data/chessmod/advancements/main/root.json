@@ -19,10 +19,17 @@
       "conditions": {
         "items": [
           {
-            "item": "chessmod:wood_chessboard"
+            "items": [
+             "chessmod:wood_chessboard"
+             ]
           }
         ]
       }
     }
-  }
+  },
+  "requirements": [
+    [
+      "board"
+    ]
+  ]
 }
