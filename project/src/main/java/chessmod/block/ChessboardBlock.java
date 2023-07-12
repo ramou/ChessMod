@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.Material;
+//import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -30,7 +30,7 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 	
 	public ChessboardBlock() {
-		super(BlockBehaviour.Properties.of(Material.STONE));
+		super(BlockBehaviour.Properties.of());
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
 	 
