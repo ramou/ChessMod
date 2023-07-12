@@ -75,16 +75,16 @@ public class Registration {
     
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND=
             SOUNDS.register("slide_piece", 
-            		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "slide_piece")));
+            		() -> new SoundEvent.createVariableRangeEvent(new ResourceLocation(ChessMod.MODID, "slide_piece")));
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_TAKE_SOUND=
             SOUNDS.register("slide_piece_take", 
-            		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "slide_piece_take")));
+            		() -> new SoundEvent.createVariableRangeEvent(new ResourceLocation(ChessMod.MODID, "slide_piece_take")));
 	public static final RegistryObject<SoundEvent> PLACE_PIECE_SOUND=
             SOUNDS.register("place_piece", 
-            		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "place_piece")));
+            		() -> new SoundEvent.createVariableRangeEvent(new ResourceLocation(ChessMod.MODID, "place_piece")));
 	public static final RegistryObject<SoundEvent> PLACE_PIECE_TAKE_SOUND=
             SOUNDS.register("place_piece_take", 
-            		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "place_piece_take")));
+            		() -> new SoundEvent.createVariableRangeEvent(new ResourceLocation(ChessMod.MODID, "place_piece_take")));
 	
 	
 	public static void init() {
