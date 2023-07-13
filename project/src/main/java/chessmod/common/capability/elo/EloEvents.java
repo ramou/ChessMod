@@ -22,7 +22,7 @@ public class EloEvents {
         if (event.isWasDeath()) {
             // We need to copyFrom the capabilities
             event.getOriginal().getCapability(EloProvider.capability).ifPresent(oldStore -> {
-                event.getPlayer().getCapability(EloProvider.capability).ifPresent(newStore -> {
+                event.getEntity().getCapability(EloProvider.capability).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
             });
