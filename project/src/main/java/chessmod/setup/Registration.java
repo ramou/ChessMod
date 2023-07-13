@@ -117,11 +117,9 @@ public class Registration {
         
     }
 
-	//TODO: got rid of the translatetable thing in lieu of a literal...
-	//we should put that back to translatetable.
 	public static final RegistryObject<CreativeModeTab> CHESS_TAB = CREATIVE_MODE_TABS.register("chesstab",
 			() -> CreativeModeTab.builder().icon(() -> new ItemStack(Registration.WOOD_CHESSBOARD.get()))
-					.title(Component.literal("chesstab"))
+					.title(Component.translatable("itemGroup.chessmod"))
 					.displayItems((pParameters, pOutput) -> {
 						pOutput.accept(Registration.WOOD_CHESSBOARD.get());
 						pOutput.accept(Registration.GOLD_CHESSBOARD.get());
