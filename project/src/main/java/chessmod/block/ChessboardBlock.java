@@ -35,7 +35,7 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 	}
 	 
 	@Override
-	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, net.minecraft.core.BlockPos pPos, CollisionContext pContext) {
+	public VoxelShape getVisualShape(BlockState pState, BlockGetter pLevel, net.minecraft.core.BlockPos pPos, CollisionContext pContext) {
 		VoxelShape BOARD = Block.box(0.0D, 12.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 		VoxelShape STAND = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 12.0D, 10.0D);
 		VoxelShape ALL =   Shapes.or(BOARD, STAND);

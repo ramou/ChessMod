@@ -15,6 +15,7 @@ import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -51,7 +52,7 @@ public abstract class ChessboardGUI extends Screen {
 		BLACK_BISHOP(4, Side.BLACK, PieceInitializer.B, 'b', new ResourceLocation(ChessMod.MODID, "textures/gui/bb.png")),
 		BLACK_PAWN(5, Side.BLACK, PieceInitializer.P, 'p', new ResourceLocation(ChessMod.MODID, "textures/gui/bp.png"));
 	
-		public void draw(PoseStack poseStack, ChessboardGUI current, int x, int y) {
+		public void draw(GuiGraphics poseStack, ChessboardGUI current, int x, int y) {
 			current.drawPiece(poseStack, x, y, tile);
 		}
 		
@@ -139,57 +140,57 @@ public abstract class ChessboardGUI extends Screen {
 	}
 
 
-	protected void drawBackground(PoseStack poseStack) {
+	protected void drawBackground(GuiGraphics poseStack) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, background);
 
 		int x1 = (int)(width/2f - 128);
 		int y1 = (int)(height/2f - 128);
-		blit(poseStack, x1, y1, 0, 0, 256, 256);
+		poseStack.blit(background, x1, y1, 0, 0, 256, 256);
 	}
 
 	
-	protected void highlightSelected(PoseStack poseStack) {
+	protected void highlightSelected(GuiGraphics poseStack) {
 		highlightSquare(poseStack, selected, SELECTED);
 	}
 
-	public void highlightSquare(PoseStack poseStack, Point target, ResourceLocation shade) {
+	public void highlightSquare(GuiGraphics poseStack, Point target, ResourceLocation shade) {
 		int x = (int)(width/2f - 128+32+target.x*24);
 		int y = (int)(height/2f - 128 + (32+target.y*24));
 
 		highlightSquare(poseStack, x, y, shade);
 	}
 
-	protected void highlightSquare(PoseStack poseStack, int x, int y, ResourceLocation shade) {
+	protected void highlightSquare(GuiGraphics poseStack, int x, int y, ResourceLocation shade) {
 		highlightSquare(poseStack, x, y, 24, 24, shade);
 	}
 
-	protected void highlightSquare(PoseStack poseStack, int x, int y, int width, int height, ResourceLocation shade) {
+	protected void highlightSquare(GuiGraphics poseStack, int x, int y, int width, int height, ResourceLocation shade) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, shade);
-		blit(poseStack, x, y, width, height, width, height);
+		poseStack.blit(background, x, y, width, height, width, height);
 	}
 
 
-	protected void drawPiece(PoseStack poseStack, int bx, int by, ResourceLocation piece) {
+	protected void drawPiece(GuiGraphics poseStack, int bx, int by, ResourceLocation piece) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, piece);
 		
 		int x1 = (int)(width/2f - 128 + 32 + bx * 24);
 		int y1 = (int)(height/2f - 128 + 32 + by * 24);
 
-		blit(poseStack, x1, y1, 0, 0, 24, 24, 24, 24);
+		poseStack.blit(background, x1, y1, 0, 0, 24, 24, 24, 24);
 	}
 
-	protected void drawSideboardPiece(PoseStack poseStack, TilePiece piece) {
+	protected void drawSideboardPiece(GuiGraphics poseStack, TilePiece piece) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, piece.tile);
 		int x1 = (int)(width/2f - 128+(piece.side.equals(Side.BLACK)?0:16+9*24));
 		int y1 = (int)(height/2f - 128 + 32 + piece.index * 24);
-		blit(poseStack, x1, y1, 0, 0, 24, 24, 24, 24);
+		poseStack.blit(background, x1, y1, 0, 0, 24, 24, 24, 24);
 	}
 
-	protected void drawPieces(PoseStack poseStack) {
+	protected void drawPieces(GuiGraphics poseStack) {
 		Board b = board.getBoard();
 	    for(int by = 0; by < 8; by++) { 
 			for(int bx = 0; bx < 8; bx++) {
