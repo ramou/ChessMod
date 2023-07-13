@@ -78,7 +78,7 @@ public class Registration {
 	public static final RegistryObject<BlockEntityType<PuzzleChessboardBlockEntity>> PUZZLE_CHESSBOARD_BE =
 			BLOCK_ENTITY_TYPES.register("puzzle_chessboard",
 					() -> BlockEntityType.Builder.of(PuzzleChessboardBlockEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
-    
+
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND=
             SOUNDS.register("slide_piece", 
             		() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ChessMod.MODID, "slide_piece")));
