@@ -19,7 +19,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-
+import org.jetbrains.annotations.NotNull;
 
 
 public abstract class ChessboardGUI extends Screen {
@@ -35,7 +35,7 @@ public abstract class ChessboardGUI extends Screen {
 	public static ResourceLocation WHITE = new ResourceLocation(ChessMod.MODID, "textures/gui/shadewhite.png");
 	public static ResourceLocation BLACK = new ResourceLocation(ChessMod.MODID, "textures/gui/shadeblack.png");
 	
-	protected static HashMap<Character, TilePiece> pieceMap = new HashMap<Character, TilePiece>();
+	protected static HashMap<Character, TilePiece> pieceMap = new HashMap<>();
 
 	protected enum TilePiece {
 		WHITE_KING(0, Side.WHITE, PieceInitializer.nmK, 'K', new ResourceLocation(ChessMod.MODID, "textures/gui/wk.png")),
@@ -75,16 +75,12 @@ public abstract class ChessboardGUI extends Screen {
 			return pi.create(p, side);
 		}
 	
-		int index;
-		Side side;
-		char piece;
-		PieceInitializer pi;
-		ResourceLocation tile;
-		
-		public ResourceLocation getTile() {
-			return tile;
-		}
-	
+		final int index;
+		final Side side;
+		final char piece;
+		final PieceInitializer pi;
+		final ResourceLocation tile;
+
 		TilePiece(int i, Side s, PieceInitializer pi, char c, ResourceLocation tile) {
 			this.index=i;
 			this.side=s;
@@ -97,25 +93,15 @@ public abstract class ChessboardGUI extends Screen {
 	}
 
 	public ChessboardGUI(ChessboardBlockEntity board) {
-		super(null);
+		super(Component.empty());
 		background = new ResourceLocation(ChessMod.MODID, "textures/gui/chessboard.png");
 		this.board = board;
 	}
 
 	
 	@Override
-	public Component getNarrationMessage() {
+	public @NotNull Component getNarrationMessage() {
 		return Component.literal("");
-	}
-
-	@Override
-	public boolean shouldCloseOnEsc() {
-		return true;
-	}
-
-	@Override
-	public boolean isPauseScreen() {
-		return true;
 	}
 
 	@Override
@@ -140,9 +126,6 @@ public abstract class ChessboardGUI extends Screen {
 
 
 	protected void drawBackground(GuiGraphics guiGraphics) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, background);
-
 		int x1 = (int)(width/2f - 128);
 		int y1 = (int)(height/2f - 128);
 		guiGraphics.blit(background, x1, y1, 0, 0, 256, 256);
@@ -165,28 +148,20 @@ public abstract class ChessboardGUI extends Screen {
 	}
 
 	protected void highlightSquare(GuiGraphics guiGraphics, int x, int y, int width, int height, ResourceLocation shade) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, shade);
-		guiGraphics.blit(background, x, y, width, height, width, height);
+		guiGraphics.blit(shade, x, y, width, height, width, height);
 	}
 
 
 	protected void drawPiece(GuiGraphics guiGraphics, int bx, int by, ResourceLocation piece) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, piece);
-		
 		int x1 = (int)(width/2f - 128 + 32 + bx * 24);
 		int y1 = (int)(height/2f - 128 + 32 + by * 24);
-
 		guiGraphics.blit(piece, x1, y1, 0, 0, 24, 24, 24, 24);
 	}
 
 	protected void drawSideboardPiece(GuiGraphics guiGraphics, TilePiece piece) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, piece.tile);
 		int x1 = (int)(width/2f - 128+(piece.side.equals(Side.BLACK)?0:16+9*24));
 		int y1 = (int)(height/2f - 128 + 32 + piece.index * 24);
-		guiGraphics.blit(piece.getTile(), x1, y1, 0, 0, 24, 24, 24, 24);
+		guiGraphics.blit(piece.tile, x1, y1, 0, 0, 24, 24, 24, 24);
 	}
 
 	protected void drawPieces(GuiGraphics guiGraphics) {
