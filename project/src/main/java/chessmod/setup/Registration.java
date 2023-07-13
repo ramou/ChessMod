@@ -99,6 +99,7 @@ public class Registration {
         ITEMS.register(bus);
         BLOCK_ENTITY_TYPES.register(bus);
         SOUNDS.register(bus);
+		CREATIVE_MODE_TABS.register(bus);
         int id = 0;
         PacketHandler.HANDLER.messageBuilder(ChessPlay.class, id++, NetworkDirection.PLAY_TO_SERVER)
         .decoder(buf->ChessPlay.decode(buf))
@@ -116,10 +117,11 @@ public class Registration {
         
     }
 
-
-	public static final RegistryObject<CreativeModeTab> CHESS_TAB = CREATIVE_MODE_TABS.register("Chess Tab",
+	//TODO: got rid of the translatetable thing in lieu of a literal...
+	//we should put that back to translatetable.
+	public static final RegistryObject<CreativeModeTab> CHESS_TAB = CREATIVE_MODE_TABS.register("chesstab",
 			() -> CreativeModeTab.builder().icon(() -> new ItemStack(Registration.WOOD_CHESSBOARD.get()))
-					.title(Component.translatable("creativetab.Chess Tab"))
+					.title(Component.literal("chesstab"))
 					.displayItems((pParameters, pOutput) -> {
 						pOutput.accept(Registration.WOOD_CHESSBOARD.get());
 						pOutput.accept(Registration.GOLD_CHESSBOARD.get());
