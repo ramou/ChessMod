@@ -18,7 +18,6 @@ import chessmod.common.network.PacketHandler;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
 
@@ -106,7 +105,7 @@ public abstract class ChessboardGUI extends Screen {
 	
 	@Override
 	public Component getNarrationMessage() {
-		return new TextComponent("");
+		return Component.literal("");
 	}
 
 	@Override
