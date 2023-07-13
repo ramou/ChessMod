@@ -64,8 +64,8 @@ public class ArbitraryPlacement {
 					@Override
 					public void run() {
 
-						Level level = ctx.get().getSender().level;
-						BlockPos pos = new BlockPos(message.x, message.y, message.z);
+						Level level = ctx.get().getSender().level();
+						BlockPos pos = new BlockPos((int) message.x, (int) message.y, (int) message.z);
 						
 						if(level.isLoaded(pos)) {
 							BlockEntity blockEntity = level.getBlockEntity(pos);
