@@ -30,7 +30,7 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 	
 	public ChessboardBlock() {
-		super(BlockBehaviour.Properties.of());
+		super(BlockBehaviour.Properties.of().noOcclusion());
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
 	 
