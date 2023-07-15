@@ -27,8 +27,7 @@ public class ChessMod {
 		ModSetup.setup();
 		Registration.init();
 		IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
-		modbus.addListener(ModSetup::init);
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modbus.addListener(ClientSetup::init));	
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modbus.addListener(ClientSetup::init));
 	}
 
     

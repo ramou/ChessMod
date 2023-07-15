@@ -30,7 +30,6 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import java.util.function.Consumer;
 
 /*
  * Stuart:: Used the tutorial of this as of May 30, 2022
@@ -49,35 +48,40 @@ public class Registration {
 	public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
 			DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ChessMod.MODID);
 
+
 	public static final RegistryObject<Block> WOOD_CHESSBOARD = BLOCKS.register("wood_chessboard", WoodChessboardBlock::new);
-	public static final RegistryObject<Item> WOOD_CHESSBOARD_ITEM = fromBlock(WOOD_CHESSBOARD);
+
 	public static final RegistryObject<BlockEntityType<WoodChessboardBlockEntity>> WOOD_CHESSBOARD_BE = 
 			BLOCK_ENTITY_TYPES.register("wood_chessboard",
 					() -> BlockEntityType.Builder.of(WoodChessboardBlockEntity::new, WOOD_CHESSBOARD.get()).build(null));
 	
 	public static final RegistryObject<Block> GOLD_CHESSBOARD = BLOCKS.register("gold_chessboard", GoldChessboardBlock::new);
-	public static final RegistryObject<Item> GOLD_CHESSBOARD_ITEM = fromBlock(GOLD_CHESSBOARD);
-	public static final RegistryObject<BlockEntityType<GoldChessboardBlockEntity>> GOLD_CHESSBOARD_BE = 
+	public static final RegistryObject<BlockEntityType<GoldChessboardBlockEntity>> GOLD_CHESSBOARD_BE =
 			BLOCK_ENTITY_TYPES.register("gold_chessboard",
 					() -> BlockEntityType.Builder.of(GoldChessboardBlockEntity::new, GOLD_CHESSBOARD.get()).build(null));
 	
 	public static final RegistryObject<Block> CHESSES_CHESSBOARD = BLOCKS.register("chesses_chessboard", ChessesChessboardBlock::new);
-	public static final RegistryObject<Item> CHESSES_CHESSBOARD_ITEM = fromBlock(CHESSES_CHESSBOARD);
 	public static final RegistryObject<BlockEntityType<ChessesChessboardBlockEntity>> CHESSES_CHESSBOARD_BE =
 			BLOCK_ENTITY_TYPES.register("chesses_chessboard",
 					() -> BlockEntityType.Builder.of(ChessesChessboardBlockEntity::new, CHESSES_CHESSBOARD.get()).build(null));
 	
 	public static final RegistryObject<Block> AI_CHESSBOARD = BLOCKS.register("ai_chessboard", AIChessboardBlock::new);
-	public static final RegistryObject<Item> AI_CHESSBOARD_ITEM = fromBlock(AI_CHESSBOARD);
 	public static final RegistryObject<BlockEntityType<AIChessboardBlockEntity>> AI_CHESSBOARD_BE =
 			BLOCK_ENTITY_TYPES.register("ai_chessboard",
 					() -> BlockEntityType.Builder.of(AIChessboardBlockEntity::new, AI_CHESSBOARD.get()).build(null));
 	
 	public static final RegistryObject<Block> PUZZLE_CHESSBOARD = BLOCKS.register("puzzle_chessboard", PuzzleChessboardBlock::new);
-	public static final RegistryObject<Item> PUZZLE_CHESSBOARD_ITEM = fromBlock(PUZZLE_CHESSBOARD);
 	public static final RegistryObject<BlockEntityType<PuzzleChessboardBlockEntity>> PUZZLE_CHESSBOARD_BE =
 			BLOCK_ENTITY_TYPES.register("puzzle_chessboard",
 					() -> BlockEntityType.Builder.of(PuzzleChessboardBlockEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
+
+	static {
+		ITEMS.register(WOOD_CHESSBOARD.getId().getPath(), () -> new BlockItem(WOOD_CHESSBOARD.get(), new Item.Properties()));
+		ITEMS.register(GOLD_CHESSBOARD.getId().getPath(), () -> new BlockItem(GOLD_CHESSBOARD.get(), new Item.Properties()));
+		ITEMS.register(CHESSES_CHESSBOARD.getId().getPath(), () -> new BlockItem(CHESSES_CHESSBOARD.get(), new Item.Properties()));
+		ITEMS.register(AI_CHESSBOARD.getId().getPath(), () -> new BlockItem(AI_CHESSBOARD.get(), new Item.Properties()));
+		ITEMS.register(PUZZLE_CHESSBOARD.getId().getPath(), () -> new BlockItem(PUZZLE_CHESSBOARD.get(), new Item.Properties()));
+	}
 
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND=
             SOUNDS.register("slide_piece", 
@@ -102,42 +106,30 @@ public class Registration {
 		CREATIVE_MODE_TABS.register(bus);
         int id = 0;
         PacketHandler.HANDLER.messageBuilder(ChessPlay.class, id++, NetworkDirection.PLAY_TO_SERVER)
-        .decoder(buf->ChessPlay.decode(buf))
+        .decoder(ChessPlay::decode)
         .encoder(ChessPlay::encode)
         .consumerNetworkThread(ChessPlay.Handler::handle)
         .add();
         PacketHandler.HANDLER.messageBuilder(ArbitraryPlacement.class, id++, NetworkDirection.PLAY_TO_SERVER)
-        .decoder(buf->ArbitraryPlacement.decode(buf))
+        .decoder(ArbitraryPlacement::decode)
         .encoder(ArbitraryPlacement::encode)
         .consumerNetworkThread(ArbitraryPlacement.Handler::handle)
         .add();
-		//PacketHandler.HANDLER.registerMessage(id++, ChessPlay.class, ChessPlay::encode, ChessPlay::decode, ChessPlay.Handler::handle);
-		//PacketHandler.HANDLER.registerMessage(id++, ArbitraryPlacement.class, ArbitraryPlacement::encode, ArbitraryPlacement::decode, ArbitraryPlacement.Handler::handle);
-        
-        
+
     }
 
-	public static final RegistryObject<CreativeModeTab> CHESS_TAB = CREATIVE_MODE_TABS.register("chesstab",
-			() -> CreativeModeTab.builder().icon(() -> new ItemStack(Registration.WOOD_CHESSBOARD.get()))
-					.title(Component.translatable("itemGroup.chessmod"))
-					.displayItems((pParameters, pOutput) -> {
-						pOutput.accept(Registration.WOOD_CHESSBOARD.get());
-						pOutput.accept(Registration.GOLD_CHESSBOARD.get());
-						pOutput.accept(Registration.CHESSES_CHESSBOARD.get());
-						pOutput.accept(Registration.AI_CHESSBOARD.get());
-						pOutput.accept(Registration.PUZZLE_CHESSBOARD.get());
-					})
-					.build());
-
-	//will probably have to put this somewhere else but here is good for now
-	public static void register(IEventBus eventBus) {
-		CREATIVE_MODE_TABS.register(eventBus);
+	static {
+		CREATIVE_MODE_TABS.register("chesstab",
+				() -> CreativeModeTab.builder().icon(() -> new ItemStack(Registration.WOOD_CHESSBOARD.get()))
+						.title(Component.translatable("itemGroup.chessmod"))
+						.displayItems((pParameters, pOutput) -> {
+							pOutput.accept(Registration.WOOD_CHESSBOARD.get());
+							pOutput.accept(Registration.GOLD_CHESSBOARD.get());
+							pOutput.accept(Registration.CHESSES_CHESSBOARD.get());
+							pOutput.accept(Registration.AI_CHESSBOARD.get());
+							pOutput.accept(Registration.PUZZLE_CHESSBOARD.get());
+						})
+						.build());
 	}
 
-
-    // Conveniance function: Take a RegistryObject<Block> and make a corresponding RegistryObject<Item> from it
-	//TODO: this might not give us the result we want
-    public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block) {
-        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
-    }
 }
