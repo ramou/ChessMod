@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.client.gui.GuiGraphics;
-
+//import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
 import chessmod.ChessMod;
 import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.Move;
@@ -43,28 +43,28 @@ public class GoldChessboardGui extends ChessboardGUI {
 	
 	
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 				
 	    //Draw the background
-		drawBackground(guiGraphics);
-		showTurnColor(guiGraphics);
+		drawBackground(poseStack);
+		showTurnColor(poseStack);
 
 		//Draw the existing pieces
-		drawPieces(guiGraphics);
+		drawPieces(poseStack);
 	    
 	    //Test highlighting squares
-	    if(selected!=null)highlightSelected(guiGraphics);
+	    if(selected!=null)highlightSelected(poseStack);
 	
 	    
 	    //Draw highlights of any selected pieces and their valid moves
-		highlightPossibleMoves(guiGraphics);
+		highlightPossibleMoves(poseStack);
 	    
 		
 		//Show sideboard for current player if they're trying to promote
 		if(promotionPosition != null) {
 			Map<Integer, TilePiece> map = board.getBoard().getCurrentPlayer().equals(Side.WHITE)?whiteSideboardMap:blackSideboardMap;
 			for(TilePiece p: map.values()) {
-				drawSideboardPiece(guiGraphics, p);
+				drawSideboardPiece(poseStack, p);
 			} 
 		}
 
@@ -72,14 +72,14 @@ public class GoldChessboardGui extends ChessboardGUI {
 		Point kingPoint = board.getBoard().getCheckMate();
 		if(kingPoint == null) {
 			kingPoint = board.getBoard().getCheck();
-			if(kingPoint != null) highlightSquare(guiGraphics, kingPoint, CHECK);
-		} else highlightSquare(guiGraphics, kingPoint, CHECKMATE);
+			if(kingPoint != null) highlightSquare(poseStack, kingPoint, CHECK);
+		} else highlightSquare(poseStack, kingPoint, CHECKMATE);
 		
 	}
 
-	private void highlightPossibleMoves(GuiGraphics guiGraphics) {
+	private void highlightPossibleMoves(PoseStack poseStack) {
 	    for(Move m: possibleMoves) {
-	    	highlightSquare(guiGraphics, m.getTarget(), POSSIBLE);
+	    	highlightSquare(poseStack, m.getTarget(), POSSIBLE);
 	    }
 	}
 	
@@ -188,7 +188,7 @@ public class GoldChessboardGui extends ChessboardGUI {
 		return null;
 	}
 
-	protected void showTurnColor(GuiGraphics guiGraphics) {
+	protected void showTurnColor(PoseStack poseStack) {
 		ResourceLocation c = BLACK;		
 		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) c = WHITE;
 
@@ -200,16 +200,16 @@ public class GoldChessboardGui extends ChessboardGUI {
 		int y2Inner = boardOriginY + 256 - 30;
 
 		//top
-		highlightSquare(guiGraphics, x1Outter, y1Outter, 204, 4, c);
+		highlightSquare(poseStack, x1Outter, y1Outter, 204, 4, c);
 
 		//left
-		highlightSquare(guiGraphics, x1Outter, y1Outter, 4, 204, c);
+		highlightSquare(poseStack, x1Outter, y1Outter, 4, 204, c);
 
 		//right
-		highlightSquare(guiGraphics, x2Inner, y1Outter, 4, 204, c);
+		highlightSquare(poseStack, x2Inner, y1Outter, 4, 204, c);
 
 		//bottom
-		highlightSquare(guiGraphics, x1Outter, y2Inner, 204, 4, c);
+		highlightSquare(poseStack, x1Outter, y2Inner, 204, 4, c);
 	}
 	
 }

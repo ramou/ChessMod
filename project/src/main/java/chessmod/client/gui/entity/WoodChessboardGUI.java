@@ -3,7 +3,8 @@ package chessmod.client.gui.entity;
 import java.util.HashMap;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
+//import net.minecraft.client.gui.GuiGraphics;
 
 import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.Move;
@@ -14,7 +15,7 @@ import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.PacketHandler;
-import net.minecraft.client.gui.GuiGraphics;
+//import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -38,38 +39,38 @@ public class WoodChessboardGUI extends ChessboardGUI {
 
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 
 	    //Draw the background
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, background);
-		drawBackground(guiGraphics);
+		drawBackground(poseStack);
 		//Draw sideboard
 		//Also, if we don't use p, it doesn't get loaded and things get weird fast!
 		for(TilePiece p: TilePiece.values()) {
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			drawSideboardPiece(guiGraphics, p);
+			drawSideboardPiece(poseStack, p);
 		}
 
 		//Draw the existing pieces
-		drawPieces(guiGraphics);
+		drawPieces(poseStack);
 
 	    //Test highlighting squares
 	    if(selected!=null) {
-	    	highlightSelected(guiGraphics);
+	    	highlightSelected(poseStack);
 	    }
 	    
 	    if(sideBoardSelected!=null) {
-	    	highlightSideBoardSelected(guiGraphics);
+	    	highlightSideBoardSelected(poseStack);
 	    }
 	    
 
 	}
 
-	protected void highlightSideBoardSelected(GuiGraphics guiGraphics) {
+	protected void highlightSideBoardSelected(PoseStack poseStack) {
 		int x = (int)(width/2f - 128 + (sideBoardSelected.getSide().equals(Side.BLACK)?0:16+24*9));
 		int y = (int)(height/2f - 128 + (32+sideBoardSelected.index*24));
-		highlightSquare(guiGraphics, x, y, POSSIBLE);
+		highlightSquare(poseStack, x, y, POSSIBLE);
 	}
 	
 	@Override
