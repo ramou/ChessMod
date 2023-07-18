@@ -14,7 +14,6 @@ import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
-//import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;

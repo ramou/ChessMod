@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-//import net.minecraft.client.gui.GuiGraphics;
 
 import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.Move;
@@ -15,7 +14,6 @@ import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.PacketHandler;
-//import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

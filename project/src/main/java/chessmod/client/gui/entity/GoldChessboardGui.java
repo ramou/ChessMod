@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-//import net.minecraft.client.gui.GuiGraphics;
 import com.mojang.blaze3d.vertex.PoseStack;
 import chessmod.ChessMod;
 import chessmod.blockentity.ChessboardBlockEntity;
