@@ -1,5 +1,6 @@
 package chessmod.common.network;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
@@ -63,7 +64,8 @@ public class ChessPlay {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
-						Level world = ctx.get().getSender().level();
+
+						Level world = Objects.requireNonNull(ctx.get().getSender()).level;
 						BlockPos pos = new BlockPos((int) message.x, (int) message.y, (int) message.z);
 						if(world.isLoaded(pos)) {
 							
@@ -91,8 +93,8 @@ public class ChessPlay {
 									if (blockEntity instanceof GoldChessboardBlockEntity) {
 										board.moveSafely(m);
 										if(board.getCheckMate() != null) {
-											Logger.getGlobal().info(ctx.get().getSender().getName().getString() + " has won a chess game with themselves!");
-											Elo.updateElo(ctx.get().getSender(), ctx.get().getSender(), true);
+											Logger.getGlobal().info(Objects.requireNonNull(ctx.get().getSender()).getName().getString() + " has won a chess game with themselves!");
+											Elo.updateElo(Objects.requireNonNull(ctx.get().getSender()), Objects.requireNonNull(ctx.get().getSender()), true);
 										}
 									} else {
 										board.move(m);
