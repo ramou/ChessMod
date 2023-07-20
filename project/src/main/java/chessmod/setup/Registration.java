@@ -14,7 +14,6 @@ import chessmod.blockentity.WoodChessboardBlockEntity;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -24,13 +23,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
 /*
  * Stuart:: Used the tutorial of this as of May 30, 2022
  * https://wiki.mcjty.eu/modding/index.php?title=Tutorial_1.18_Episode_1
@@ -39,15 +39,30 @@ import net.minecraftforge.registries.RegistryObject;
  * I'd actually rather a proper Registry that lets me ask for Blocks.WOOD_CHESSBOARD and Items.WOOD_CHESSBOARD instead of dicking around like this.
  * 
  */
+
 public class Registration {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ChessMod.MODID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ChessMod.MODID);
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ChessMod.MODID);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ChessMod.MODID);
 
-	public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-			DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ChessMod.MODID);
+	public static CreativeModeTab CREATIVE_MODE_TAB;
+	@SubscribeEvent
+	public static void registerCreativeModeTabs(CreativeModeTabEvent.Register event){
 
+		CREATIVE_MODE_TAB = event.registerCreativeModeTab(new ResourceLocation("chesstab"),
+				builder -> builder.icon(() -> new ItemStack(Registration.GOLD_CHESSBOARD.get()))
+						.title(Component.translatable("itemGroup.chessmod"))
+						.displayItems((pParameters, pOutput) -> {
+							pOutput.accept(Registration.WOOD_CHESSBOARD.get());
+							pOutput.accept(Registration.GOLD_CHESSBOARD.get());
+							pOutput.accept(Registration.CHESSES_CHESSBOARD.get());
+							pOutput.accept(Registration.AI_CHESSBOARD.get());
+							pOutput.accept(Registration.PUZZLE_CHESSBOARD.get());
+						})
+						.build());
+		
+	}
 
 	public static final RegistryObject<Block> WOOD_CHESSBOARD = BLOCKS.register("wood_chessboard", WoodChessboardBlock::new);
 
@@ -103,7 +118,6 @@ public class Registration {
         ITEMS.register(bus);
         BLOCK_ENTITY_TYPES.register(bus);
         SOUNDS.register(bus);
-		CREATIVE_MODE_TABS.register(bus);
         int id = 0;
         PacketHandler.HANDLER.messageBuilder(ChessPlay.class, id++, NetworkDirection.PLAY_TO_SERVER)
         .decoder(ChessPlay::decode)
@@ -115,21 +129,8 @@ public class Registration {
         .encoder(ArbitraryPlacement::encode)
         .consumerNetworkThread(ArbitraryPlacement.Handler::handle)
         .add();
-
+		bus.addListener(Registration::registerCreativeModeTabs);
     }
 
-	static {
-		CREATIVE_MODE_TABS.register("chesstab",
-				() -> CreativeModeTab.builder().icon(() -> new ItemStack(Registration.WOOD_CHESSBOARD.get()))
-						.title(Component.translatable("itemGroup.chessmod"))
-						.displayItems((pParameters, pOutput) -> {
-							pOutput.accept(Registration.WOOD_CHESSBOARD.get());
-							pOutput.accept(Registration.GOLD_CHESSBOARD.get());
-							pOutput.accept(Registration.CHESSES_CHESSBOARD.get());
-							pOutput.accept(Registration.AI_CHESSBOARD.get());
-							pOutput.accept(Registration.PUZZLE_CHESSBOARD.get());
-						})
-						.build());
-	}
 
 }
