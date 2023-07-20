@@ -14,7 +14,6 @@ import chessmod.blockentity.WoodChessboardBlockEntity;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -52,7 +51,7 @@ public class Registration {
 	public static void registerCreativeModeTabs(CreativeModeTabEvent.Register event){
 
 		CREATIVE_MODE_TAB = event.registerCreativeModeTab(new ResourceLocation("chesstab"),
-				builder -> builder.icon(() -> new ItemStack(Registration.WOOD_CHESSBOARD.get()))
+				builder -> builder.icon(() -> new ItemStack(Registration.GOLD_CHESSBOARD.get()))
 						.title(Component.translatable("itemGroup.chessmod"))
 						.displayItems((pParameters, pOutput) -> {
 							pOutput.accept(Registration.WOOD_CHESSBOARD.get());
@@ -130,7 +129,7 @@ public class Registration {
         .encoder(ArbitraryPlacement::encode)
         .consumerNetworkThread(ArbitraryPlacement.Handler::handle)
         .add();
-
+		bus.addListener(Registration::registerCreativeModeTabs);
     }
 
 

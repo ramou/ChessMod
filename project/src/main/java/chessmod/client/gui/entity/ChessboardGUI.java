@@ -125,6 +125,9 @@ public abstract class ChessboardGUI extends Screen {
 
 
 	protected void drawBackground(PoseStack poseStack) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, background);
+
 		int x1 = (int)(width/2f - 128);
 		int y1 = (int)(height/2f - 128);
 		blit(poseStack, x1, y1, 0, 0, 256, 256);
@@ -147,17 +150,23 @@ public abstract class ChessboardGUI extends Screen {
 	}
 
 	protected void highlightSquare(PoseStack poseStack, int x, int y, int width, int height, ResourceLocation shade) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, shade);
 		blit(poseStack,x, y, width, height, width, height);
 	}
 
 
 	protected void drawPiece(PoseStack poseStack, int bx, int by, ResourceLocation piece) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, piece);
 		int x1 = (int)(width/2f - 128 + 32 + bx * 24);
 		int y1 = (int)(height/2f - 128 + 32 + by * 24);
 		blit(poseStack, x1, y1, 0, 0, 24, 24, 24, 24);
 	}
 
 	protected void drawSideboardPiece(PoseStack poseStack, TilePiece piece) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, piece.tile);
 		int x1 = (int)(width/2f - 128+(piece.side.equals(Side.BLACK)?0:16+9*24));
 		int y1 = (int)(height/2f - 128 + 32 + piece.index * 24);
 		blit(poseStack, x1, y1, 0, 0, 24, 24, 24, 24);
