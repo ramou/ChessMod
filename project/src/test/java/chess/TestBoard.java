@@ -88,7 +88,42 @@ class TestBoard {
 			
 		}
 	}
-	
+
+	@Test
+	void testBadPawnDoubleMove() {
+		try {
+			doubleAdvancePawn(b, 7, 6);
+			doubleAdvancePawn(b, 1, 1);
+			Piece p = b.pieceAt(7, 4);
+			assertEquals(1,p.getAllowedMoves(b).size());
+			for(Move m: p.getAllowedMoves(b)) {
+				assertEquals(new Point(7, 3), m.getTarget());
+			}
+			doubleAdvancePawn(b, 7, 4);
+			fail("You cannot double move a pawn that has already moved!");
+		} catch (InvalidMoveException e) {
+
+		}
+	}
+
+	@Test
+	void testBadPawnDoubleMoveOnClonedBoard() {
+		try {
+			doubleAdvancePawn(b, 7, 6);
+			doubleAdvancePawn(b, 1, 1);
+			Board b2 = BoardFactory.createBoard(b);
+			Piece p = b2.pieceAt(7, 4);
+			assertEquals(1,p.getAllowedMoves(b2).size());
+			for(Move m: p.getAllowedMoves(b2)) {
+				assertEquals(new Point(7, 3), m.getTarget());
+			}
+			doubleAdvancePawn(b, 7, 4);
+			fail("You cannot double move a pawn that has already moved!");
+		} catch (InvalidMoveException e) {
+
+		}
+	}
+
 	@Test
 	void testFailMovingIntoCheck() {
 		try {
