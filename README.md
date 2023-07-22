@@ -11,16 +11,17 @@ So many things to take us to a solid 1.0. Lots of cool features suggested by the
 
 ### 0.7
 Focus on low-level mechanics for the chessboard.
- * [ ] Finish the board heirarchy [18]
-  * [ ] This means the tournament board (including [28])
-  * [ ] This means bound boards (linking baords at a distance, ender pearls)
-  * [ ] This means a Chesses board (with no Chesses)
-  * [ ] This means an AI board (with no AI)
+ * [ ] Finish the board heirarchy [13]
+  * [ ] This means the tournament board [49]
+  * [ ] This means bound boards [66] (linking boards at a distance, ender pearls)
+  * [x] This means a Chesses board ~[67]~ (with no Chesses)
+  * [x] This means an AI board ~[68]~ (with no AI)
+  * [x] This means a Puzzle board ~[43]~ (with no Puzzles)
 
 ### 0.8
 Focus on feedback, core visuals and optimizing the code/textures around visuals
  * [ ] Make the Patchouli book for chesses [26]
- * [ ] Add orientation to the board [23] [24]
+ * [ ] Add orientation to the board ~[23]~ [24]
  * [ ] Add mechanism for free-piece setup [32]
  * [ ] Visuals code cleanup [12] [9] (and maybe [2])
 
@@ -41,7 +42,7 @@ Focus on extending the chess universe
  
 ### 1.2
 Focus on extending the chess experience
- * [ ] Add Chess Challenges [43]
+ * [ ] Add initial Chess Challenges (e.g. [84])
  * [ ] Add Achievements Tree
  
 ### 1.3
@@ -91,4 +92,9 @@ I'll post these as I find them or they're brought to my attention:
 [41]: https://github.com/ramou/ChessMod/issues/41
 [42]: https://github.com/ramou/ChessMod/issues/42
 [43]: https://github.com/ramou/ChessMod/issues/43
+[49]: https://github.com/ramou/ChessMod/issues/49
+[66]: https://github.com/ramou/ChessMod/issues/66
+[67]: https://github.com/ramou/ChessMod/issues/67
+[68]: https://github.com/ramou/ChessMod/issues/68
+[84]: https://github.com/ramou/ChessMod/issues/84
  

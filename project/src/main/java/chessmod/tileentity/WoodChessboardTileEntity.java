@@ -14,7 +14,7 @@ public class WoodChessboardTileEntity extends ChessboardTileEntity{
 	}
 	
 	public WoodChessboardTileEntity() {
-		super(ModTileEntityTypes.WOOD_CHESSBOARD);
+		super(ModTileEntityTypes.wood_chessboard);
 	}
 	
 }

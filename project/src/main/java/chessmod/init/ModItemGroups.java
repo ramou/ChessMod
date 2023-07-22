@@ -17,7 +17,7 @@ import net.minecraft.item.ItemStack;
  */
 public class ModItemGroups {
 	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(ChessMod.MODID, () -> new ItemStack(
-			ModBlocks.WOOD_CHESSBOARD.asItem()
+			ModBlocks.wood_chessboard.asItem()
 	));
 		
 	public static final class ModItemGroup extends ItemGroup {

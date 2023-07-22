@@ -72,7 +72,7 @@ public class ArbitraryPlacement {
 								Piece piece = PieceInitializer.create(point, message.piece);
 								board.setPiece(piece, point);
 								((ChessboardTileEntity)tileEntity).notifyClientOfBoardChange();
-								world.playSound(null, pos, ModSounds.placePiece, SoundCategory.BLOCKS, 1F, 1F);
+								world.playSound(null, pos, ModSounds.place_piece, SoundCategory.BLOCKS, 1F, 1F);
 							}
 							
 						}

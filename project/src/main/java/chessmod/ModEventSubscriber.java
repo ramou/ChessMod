@@ -2,16 +2,14 @@ package chessmod;
 
 import javax.annotation.Nonnull;
 
+import chessmod.block.*;
+import chessmod.tileentity.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Preconditions;
-import chessmod.block.GoldChessboardBlock;
-import chessmod.block.WoodChessboardBlock;
 import chessmod.init.ModBlocks;
 import chessmod.init.ModItemGroups;
-import chessmod.tileentity.GoldChessBoardTileEntity;
-import chessmod.tileentity.WoodChessboardTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -39,7 +37,10 @@ public class ModEventSubscriber {
 		// Register all your blocks inside this registerAll call		
 		event.getRegistry().registerAll(
 				setup(new WoodChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "wood_chessboard"),
-				setup(new GoldChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "gold_chessboard")
+				setup(new GoldChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "gold_chessboard"),
+				setup(new ChessesChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "chesses_chessboard"),
+				setup(new AIChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "ai_chessboard"),
+				setup(new PuzzleChessboardBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(0)), "puzzle_chessboard")
 		);
 		LOGGER.debug("Registered Blocks");
 	}
@@ -92,13 +93,28 @@ public class ModEventSubscriber {
 				setup(
 						TileEntityType.Builder.create(
 								WoodChessboardTileEntity::new, 
-								ModBlocks.WOOD_CHESSBOARD
+								ModBlocks.wood_chessboard
 							).build(null), "wood_chessboard"),
 				setup(
 						TileEntityType.Builder.create(
-								GoldChessBoardTileEntity::new, 
-								ModBlocks.GOLD_CHESSBOARD
-							).build(null), "gold_chessboard")
+								GoldChessBoardTileEntity::new,
+								ModBlocks.gold_chessboard
+						).build(null), "gold_chessboard"),
+				setup(
+						TileEntityType.Builder.create(
+								ChessesChessboardTileEntity::new,
+								ModBlocks.chesses_chessboard
+						).build(null), "chesses_chessboard"),
+				setup(
+						TileEntityType.Builder.create(
+								AIChessboardTileEntity::new,
+								ModBlocks.ai_chessboard
+						).build(null), "ai_chessboard"),
+				setup(
+						TileEntityType.Builder.create(
+								PuzzleChessboardTileEntity::new,
+								ModBlocks.puzzle_chessboard
+						).build(null), "puzzle_chessboard")
 		);
 		LOGGER.debug("Registered TileEntityTypes");
 	}

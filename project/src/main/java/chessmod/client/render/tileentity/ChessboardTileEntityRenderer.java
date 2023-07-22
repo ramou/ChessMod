@@ -1,5 +1,9 @@
 package chessmod.client.render.tileentity;
 
+import chessmod.block.ChessboardBlock;
+import chessmod.common.Point2f;
+import chessmod.common.dom.model.chess.Side;
+import chessmod.tileentity.GoldChessBoardTileEntity;
 import org.lwjgl.opengl.GL11;
 
 import chessmod.common.dom.model.chess.Point;
@@ -17,185 +21,288 @@ import net.minecraft.util.ResourceLocation;
 
 public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardTileEntity> {
 
-	/**
-	 * Render our TileEntity
-	 */
-	@Override
-	public void render(final ChessboardTileEntity tileEntityIn, final double x, final double y, final double z, final float partialTicks, final int destroyStage) {
+
+    public void draw2DRect(BufferBuilder bufferbuilder, Point2f p1, Point2f p2) {
+        bufferbuilder.pos(p2.x, 1.001, p1.y).tex(1, 1).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(p1.x, 1.001, p1.y).tex(1, 0).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(p1.x, 1.001, p2.y).tex(0, 0).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(p2.x, 1.001, p2.y).tex(0, 1).normal(0, 1, 0).endVertex();
+    }
+
+    protected void showTurnColor(BufferBuilder bufferbuilder, Side s) {
+
+        if (s.equals(Side.WHITE)) {
+            this.bindTexture(new ResourceLocation("chessmod", "textures/gui/shadewhite.png"));
+        } else {
+            this.bindTexture(new ResourceLocation("chessmod", "textures/gui/shadeblack.png"));
+        }
+
+        float x1Outter = 26f / 256f;
+        float x1Inner = 29f / 256f;
+        float x2Inner = 227f / 256f;
+        float x2Outter = 230f / 256f;
+
+        float z1Outter = 26f / 256f;
+        float z1Inner = 29f / 256f;
+        float z2Inner = 227f / 256f;
+        float z2Outter = 230f / 256f;
+
+
+        //top
+        Point2f p1 = new Point2f(x1Outter, z1Outter);
+        Point2f p2 = new Point2f(x2Outter, z1Inner);
+        draw2DRect(bufferbuilder, p1, p2);
+        //left
+        p2 = new Point2f(x1Inner, z2Outter);
+        draw2DRect(bufferbuilder, p1, p2);
+
+        //right
+        p1 = new Point2f(x2Inner, z1Outter);
+        p2 = new Point2f(x2Outter, z2Outter);
+        draw2DRect(bufferbuilder, p1, p2);
+
+        //bottom
+        p1 = new Point2f(x1Outter, z2Inner);
+        draw2DRect(bufferbuilder, p1, p2);
+    }
+
+    /**
+     * Render our TileEntity
+     */
+    @Override
+    public void render(final ChessboardTileEntity tileEntityIn, final double x, final double y, final double z, final float partialTicks, final int destroyStage) {
         Tessellator tessellator = Tessellator.getInstance();
+
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         ResourceLocation black = new ResourceLocation("chessmod", "textures/block/black.png");
         ResourceLocation white = new ResourceLocation("chessmod", "textures/block/white.png");
-        
+
         GlStateManager.pushMatrix();
 
-        //RenderHelper.disableStandardItemLighting();
         GlStateManager.disableCull();
-		if (Minecraft.isAmbientOcclusionEnabled()) {
-			GlStateManager.shadeModel(GL11.GL_SMOOTH);
-		} else {
-			GlStateManager.shadeModel(GL11.GL_FLAT);
-		}
+        if (Minecraft.isAmbientOcclusionEnabled()) {
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        } else {
+            GlStateManager.shadeModel(GL11.GL_FLAT);
+        }
 
-         BlockModelRenderer.enableCache();
-         
-         this.bindTexture(black);
+        BlockModelRenderer.enableCache();
 
-         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+
+        bufferbuilder.setTranslation(x, y, z);
 
 
-         for(int by = 0; by < 8; by++) { 
-        	 for(int bx = 0; bx < 8; bx++) {
-        		 Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(bx, by));
-        		 if(piece != null) switch(piece.getCharacter()) {
-	        	 	case 'r':
-	        	 		drawRook(bx, by, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	case 'n':
-	        	 		drawKnight(bx, by, false, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	case 'b':
-	        	 		drawBishop(bx, by, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	case 'q':
-	        	 		drawQueen(bx, by, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	case 'k':
-	        	 		drawKing(bx, by, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	case 'p':
-	        	 		drawPawn(bx, by, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	default:
-	        	 }
-        	 }
-         }
 
-         bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
-         tessellator.draw();
-         
-         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
-         this.bindTexture(white);
-         
-         for(int by = 0; by < 8; by++) { 
-        	 for(int bx = 0; bx < 8; bx++) {
-        		 Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(bx, by));
-        		 if(piece != null) switch(tileEntityIn.getBoard().pieceAt(Point.create(bx, by)).getCharacter()) {
-	        	 	case 'R':
-	        	 		drawRook(bx, by, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	case 'N':
-	        	 		drawKnight(bx, by, true, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	case 'B':
-	        	 		drawBishop(bx, by, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	case 'Q':
-	        	 		drawQueen(bx, by, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	case 'K':
-	        	 		drawKing(bx, by, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	case 'P':
-	        	 		drawPawn(bx, by, bufferbuilder, x, y, z);
-	        	 		break;
-	        	 	default:
-	        	 }
-        	 }
-         }
-         
-         bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
-         tessellator.draw();
-         
-         
-         BlockModelRenderer.disableCache();
-         
-         GlStateManager.enableCull();
-         
-         //RenderHelper.enableStandardItemLighting();
-         GlStateManager.popMatrix();
-	}
-	
-	
-	private void drawBishop(int bx, int bz, BufferBuilder bufferbuilder, final double x, final double y, final double z) {
-		drawPiece(0.02f, bx, bz, bufferbuilder, x, y, z);        
-		drawPiece(0.02f, bx, bz, bufferbuilder, x, y+0.04, z);
-	}
+        if (tileEntityIn instanceof GoldChessBoardTileEntity) {
+            //Draw current-turn indicator:
+            showTurnColor(bufferbuilder, tileEntityIn.getBoard().getCurrentPlayer());
+            bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
+            tessellator.draw();
+            bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+            bufferbuilder.setTranslation(x, y, z);
+        }
 
-	private void drawKnight(int bx, int bz, boolean flip, BufferBuilder bufferbuilder, final double x, final double y, final double z) {
-		drawPiece(0.02f, bx, bz, bufferbuilder, x, y, z);        
-		drawPiece(0.02f, bx, bz, bufferbuilder, x+0.02*((flip)?-1:1), y+0.04, z);
-	}
-	
-	private void drawRook(int bx, int bz, BufferBuilder bufferbuilder, final double x, final double y, final double z) {
-		drawPiece(0.03f, bx, bz, bufferbuilder, x, y, z);        
-	}
 
-	private void drawKing(int bx, int bz, BufferBuilder bufferbuilder, final double x, final double y, final double z) {
-		drawPiece(0.04f, bx, bz, bufferbuilder, x, y, z);        
-	}
-	
-	private void drawQueen(int bx, int bz, BufferBuilder bufferbuilder, final double x, final double y, final double z) {
-		drawPiece(0.03f, bx, bz, bufferbuilder, x, y, z);
-		drawPiece(0.02f, bx, bz, bufferbuilder, x, y+0.06, z);
-	}
-	
-	private void drawPawn(int bx, int bz, BufferBuilder bufferbuilder, final double x, final double y, final double z) {
-		drawPiece(0.02f, bx, bz, bufferbuilder, x, y, z);
-	}
+        this.bindTexture(black);
+        for (int ay = 0; ay < 8; ay++) {
+            for (int ax = 0; ax < 8; ax++) {
+                int bx = ax;
+                int by = ay;
+                switch (tileEntityIn.getBlockState().get(ChessboardBlock.FACING)) {
+                    case UP:
+                    case DOWN:
+                    case NORTH:
+                        bx = 7 - ax;
+                        by = 7 - ay;
+                        break;
+                    case EAST:
+                        bx = ay;
+                        by = 7 - ax;
+                        break;
+                    case SOUTH:
+                        break;
+                    case WEST:
+                        bx = 7 - ay;
+                        by = ax;
+                        break;
+                }
 
-	private void drawPiece(float size, int bx, int bz, BufferBuilder bufferbuilder, final double x, final double y, final double z) {
-         bufferbuilder.setTranslation(x + 2.75D/16D + bx*1.5D/16D, y +1+size, z + 2.75D/16D + bz*1.5D/16D);
 
-         double textureScale = 0.5*size/0.03;
-         
-         //south side [pos z] [parent x]
-         bufferbuilder.pos(+size, -size, +size).tex(textureScale,textureScale).normal(0, 0, 1).endVertex();
-         bufferbuilder.pos(+size, +size, +size).tex(textureScale,0).normal(0, 0, 1).endVertex();
-         bufferbuilder.pos(-size, +size, +size).tex(0,0).normal(0, 0, 1).endVertex();
-         bufferbuilder.pos(-size, -size, +size).tex(0,textureScale).normal(0, 0, 1).endVertex();
+                Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(ax, ay));
+                if (piece != null) switch (piece.getCharacter()) {
+                    case 'r':
+                        drawRook(bx, by, bufferbuilder);
+                        break;
+                    case 'n':
+                        drawKnight(bx, by, false, bufferbuilder);
+                        break;
+                    case 'b':
+                        drawBishop(bx, by, bufferbuilder);
+                        break;
+                    case 'q':
+                        drawQueen(bx, by, bufferbuilder);
+                        break;
+                    case 'k':
+                        drawKing(bx, by, bufferbuilder);
+                        break;
+                    case 'p':
+                        drawPawn(bx, by, bufferbuilder);
+                        break;
+                    default:
+                }
+            }
+        }
 
-         //north side [neg z] [parent x]
-         bufferbuilder.pos(-size, -size, -size).tex(textureScale,textureScale).normal(0, 0, -1).endVertex();
-         bufferbuilder.pos(-size, +size, -size).tex(textureScale,0).normal(0, 0, -1).endVertex();
-         bufferbuilder.pos(+size, +size, -size).tex(0,0).normal(0, 0, -1).endVertex();
-         bufferbuilder.pos(+size, -size, -size).tex(0,textureScale).normal(0, 0, -1).endVertex();
+        bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
+        tessellator.draw();
 
-         //east side [pos x] [parent z]
-         bufferbuilder.pos(+size, -size, -size).tex(textureScale,textureScale).normal(1, 0, 0).endVertex();
-         bufferbuilder.pos(+size, +size, -size).tex(textureScale,textureScale).normal(1, 0, 0).endVertex();
-         bufferbuilder.pos(+size, +size, +size).tex(0,0).normal(1, 0, 0).endVertex();
-         bufferbuilder.pos(+size, -size, +size).tex(0,textureScale).normal(1, 0, 0).endVertex();
+        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        bufferbuilder.setTranslation(x, y, z);
+        this.bindTexture(white);
 
-         //west side [neg x] [parent z]
-         bufferbuilder.pos(-size, -size, +size).tex(textureScale,textureScale).normal(-1, 0, 0).endVertex();
-         bufferbuilder.pos(-size, +size, +size).tex(textureScale,0).normal(-1, 0, 0).endVertex();
-         bufferbuilder.pos(-size, +size, -size).tex(0,0).normal(-1, 0, 0).endVertex();
-         bufferbuilder.pos(-size, -size, -size).tex(0,textureScale).normal(-1, 0, 0).endVertex();
+        for (int ay = 0; ay < 8; ay++) {
+            for (int ax = 0; ax < 8; ax++) {
+                int bx = ax;
+                int by = ay;
+                switch (tileEntityIn.getBlockState().get(ChessboardBlock.FACING)) {
+                    case UP:
+                    case DOWN:
+                    case NORTH:
+                        bx = 7 - ax;
+                        by = 7 - ay;
+                        break;
+                    case EAST:
+                        bx = ay;
+                        by = 7 - ax;
+                        break;
+                    case SOUTH:
+                        break;
+                    case WEST:
+                        bx = 7 - ay;
+                        by = ax;
+                        break;
+                }
+                Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(ax, ay));
+                if (piece != null) switch (piece.getCharacter()) {
+                    case 'R':
+                        drawRook(bx, by, bufferbuilder);
+                        break;
+                    case 'N':
+                        drawKnight(bx, by, true, bufferbuilder);
+                        break;
+                    case 'B':
+                        drawBishop(bx, by, bufferbuilder);
+                        break;
+                    case 'Q':
+                        drawQueen(bx, by, bufferbuilder);
+                        break;
+                    case 'K':
+                        drawKing(bx, by, bufferbuilder);
+                        break;
+                    case 'P':
+                        drawPawn(bx, by, bufferbuilder);
+                        break;
+                    default:
+                }
+            }
+        }
 
-         //top [pos y] [parent x & y]
-         bufferbuilder.pos(+size, +size, -size).tex(textureScale,textureScale).normal(0, 1, 0).endVertex();
-         bufferbuilder.pos(-size, +size, -size).tex(textureScale,0).normal(0, 1, 0).endVertex();
-         bufferbuilder.pos(-size, +size, +size).tex(0,0).normal(0, 1, 0).endVertex();
-         bufferbuilder.pos(+size, +size, +size).tex(0,textureScale).normal(0, 1, 0).endVertex();
+        bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
+        tessellator.draw();
 
-         //bottom [neg y] [parent x & y]
-         bufferbuilder.pos(-size, -size, -size).tex(textureScale,textureScale).normal(0, -1, 0).endVertex();
-         bufferbuilder.pos(+size, -size, -size).tex(textureScale,0).normal(0, -1, 0).endVertex();
-         bufferbuilder.pos(+size, -size, +size).tex(0,0).normal(0, -1, 0).endVertex();
-         bufferbuilder.pos(-size, -size, +size).tex(0,textureScale).normal(0, -1, 0).endVertex();
-         
-	}
+        BlockModelRenderer.disableCache();
+        GlStateManager.enableCull();
+        GlStateManager.popMatrix();
+    }
 
-	/**
-	 * This renderer is a global renderer.
-	 * This means that it will always render, even if the player is not able to see it's block.
-	 * This is useful for rendering larger models or dynamically sized models.
-	 * The Beacon's beam is also a global renderer
-	 */
-	@Override
-	public boolean isGlobalRenderer(final ChessboardTileEntity te) {
-		return true;
-	}
+    private void drawBishop(int bx, int bz, BufferBuilder bufferbuilder) {
+        drawPiece(0.02f, bx, bz, bufferbuilder, 0, 0, 0);
+        drawPiece(0.02f, bx, bz, bufferbuilder, 0, 0.04, 0);
+    }
+
+    private void drawKnight(int bx, int bz, boolean flip, BufferBuilder bufferbuilder) {
+        float x = flip ? 0.01f : -0.01f;
+        float z = flip ? -0.01f : 0.01f;
+
+        drawPiece(0.02f, bx, bz, bufferbuilder, +x, 0, +z);
+        drawPiece(0.02f, bx, bz, bufferbuilder, -x, 0.04, -z);
+    }
+
+    private void drawRook(int bx, int bz, BufferBuilder bufferbuilder) {
+        drawPiece(0.03f, bx, bz, bufferbuilder, 0, 0, 0);
+    }
+
+    private void drawKing(int bx, int bz, BufferBuilder bufferbuilder) {
+        drawPiece(0.04f, bx, bz, bufferbuilder, 0, 0, 0);
+    }
+
+    private void drawQueen(int bx, int bz, BufferBuilder bufferbuilder) {
+        drawPiece(0.03f, bx, bz, bufferbuilder, 0, 0, 0);
+        drawPiece(0.02f, bx, bz, bufferbuilder, 0, 0.06, 0);
+    }
+
+    private void drawPawn(int bx, int bz, BufferBuilder bufferbuilder) {
+        drawPiece(0.02f, bx, bz, bufferbuilder, 0, 0, 0);
+    }
+
+    private void drawPiece(float size, int bx, int bz, BufferBuilder bufferbuilder, final double x, final double y, final double z) {
+        float xOff = (float) (x + 2.75f / 16f + bx * 1.5f / 16f);
+        float yOff = (float) (y + 1 + size);
+        float zOff = (float) (z + 2.75f / 16f + bz * 1.5f / 16f);
+
+        final float PieceTileSize = 240;
+        final float PieceTileBorderSize = 12;
+        final float UnitPieceSize = 0.04f;
+        float scaledTextureOffset = (2 - UnitPieceSize / size) / 2 * PieceTileBorderSize / PieceTileSize;
+
+        //south side [pos z] [parent x]
+        bufferbuilder.pos(xOff + size, yOff - size, zOff + size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, 1).endVertex();
+        bufferbuilder.pos(xOff + size, yOff + size, zOff + size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, 0, 1).endVertex();
+        bufferbuilder.pos(xOff - size, yOff + size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, 0, 1).endVertex();
+        bufferbuilder.pos(xOff - size, yOff - size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, 1).endVertex();
+
+        //north side [neg z] [parent x]
+        bufferbuilder.pos(xOff - size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, -1).endVertex();
+        bufferbuilder.pos(xOff - size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, 0, -1).endVertex();
+        bufferbuilder.pos(xOff + size, yOff + size, zOff - size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, 0, -1).endVertex();
+        bufferbuilder.pos(xOff + size, yOff - size, zOff - size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, -1).endVertex();
+
+        //east side [pos x] [parent z]
+        bufferbuilder.pos(xOff + size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(1, 0, 0).endVertex();
+        bufferbuilder.pos(xOff + size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(1, 0, 0).endVertex();
+        bufferbuilder.pos(xOff + size, yOff + size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(1, 0, 0).endVertex();
+        bufferbuilder.pos(xOff + size, yOff - size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(1, 0, 0).endVertex();
+
+        //west side [neg x] [parent z]
+        bufferbuilder.pos(xOff - size, yOff - size, zOff + size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(-1, 0, 0).endVertex();
+        bufferbuilder.pos(xOff - size, yOff + size, zOff + size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(-1, 0, 0).endVertex();
+        bufferbuilder.pos(xOff - size, yOff + size, zOff - size).tex(scaledTextureOffset, scaledTextureOffset).normal(-1, 0, 0).endVertex();
+        bufferbuilder.pos(xOff - size, yOff - size, zOff - size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(-1, 0, 0).endVertex();
+
+        //top [pos y] [parent x & y]
+        bufferbuilder.pos(xOff + size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(xOff - size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(xOff - size, yOff + size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(xOff + size, yOff + size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 1, 0).endVertex();
+
+        //bottom [neg y] [parent x & y]
+        bufferbuilder.pos(xOff - size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, -1, 0).endVertex();
+        bufferbuilder.pos(xOff + size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, -1, 0).endVertex();
+        bufferbuilder.pos(xOff + size, yOff - size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, -1, 0).endVertex();
+        bufferbuilder.pos(xOff - size, yOff - size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, -1, 0).endVertex();
+
+    }
+
+    /**
+     * This renderer is a global renderer.
+     * This means that it will always render, even if the player is not able to see it's block.
+     * This is useful for rendering larger models or dynamically sized models.
+     * The Beacon's beam is also a global renderer
+     */
+    @Override
+    public boolean isGlobalRenderer(final ChessboardTileEntity te) {
+        return true;
+    }
 
 }

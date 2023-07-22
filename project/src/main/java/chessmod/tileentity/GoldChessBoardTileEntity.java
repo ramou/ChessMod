@@ -11,7 +11,7 @@ public class GoldChessBoardTileEntity extends ChessboardTileEntity {
 	}
 
 	public GoldChessBoardTileEntity() {
-		super(ModTileEntityTypes.GOLD_CHESSBOARD);
+		super(ModTileEntityTypes.gold_chessboard);
 	}
 	
 }
