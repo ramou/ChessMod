@@ -7,7 +7,7 @@
 	},
 	"elements": [ 	 
 		{
-			"__comment": "cheesboard",
+			"__comment": "chessboard",
 			"from": [ 0, 12, 0 ],
 			"to": [ 16, 16, 16 ],
 			"faces": {

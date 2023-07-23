@@ -24,7 +24,7 @@ public class WoodChessboardBlock extends ChessboardBlock {
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
 		// Always use TileEntityType#create to allow registry overrides to work.
-		return ModTileEntityTypes.WOOD_CHESSBOARD.create();
+		return ModTileEntityTypes.wood_chessboard.create();
 	}
 	
 	@OnlyIn(Dist.CLIENT)

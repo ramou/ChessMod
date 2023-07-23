@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -193,12 +194,12 @@ public class GoldChessboardGui extends ChessboardGUI {
 
 	protected void showTurnColor() {
 		GlStateManager.enableBlend();
-
-		GlStateManager.blendFunc(1 , 1);
+		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.disableTexture();
 		
 		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) Color4f.WHITE.apply();
 		else Color4f.BLACK.apply();
+
 		
 		float myHeight=Math.min(height, 256);
 		final float boardOriginX = width/2f - 128;

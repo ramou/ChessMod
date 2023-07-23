@@ -10,6 +10,9 @@
   
   "block.chessmod.wood_chessboard": "A Wooden Chess Board",
   "block.chessmod.gold_chessboard": "A Golden Chess Board",
+  "block.chessmod.chesses_chessboard": "A Chesses Chess Board",
+  "block.chessmod.ai_chessboard": "An AI Chess Board",
+  "block.chessmod.puzzle_chessboard": "An Puzzle Chess Board",
   
   "advancement.chessmod:woodChessboardPickup": "Getting Board!",
   "advancement.chessmod:woodChessboardPickup.desc": "Pick up a Chess Board from the world"

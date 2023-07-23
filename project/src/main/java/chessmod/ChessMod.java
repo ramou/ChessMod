@@ -1,5 +1,8 @@
 package chessmod;
 
+import chessmod.common.capability.elo.EloCapability;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +17,12 @@ public class ChessMod {
 	
 	public ChessMod() {
 		LOGGER.debug("So, you want to play some chesses?");
-		PacketHandler.init();		
+		PacketHandler.init();
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupAdditional);
 	}
-	
+
+	public void setupAdditional (final FMLCommonSetupEvent event){
+		EloCapability.register();
+	}
+
 }

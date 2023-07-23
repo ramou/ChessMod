@@ -162,7 +162,7 @@ public abstract class ChessboardGUI extends Screen {
 		public static Color4f CHECK = new Color4f(0.9F, 0.1F, 0.1F, 0.5F);
 		public static Color4f CHECKMATE = new Color4f(0.9F, 0.1F, 0.1F, 0.9F);
 		public static Color4f WHITE = new Color4f(1F, 1F, 1F, 1F);
-		public static Color4f BLACK = new Color4f(0F, 0F, 0F, 0F);
+		public static Color4f BLACK = new Color4f(0F, 0F, 0F, 1F);
 		
 		public void apply() {
 			RenderSystem.color4f(r, g, b, a);

@@ -9,7 +9,7 @@ import chessmod.common.dom.model.chess.piece.InvalidMoveException;
 import chessmod.common.dom.model.chess.piece.Knight;
 import chessmod.init.ModSounds;
 import chessmod.tileentity.ChessboardTileEntity;
-import chessmod.tileentity.GoldChessboardTileEntity;
+import chessmod.tileentity.GoldChessBoardTileEntity;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -73,20 +73,20 @@ public class ChessPlay {
 								SoundEvent sound = null;
 								if(board.pieceAt(m.getSource()) instanceof Knight) {
 									if(board.pieceAt(m.getTarget()) == null) {
-										sound = ModSounds.placePiece;
+										sound = ModSounds.place_piece;
 									} else {
-										sound = ModSounds.placePieceTake;
+										sound = ModSounds.place_piece_take;
 									}
 								} else {
 									if(board.pieceAt(m.getTarget()) == null) {
-										sound = ModSounds.slidePiece;
+										sound = ModSounds.slide_piece;
 									} else {
-										sound = ModSounds.slidePieceTake;
+										sound = ModSounds.slide_piece_take;
 									}
 								}
 
 								try { //On GoldChessBoard confirm that it is a valid move!
-									if (tileEntity instanceof GoldChessboardTileEntity) {
+									if (tileEntity instanceof GoldChessBoardTileEntity) {
 										board.moveSafely(m);
 									} else {
 										board.move(m);

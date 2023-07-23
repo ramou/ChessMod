@@ -15,10 +15,10 @@ public class ModEventSubscriber {
 	@SubscribeEvent
 	public static void registerSounds(RegistryEvent.Register<SoundEvent> evt) {
 		IForgeRegistry<SoundEvent> r = evt.getRegistry();
-		r.register(ModSounds.slidePiece);
-		r.register(ModSounds.slidePieceTake);
-		r.register(ModSounds.placePiece);
-		r.register(ModSounds.placePieceTake);
+		r.register(ModSounds.slide_piece);
+		r.register(ModSounds.slide_piece_take);
+		r.register(ModSounds.place_piece);
+		r.register(ModSounds.place_piece_take);
 		
 		ChessMod.LOGGER.debug("Registered Sosunds!");
 	}

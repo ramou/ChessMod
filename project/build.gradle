@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net/' }
         jcenter()
         mavenCentral()
     }
@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.15.2-0.606'
+version = '1.15.2-0.616'
 group = 'com.stuartthiel.chessmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'ChessMod'
 
@@ -117,6 +117,13 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
