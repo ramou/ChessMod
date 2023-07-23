@@ -1,5 +1,6 @@
 package chessmod.common.network;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
@@ -18,7 +19,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 
 public class ChessPlay {
@@ -63,7 +64,7 @@ public class ChessPlay {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
-						Level world = ctx.get().getSender().level;
+						Level world = Objects.requireNonNull(ctx.get().getSender()).level;
 						BlockPos pos = new BlockPos(message.x, message.y, message.z);
 						if(world.isLoaded(pos)) {
 							
@@ -91,8 +92,8 @@ public class ChessPlay {
 									if (blockEntity instanceof GoldChessboardBlockEntity) {
 										board.moveSafely(m);
 										if(board.getCheckMate() != null) {
-											Logger.getGlobal().info(ctx.get().getSender().getName().getString() + " has won a chess game with themselves!");
-											Elo.updateElo(ctx.get().getSender(), ctx.get().getSender(), true);
+											Logger.getGlobal().info(Objects.requireNonNull(ctx.get().getSender()).getName().getString() + " has won a chess game with themselves!");
+											Elo.updateElo(Objects.requireNonNull(ctx.get().getSender()), Objects.requireNonNull(ctx.get().getSender()), true);
 										}
 									} else {
 										board.move(m);
