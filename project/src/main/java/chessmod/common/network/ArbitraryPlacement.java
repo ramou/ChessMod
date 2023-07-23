@@ -1,5 +1,6 @@
 package chessmod.common.network;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import chessmod.blockentity.ChessboardBlockEntity;
@@ -11,10 +12,11 @@ import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class ArbitraryPlacement {
 	private final int point;
@@ -64,7 +66,7 @@ public class ArbitraryPlacement {
 					@Override
 					public void run() {
 
-						Level level = ctx.get().getSender().level;
+						Level level = Objects.requireNonNull(ctx.get().getSender()).level;
 						BlockPos pos = new BlockPos(message.x, message.y, message.z);
 						
 						if(level.isLoaded(pos)) {
@@ -75,7 +77,10 @@ public class ArbitraryPlacement {
 								Piece piece = PieceInitializer.create(point, message.piece);
 								board.setPiece(piece, point);
 								((ChessboardBlockEntity)blockEntity).notifyClientOfBoardChange();
-								level.playSound(null, pos, Registration.PLACE_PIECE_SOUND.get(), SoundSource.BLOCKS, 1F, 1F);
+								//level.playSound(null, pos, Registration.PLACE_PIECE_SOUND., SoundSource.BLOCKS, 1F, 1F);
+
+								//SoundEvent sound = Registration.PLACE_PIECE_SOUND.get
+
 							}
 							
 						}
