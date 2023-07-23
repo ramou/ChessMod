@@ -95,12 +95,12 @@ public class Registration {
         SOUNDS.register(bus);
         int id = 0;
         PacketHandler.HANDLER.messageBuilder(ChessPlay.class, id++, NetworkDirection.PLAY_TO_SERVER)
-        .decoder(ChessPlay::decode)
+        .decoder(buf -> ChessPlay.decode(buf))
         .encoder(ChessPlay::encode)
         .consumer(ChessPlay.Handler::handle)
         .add();
         PacketHandler.HANDLER.messageBuilder(ArbitraryPlacement.class, id++, NetworkDirection.PLAY_TO_SERVER)
-        .decoder(ArbitraryPlacement::decode)
+        .decoder(buf -> ArbitraryPlacement.decode(buf))
         .encoder(ArbitraryPlacement::encode)
         .consumer(ArbitraryPlacement.Handler::handle)
         .add();
