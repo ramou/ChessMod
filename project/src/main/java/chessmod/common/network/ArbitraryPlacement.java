@@ -61,11 +61,11 @@ public class ArbitraryPlacement {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
-						World world = ctx.get().getSender().world;
+						World world = ctx.get().getSender().level;
 						BlockPos pos = new BlockPos(message.x, message.y, message.z);
 						if(world.isAreaLoaded(pos, 1)) {
 							
-							TileEntity tileEntity = world.getTileEntity(pos);
+							TileEntity tileEntity = world.getBlockEntity(pos);
 							if (tileEntity instanceof WoodChessboardTileEntity) { //If we want this stuff for other boards, we have to reconsider move format.
 								Board board = ((ChessboardTileEntity)tileEntity).getBoard();
 								Point point = Point.create(message.point);

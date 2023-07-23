@@ -1,7 +1,6 @@
 package chessmod.tileentity;
 
 import chessmod.ChessMod;
-import chessmod.init.ModTileEntityTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -15,7 +14,7 @@ public class PuzzleChessboardTileEntity extends ChessboardTileEntity {
 	}
 
 	public PuzzleChessboardTileEntity() {
-		super(ModTileEntityTypes.puzzle_chessboard);
+		this(TYPE);
 	}
-	
+
 }

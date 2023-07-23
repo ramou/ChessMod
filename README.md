@@ -2,7 +2,7 @@
 Adding Pippin Barr's Chesses to minecraft.
 
 ## Playing it
-You can grab the current version of the mod in the [mod folder](forge-1.14.4-28.2.0-mdk/mod).
+You can grab the current version of the mod in the [mod folder](project/mod).
 
 You cab grab the current version as an instance that can be imported with something like MultiMC in the [modpack folder](modpack)
 

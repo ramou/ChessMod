@@ -32,7 +32,7 @@ public class ModItemGroups {
 
 		@Override
 		@Nonnull
-		public ItemStack createIcon() {
+		public ItemStack makeIcon() {
 			return iconSupplier.get();
 		}
 

@@ -239,7 +239,7 @@ public class GoldChessboardGui extends ChessboardGUI {
 		//bottom
 		p1 = new Point2f(x1Outter, y2Inner);
 		c.draw2DRect(bufferbuilder, p1, p2);
-		tessellator.draw();
+		tessellator.end();
 		
 		RenderSystem.enableTexture();		
 		RenderSystem.disableBlend();

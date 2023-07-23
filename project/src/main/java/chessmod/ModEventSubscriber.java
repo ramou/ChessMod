@@ -2,6 +2,8 @@ package chessmod;
 
 import javax.annotation.Nonnull;
 
+import chessmod.block.*;
+import net.minecraft.block.material.Material;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,8 +31,23 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 @EventBusSubscriber(modid = ChessMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ModEventSubscriber {
 	private static final Logger LOGGER = LogManager.getLogger(ChessMod.MODID + " Mod Event Subscriber");
-	
 
+	/**
+	 * This method will be called by Forge when it is time for the mod to register its Blocks.
+	 * This method will always be called before the Item registry method.
+	 */
+	@SubscribeEvent
+	public static void onRegisterBlocks(final RegistryEvent.Register<Block> event) {
+		// Register all your blocks inside this registerAll call
+		event.getRegistry().registerAll(
+				setup(new WoodChessboardBlock(Block.Properties.of(Material.STONE).strength(3.5F).lightLevel(state -> 0)), "wood_chessboard"),
+				setup(new GoldChessboardBlock(Block.Properties.of(Material.STONE).strength(3.5F).lightLevel(state -> 0)), "gold_chessboard"),
+				setup(new ChessesChessboardBlock(Block.Properties.of(Material.STONE).strength(3.5F).lightLevel(state -> 0)), "chesses_chessboard"),
+				setup(new AIChessboardBlock(Block.Properties.of(Material.STONE).strength(3.5F).lightLevel(state -> 0)), "ai_chessboard"),
+				setup(new PuzzleChessboardBlock(Block.Properties.of(Material.STONE).strength(3.5F).lightLevel(state -> 0)), "puzzle_chessboard")
+		);
+		LOGGER.debug("Registered Blocks");
+	}
 	
 	/**
 	 * This method will be called by Forge when it is time for the mod to register its Items.
@@ -59,7 +76,7 @@ public class ModEventSubscriber {
 			}
 
 			// Make the properties, and make it so that the item will be on our ItemGroup (CreativeTab)
-			final Item.Properties properties = new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP);
+			final Item.Properties properties = new Item.Properties().tab(ModItemGroups.MOD_ITEM_GROUP);
 			// Create the new BlockItem with the block and it's properties
 			final BlockItem blockItem = new BlockItem(block, properties);
 			// Setup the new BlockItem with the block's registry name and register it
@@ -78,27 +95,27 @@ public class ModEventSubscriber {
 		event.getRegistry().registerAll(
 				// We don't have a datafixer for our TileEntity, so we pass null into build
 				setup(
-						TileEntityType.Builder.create(
-								WoodChessboardTileEntity::new, 
+						TileEntityType.Builder.of(
+								WoodChessboardTileEntity::new,
 								ModBlocks.wood_chessboard
 							).build(null), "wood_chessboard"),
 				setup(
-						TileEntityType.Builder.create(
+						TileEntityType.Builder.of(
 								GoldChessboardTileEntity::new, 
 								ModBlocks.gold_chessboard
 							).build(null), "gold_chessboard"),
 				setup(
-						TileEntityType.Builder.create(
+						TileEntityType.Builder.of(
 								ChessesChessboardTileEntity::new, 
 								ModBlocks.chesses_chessboard
 							).build(null), "chesses_chessboard"),
 				setup(
-						TileEntityType.Builder.create(
+						TileEntityType.Builder.of(
 								AIChessboardTileEntity::new, 
 								ModBlocks.ai_chessboard
 							).build(null), "ai_chessboard"),
 				setup(
-						TileEntityType.Builder.create(
+						TileEntityType.Builder.of(
 								PuzzleChessboardTileEntity::new, 
 								ModBlocks.puzzle_chessboard
 							).build(null), "puzzle_chessboard")

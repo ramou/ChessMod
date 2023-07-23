@@ -12,11 +12,10 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.server.ServerChunkProvider;
-import net.minecraft.world.server.ServerWorld;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.Constants;
 
 public abstract class ChessboardTileEntity extends TileEntity {
 	protected Board board = BoardFactory.createBoard();
@@ -47,8 +46,8 @@ public abstract class ChessboardTileEntity extends TileEntity {
 	 * Read saved data from disk into the tile.
 	 */
 	@Override
-	public void read(BlockState state, final CompoundNBT compound) {
-		super.read(state, compound);
+	public void load(BlockState state, final CompoundNBT compound) {
+		super.load(state, compound);
 		long pieceMask = compound.getLong("piece_mask");
 		long[] pieces = compound.getLongArray("pieces");
 		long[] moves = compound.getLongArray("moves");
@@ -61,8 +60,8 @@ public abstract class ChessboardTileEntity extends TileEntity {
 	 */
 	@Nonnull
 	@Override
-	public CompoundNBT write(final CompoundNBT compound) {
-		super.write(compound);
+	public CompoundNBT save(final CompoundNBT compound) {
+		super.save(compound);
 		SerializedBoard sb = SerializedBoard.serialize(board);
 		compound.putLong("piece_mask", sb.piece_mask);
 		compound.putLongArray("pieces", sb.pieces);
@@ -73,38 +72,37 @@ public abstract class ChessboardTileEntity extends TileEntity {
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT tag = new CompoundNBT();
-		write(tag);
-		return new SUpdateTileEntityPacket(getPos(), 42, tag); //What minecraft uses... cause 42.
+		save(tag);
+		return new SUpdateTileEntityPacket(getBlockPos(), 42, tag); //What minecraft uses... cause 42.
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
-		CompoundNBT tag = pkt.getNbtCompound();
-		read(getBlockState(), tag);
+		CompoundNBT tag = pkt.getTag();
+		load(getBlockState(), tag);
 	}
 
 	@Nonnull
 	@Override
 	public CompoundNBT getUpdateTag() {
 		CompoundNBT tag = super.getUpdateTag();
-		this.write(tag);
+		this.save(tag);
 		return tag;
 	}
 
 	@Override
 	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-		this.read(getBlockState(), tag);
+		this.load(getBlockState(), tag);
 	}
 
 
 	@SuppressWarnings("resource")
 	public void notifyClientOfBoardChange() {
 		SUpdateTileEntityPacket packet = getUpdatePacket();
-		if (packet != null && getWorld() instanceof ServerWorld) {
-			((ServerChunkProvider) getWorld().getChunkProvider()).chunkManager
-			.getTrackingPlayers(new ChunkPos(this.getPos()), false)
-			.forEach(e -> e.connection.sendPacket(packet));
+		if (packet != null) {
+			getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+			getLevel().blockEntityChanged(getBlockPos(), this);
 		}
 	}
 

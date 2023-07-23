@@ -1,6 +1,5 @@
 package chessmod.common.capability.elo;
 
-import net.minecraft.entity.player.PlayerEntity;
 
 public interface IElo {
 

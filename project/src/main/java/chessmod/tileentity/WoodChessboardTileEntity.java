@@ -1,7 +1,6 @@
 package chessmod.tileentity;
 
 import chessmod.ChessMod;
-import chessmod.init.ModTileEntityTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ObjectHolder;
@@ -15,9 +14,9 @@ public class WoodChessboardTileEntity extends ChessboardTileEntity{
 	public WoodChessboardTileEntity(TileEntityType<?> type) {
 		super(type);
 	}
-	
+
 	public WoodChessboardTileEntity() {
-		super(ModTileEntityTypes.wood_chessboard);
+		this(TYPE);
 	}
-	
+
 }

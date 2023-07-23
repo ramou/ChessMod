@@ -71,7 +71,7 @@ public class WoodChessboardGUI extends ChessboardGUI {
 		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		Color4f.POSSIBLE.draw2DRect(bufferbuilder, new Point2f(x1,y1), new Point2f(x2,y2));
 
-		tessellator.draw();
+		tessellator.end();
 		RenderSystem.enableTexture();		
 		RenderSystem.disableBlend();
 	}
@@ -122,6 +122,6 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	}
 	
 	protected void notifyServerOfArbitraryPlacement(Piece pi) {
-		PacketHandler.sendToServer(new ArbitraryPlacement(pi, board.getPos()));
+		PacketHandler.sendToServer(new ArbitraryPlacement(pi, board.getBlockPos()));
 	}
 }

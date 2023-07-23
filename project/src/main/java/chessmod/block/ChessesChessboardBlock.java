@@ -3,8 +3,8 @@ package chessmod.block;
 import javax.annotation.Nullable;
 
 import chessmod.client.gui.entity.GoldChessboardGui;
-import chessmod.init.ModTileEntityTypes;
 import chessmod.tileentity.ChessboardTileEntity;
+import chessmod.tileentity.ChessesChessboardTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -15,23 +15,22 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ChessesChessboardBlock extends ChessboardBlock {
-	public ChessesChessboardBlock() {
-		super();
+	public ChessesChessboardBlock(Properties properties) {
+		super(properties);
 	}
 	
 	@Nullable
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		// Always use TileEntityType#create to allow registry overrides to work.
-		return ModTileEntityTypes.chesses_chessboard.create();
+		return new ChessesChessboardTileEntity(ChessesChessboardTileEntity.TYPE);
 	}
 	
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	protected void openGui(final World worldIn, final BlockPos pos) {
-		final TileEntity tileEntity = worldIn.getTileEntity(pos);
+		final TileEntity tileEntity = worldIn.getBlockEntity(pos);
 		if (tileEntity instanceof ChessboardTileEntity) {
-			Minecraft.getInstance().displayGuiScreen(new GoldChessboardGui((ChessboardTileEntity)tileEntity));
+			Minecraft.getInstance().setScreen(new GoldChessboardGui((ChessboardTileEntity)tileEntity));
 		}
 	}
 	
