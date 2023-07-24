@@ -64,7 +64,7 @@ public class ChessPlay {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
-						Level world = Objects.requireNonNull(ctx.get().getSender()).level;
+						Level world = ctx.get().getSender().level;
 						BlockPos pos = new BlockPos(message.x, message.y, message.z);
 						if(world.isLoaded(pos)) {
 							
