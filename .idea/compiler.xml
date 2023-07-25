@@ -2,8 +2,11 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="com.stuartthiel.chessmod.project" target="16" />
+      <module name="com.stuartthiel.chessmod.project.main" target="16" />
       <module name="com.stuartthiel.chessmod.project.main~1" target="17" />
       <module name="com.stuartthiel.chessmod.project.main~2" target="17" />
+      <module name="com.stuartthiel.chessmod.project.test" target="16" />
       <module name="com.stuartthiel.chessmod.project.test~1" target="17" />
       <module name="com.stuartthiel.chessmod.project.test~2" target="17" />
     </bytecodeTargetLevel>
