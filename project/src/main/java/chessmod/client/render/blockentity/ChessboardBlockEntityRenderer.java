@@ -34,10 +34,14 @@ public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<Chessb
     public static void register() {
     	BlockEntityRenderers.register(Registration.WOOD_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
     	BlockEntityRenderers.register(Registration.GOLD_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
+		BlockEntityRenderers.register(Registration.CHESSES_CHESSBOARD_BE.get(),ChessboardBlockEntityRenderer::new);
+		BlockEntityRenderers.register(Registration.AI_CHESSBOARD_BE.get(),ChessboardBlockEntityRenderer::new);
+		BlockEntityRenderers.register(Registration.PUZZLE_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
+
     }
 
 	public void draw2DRect(VertexConsumer  bufferbuilder, PoseStack pPoseStack, Point2f p1, Point2f p2, float r, float g, float b, float a, int pPackedLight, int pPackedOverlay) {
-		Matrix4f model = pPoseStack.last().pose();
+		Matrix4f model = pPoseStack.last().pose() ;
 		Matrix3f matrix3f = pPoseStack.last().normal();
 		bufferbuilder.vertex(model, p2.x, 1.001f, p1.y).color(r, g, b, a).uv(0, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
 		bufferbuilder.vertex(model, p1.x, 1.001f, p1.y).color(r, g, b, a).uv(0, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
