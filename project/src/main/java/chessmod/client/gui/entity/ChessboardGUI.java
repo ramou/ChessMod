@@ -103,6 +103,12 @@ public abstract class ChessboardGUI extends Screen {
 		return Component.literal("");
 	}
 
+
+	@Override
+	public boolean isPauseScreen (){
+		return false;
+	}
+
 	@Override
 	public void init() {
 
