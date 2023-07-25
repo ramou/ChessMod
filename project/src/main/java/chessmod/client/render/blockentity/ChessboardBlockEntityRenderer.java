@@ -34,6 +34,9 @@ public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<Chessb
     public static void register() {
     	BlockEntityRenderers.register(Registration.WOOD_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
     	BlockEntityRenderers.register(Registration.GOLD_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
+		BlockEntityRenderers.register(Registration.PUZZLE_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer:: new);
+		BlockEntityRenderers.register(Registration.AI_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer:: new);
+		BlockEntityRenderers.register(Registration.CHESSES_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
     }
 
 	public void draw2DRect(VertexConsumer  bufferbuilder, PoseStack pPoseStack, Point2f p1, Point2f p2, float r, float g, float b, float a, int pPackedLight, int pPackedOverlay) {
