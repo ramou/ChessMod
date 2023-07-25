@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="329c440c-cc04-44cd-8ad4-d303ec1691aa" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/client/gui/entity/ChessboardGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/client/gui/entity/ChessboardGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/client/render/blockentity/ChessboardBlockEntityRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/client/render/blockentity/ChessboardBlockEntityRenderer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +42,11 @@
                 <item name="project" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="forgegradle runs" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="project" type="f1a62948:ProjectNode" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
             <select />
@@ -128,6 +135,8 @@
       <workItem from="1690225905316" duration="4418000" />
       <workItem from="1690296442830" duration="463000" />
       <workItem from="1690296934197" duration="247000" />
+      <workItem from="1690307117717" duration="545000" />
+      <workItem from="1690307711286" duration="1359000" />
     </task>
     <servers />
   </component>
