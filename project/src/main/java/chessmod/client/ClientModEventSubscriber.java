@@ -1,12 +1,11 @@
 package chessmod.client;
 
+import chessmod.tileentity.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import chessmod.ChessMod;
 import chessmod.client.render.tileentity.ChessboardTileEntityRenderer;
-import chessmod.tileentity.GoldChessBoardTileEntity;
-import chessmod.tileentity.WoodChessboardTileEntity;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,6 +34,10 @@ public final class ClientModEventSubscriber {
 		// Register TileEntity Renderers
 		ClientRegistry.bindTileEntitySpecialRenderer(WoodChessboardTileEntity.class, new ChessboardTileEntityRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(GoldChessBoardTileEntity.class, new ChessboardTileEntityRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(AIChessboardTileEntity.class, new ChessboardTileEntityRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(ChessesChessboardTileEntity.class, new ChessboardTileEntityRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(PuzzleChessboardTileEntity.class, new ChessboardTileEntityRenderer());
+
 		LOGGER.debug("Registered TileEntity Renderers");
 
 	}
