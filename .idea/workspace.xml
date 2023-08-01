@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bd4f99e-bd50-419d-ac26-96672e64952a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/client/ClientModEventSubscriber.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/client/ClientModEventSubscriber.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/tileentity/AIChessboardTileEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/tileentity/AIChessboardTileEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/tileentity/ChessesChessboardTileEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/tileentity/ChessesChessboardTileEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/tileentity/PuzzleChessboardTileEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/tileentity/PuzzleChessboardTileEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/project.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/project.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/project.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/project.test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/META-INF/mods.toml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/META-INF/mods.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
