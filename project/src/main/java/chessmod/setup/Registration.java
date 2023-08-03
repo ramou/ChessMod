@@ -14,16 +14,15 @@ import chessmod.blockentity.WoodChessboardBlockEntity;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
+import chessmod.item.ChessWrench;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkDirection;
@@ -75,6 +74,11 @@ public class Registration {
 			BLOCK_ENTITY_TYPES.register("puzzle_chessboard",
 					() -> BlockEntityType.Builder.of(PuzzleChessboardBlockEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
 
+	public static final RegistryObject<Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new Item(new Item.Properties()));
+
+
+
+
 	static {
 		ITEMS.register(WOOD_CHESSBOARD.getId().getPath(), () -> new BlockItem(WOOD_CHESSBOARD.get(), new Item.Properties()));
 		ITEMS.register(GOLD_CHESSBOARD.getId().getPath(), () -> new BlockItem(GOLD_CHESSBOARD.get(), new Item.Properties()));
@@ -115,7 +119,6 @@ public class Registration {
         .encoder(ArbitraryPlacement::encode)
         .consumerNetworkThread(ArbitraryPlacement.Handler::handle)
         .add();
-
     }
 
 	static {
@@ -130,6 +133,12 @@ public class Registration {
 							pOutput.accept(Registration.PUZZLE_CHESSBOARD.get());
 						})
 						.build());
+		CREATIVE_MODE_TABS.register("chesstab1", () -> CreativeModeTab.builder().icon(() -> new ItemStack(Registration.CHESS_WRENCH.get()))
+				.title(Component.translatable("itemGroup.chessmod"))
+				.displayItems((pParameters, pOutput) -> {
+					pOutput.accept(Registration.CHESS_WRENCH.get());
+				} ).build());
 	}
+	
 
 }
