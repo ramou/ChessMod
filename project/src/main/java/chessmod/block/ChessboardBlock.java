@@ -54,7 +54,7 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 		if(pLevel.isClientSide) {
 			openGui(pLevel, pPos);
 		}
-		
+
 		return InteractionResult.SUCCESS;
 	}
 
@@ -75,6 +75,8 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
-    }    
+    }
+
+
     
 }
