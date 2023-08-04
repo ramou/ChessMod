@@ -1,6 +1,7 @@
 package chessmod.block;
 
 
+import chessmod.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -47,17 +48,19 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 			BlockHitResult pHit) {
-		/*
-		 * We want to know how much to rotate the screen by based on what direction they're facing.
-		 */		
-		if(pLevel.isClientSide) {
-			openGui(pLevel, pPos);
-		}
-		if(!pLevel.isClientSide){
+
+		if(!pLevel.isClientSide && pPlayer.getMainHandItem().is(Registration.CHESS_WRENCH.get())){
 			Direction currentFacing = pState.getValue(FACING);
 			Direction newFacing = currentFacing.getClockWise();
 			pLevel.setBlockAndUpdate(pPos, pState.setValue(FACING,newFacing));
+			return InteractionResult.PASS;
+		} else if(pLevel.isClientSide && !pPlayer.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
+			/*
+			 * We want to know how much to rotate the screen by based on what direction they're facing.
+			 */
+			openGui(pLevel, pPos);
 		}
+
 
 		return InteractionResult.SUCCESS;
 	}
