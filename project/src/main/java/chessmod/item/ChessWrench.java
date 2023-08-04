@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import chessmod.block.ChessboardBlock;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -34,26 +35,26 @@ public class ChessWrench extends Item {
             if (state.getBlock() instanceof ChessboardBlock){
                 if (!level.isClientSide()){
                     Direction currentPosition = state.getValue(ChessboardBlock.FACING);
-                    Direction newPosition;
                     switch (currentPosition){
                         case NORTH:
-                            newPosition = Direction.EAST;
+                            currentPosition = Direction.EAST;
                             break;
                         case EAST:
-                            newPosition = Direction.SOUTH;
+                            currentPosition = Direction.SOUTH;
                             break;
                         case SOUTH:
-                            newPosition = Direction.WEST;
+                            currentPosition = Direction.WEST;
                             break;
                         case WEST:
-                            newPosition = Direction.NORTH;
+                            currentPosition = Direction.NORTH;
                             break;
                         default:
                             break;
                     }
-                    level.setBlockAndUpdate(pos, state.setValue(ChessboardBlock.FACING,newPosition));
+                    level.getBlockEntity(pos).getBlockState().setValue(ChessboardBlock.FACING, currentPosition);
                 }
                 return InteractionResultHolder.success(item);
+
             }
         }
 
