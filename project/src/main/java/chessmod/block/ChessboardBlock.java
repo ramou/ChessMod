@@ -27,7 +27,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class ChessboardBlock extends GlassBlock implements EntityBlock {
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;
-	
 	public ChessboardBlock() {
 		super(BlockBehaviour.Properties.of().noOcclusion());
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
@@ -54,11 +53,17 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 		if(pLevel.isClientSide) {
 			openGui(pLevel, pPos);
 		}
+		if(!pLevel.isClientSide){
+			Direction currentFacing = pState.getValue(FACING);
+			Direction newFacing = currentFacing.getClockWise();
+			pLevel.setBlockAndUpdate(pPos, pState.setValue(FACING,newFacing));
+		}
 
 		return InteractionResult.SUCCESS;
 	}
 
 	protected abstract void openGui(final Level pLevel, final BlockPos pos);
+
 
 	
     @Override

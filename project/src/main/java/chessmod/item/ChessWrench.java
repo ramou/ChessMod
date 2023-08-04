@@ -26,16 +26,14 @@ public class ChessWrench extends Item {
         ItemStack item = player.getItemInHand(hand);
         HitResult hitResult  = player.pick(5.0D,0.0F,false);
 
-
         if (hitResult.getType() == HitResult.Type.BLOCK){
+
             BlockPos pos = ((BlockHitResult) hitResult).getBlockPos();
             BlockState state = level.getBlockState(pos);
 
             if (state.getBlock() instanceof ChessboardBlock){
-
                 if (!level.isClientSide()){
-
-                    Direction currentPosition = state.getBedDirection(level,pos);
+                    Direction currentPosition = state.getValue(ChessboardBlock.FACING);
                     Direction newPosition;
                     switch (currentPosition){
                         case NORTH:
@@ -53,15 +51,12 @@ public class ChessWrench extends Item {
                         default:
                             break;
                     }
-
+                    level.setBlockAndUpdate(pos, state.setValue(ChessboardBlock.FACING,newPosition));
                 }
-
-
-
+                return InteractionResultHolder.success(item);
             }
-
-
         }
 
+        return InteractionResultHolder.pass(item);
     }
 }
