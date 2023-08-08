@@ -1,6 +1,8 @@
 package chessmod.block;
 
 
+import chessmod.common.dom.model.chess.board.Board;
+import chessmod.common.dom.model.chess.board.BoardFactory;
 import chessmod.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,8 +55,12 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 			Direction currentFacing = pState.getValue(FACING);
 			Direction newFacing = currentFacing.getClockWise();
 			pLevel.setBlockAndUpdate(pPos, pState.setValue(FACING,newFacing));
+
 			return InteractionResult.PASS;
-		} else if(pLevel.isClientSide && !pPlayer.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
+		} else if(pLevel.isClientSide && pPlayer.getMainHandItem().is(Registration.CHESS_WRENCH.get()) && pState.canHarvestBlock(pLevel,pPos,pPlayer)){
+			initializeBoard();
+		}
+		else if(pLevel.isClientSide && !pPlayer.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
 			/*
 			 * We want to know how much to rotate the screen by based on what direction they're facing.
 			 */
@@ -62,10 +68,15 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 		}
 
 
+
 		return InteractionResult.SUCCESS;
 	}
 
 	protected abstract void openGui(final Level pLevel, final BlockPos pos);
+
+	public void initializeBoard(){
+		BoardFactory.createBoard();
+	}
 
 
 	
