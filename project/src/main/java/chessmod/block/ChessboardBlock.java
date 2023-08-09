@@ -3,16 +3,20 @@ package chessmod.block;
 
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.board.BoardFactory;
+import chessmod.item.ChessWrench;
 import chessmod.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChangeOverTimeBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -24,8 +28,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 
 public abstract class ChessboardBlock extends GlassBlock implements EntityBlock {
@@ -57,8 +62,6 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 			pLevel.setBlockAndUpdate(pPos, pState.setValue(FACING,newFacing));
 
 			return InteractionResult.PASS;
-		} else if(pLevel.isClientSide && pPlayer.getMainHandItem().is(Registration.CHESS_WRENCH.get()) && pState.canHarvestBlock(pLevel,pPos,pPlayer)){
-			initializeBoard();
 		}
 		else if(pLevel.isClientSide && !pPlayer.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
 			/*
@@ -79,8 +82,35 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 	}
 
 
-	
-    @Override
+	@Override
+	public void playerWillDestroy(Level level, BlockPos pos, BlockState blockState, Player player) {
+
+		//Is there an another way than null??????
+		BlockEvent.BreakEvent breakEvent = null;
+
+		Item item;
+		player = breakEvent.getPlayer();
+		if (player != null){
+			item = player.getMainHandItem().getItem();
+			if (item instanceof ChessWrench) {
+				breakEvent.setCanceled(true);
+				initializeBoard();
+			}
+		}
+}
+
+
+/*
+	@SubscribeEvent
+	public static void onBlockBreak(BlockEvent.BreakEvent breakEvent){
+		Player player = breakEvent.getPlayer();
+		ItemStack itemStack = player.getMainHandItem();
+		if (!itemStack.isEmpty() && player.getMainHandItem().is(Registration.CHESS_WRENCH.get())){
+			breakEvent.setCanceled(true);
+		}
+	}
+*/
+	@Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
     	//Don't mess around, if they're looking up or down, direction is east.
     	//If we really want to make this nice we can examine relative directions 
