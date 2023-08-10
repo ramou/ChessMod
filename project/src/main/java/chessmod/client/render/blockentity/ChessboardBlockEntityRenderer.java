@@ -15,12 +15,10 @@ import chessmod.common.Point2f;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.piece.Piece;
-import chessmod.setup.Registration;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 
 public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<ChessboardBlockEntity> {
@@ -29,14 +27,6 @@ public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<Chessb
 
     public ChessboardBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 
-    }
-
-    public static void register() {
-    	BlockEntityRenderers.register(Registration.WOOD_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
-    	BlockEntityRenderers.register(Registration.GOLD_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
-		BlockEntityRenderers.register(Registration.PUZZLE_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer:: new);
-		BlockEntityRenderers.register(Registration.AI_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer:: new);
-		BlockEntityRenderers.register(Registration.CHESSES_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
     }
 
 	public void draw2DRect(VertexConsumer  bufferbuilder, PoseStack pPoseStack, Point2f p1, Point2f p2, float r, float g, float b, float a, int pPackedLight, int pPackedOverlay) {
