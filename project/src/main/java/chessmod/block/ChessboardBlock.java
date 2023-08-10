@@ -1,6 +1,7 @@
 package chessmod.block;
 
 
+import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.board.BoardFactory;
 import chessmod.item.ChessWrench;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -41,33 +43,33 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 	}
 	 
 	@Override
-	public VoxelShape getVisualShape(BlockState pState, BlockGetter pLevel, net.minecraft.core.BlockPos pPos, CollisionContext pContext) {
+	public VoxelShape getVisualShape(BlockState state, BlockGetter level, net.minecraft.core.BlockPos pos, CollisionContext context) {
 		VoxelShape BOARD = Block.box(0.0D, 12.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 		VoxelShape STAND = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 12.0D, 10.0D);
 		return Shapes.or(BOARD, STAND);
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState pState, BlockGetter pReader, net.minecraft.core.BlockPos pPos) {
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, net.minecraft.core.BlockPos pos) {
 		return false;
 	}
 	
 	@Override
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
 			BlockHitResult pHit) {
 
-		if(!pLevel.isClientSide && pPlayer.getMainHandItem().is(Registration.CHESS_WRENCH.get())){
-			Direction currentFacing = pState.getValue(FACING);
+		if(!level.isClientSide && player.getMainHandItem().is(Registration.CHESS_WRENCH.get())){
+			Direction currentFacing = state.getValue(FACING);
 			Direction newFacing = currentFacing.getClockWise();
-			pLevel.setBlockAndUpdate(pPos, pState.setValue(FACING,newFacing));
+			level.setBlockAndUpdate(pos, state.setValue(FACING,newFacing));
 
 			return InteractionResult.PASS;
 		}
-		else if(pLevel.isClientSide && !pPlayer.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
+		else if(level.isClientSide && !player.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
 			/*
 			 * We want to know how much to rotate the screen by based on what direction they're facing.
 			 */
-			openGui(pLevel, pPos);
+			openGui(level, pos);
 		}
 
 
@@ -75,41 +77,21 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 		return InteractionResult.SUCCESS;
 	}
 
-	protected abstract void openGui(final Level pLevel, final BlockPos pos);
-
-	public void initializeBoard(){
-		BoardFactory.createBoard();
-	}
+	protected abstract void openGui(final Level level, final BlockPos pos);
 
 
 	@Override
-	public void playerWillDestroy(Level level, BlockPos pos, BlockState blockState, Player player) {
-
-		//Is there an another way than null??????
-		BlockEvent.BreakEvent breakEvent = null;
-
-		Item item;
-		player = breakEvent.getPlayer();
-		if (player != null){
-			item = player.getMainHandItem().getItem();
-			if (item instanceof ChessWrench) {
-				breakEvent.setCanceled(true);
-				initializeBoard();
+	public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+		if(player.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
+			if(!level.isClientSide && level.getBlockEntity(pos) instanceof ChessboardBlockEntity chessboard) {
+				chessboard.initialize();
+				chessboard.notifyClientOfBoardChange();
+				return false;
 			}
 		}
-}
-
-
-/*
-	@SubscribeEvent
-	public static void onBlockBreak(BlockEvent.BreakEvent breakEvent){
-		Player player = breakEvent.getPlayer();
-		ItemStack itemStack = player.getMainHandItem();
-		if (!itemStack.isEmpty() && player.getMainHandItem().is(Registration.CHESS_WRENCH.get())){
-			breakEvent.setCanceled(true);
-		}
+		return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
 	}
-*/
+
 	@Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
     	//Don't mess around, if they're looking up or down, direction is east.
@@ -126,6 +108,4 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
         builder.add(FACING);
     }
 
-
-    
 }

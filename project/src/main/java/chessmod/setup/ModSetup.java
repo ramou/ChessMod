@@ -16,7 +16,6 @@ public class ModSetup {
         bus.addGenericListener(Entity.class, EloEvents::onAttachCapabilitiesPlayer);
         bus.addListener(EloEvents::onPlayerCloned);
         bus.addListener(EloEvents::onRegisterCapabilities);
-
     }
 
 }

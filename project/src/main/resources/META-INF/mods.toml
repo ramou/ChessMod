@@ -27,7 +27,7 @@ displayName="Chess Mod" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="chessmod.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+credits="Thanks to Ella, Rama and Thomas for their work Summer 2023" #optional
 # A text field displayed in the mod UI
 authors="stuartthiel" #optional
 # Display Test controls the display for your mod in the server connection screen
