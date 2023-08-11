@@ -2,15 +2,12 @@ package chessmod.client.render.tileentity;
 
 import chessmod.block.ChessboardBlock;
 import chessmod.common.Point2f;
-import chessmod.common.dom.model.chess.Side;
-import chessmod.tileentity.GoldChessBoardTileEntity;
-import org.lwjgl.opengl.GL11;
-
 import chessmod.common.dom.model.chess.Point;
+import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.tileentity.ChessboardTileEntity;
+import chessmod.tileentity.GoldChessBoardTileEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -18,6 +15,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardTileEntity> {
 
@@ -100,36 +98,15 @@ public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardT
             bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
             tessellator.draw();
             bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
-            bufferbuilder.setTranslation(x, y, z);
         }
+
+        rotateForBoardFacing(tileEntityIn, x,  y,  z);
 
 
         this.bindTexture(black);
-        for (int ay = 0; ay < 8; ay++) {
-            for (int ax = 0; ax < 8; ax++) {
-                int bx = ax;
-                int by = ay;
-                switch (tileEntityIn.getBlockState().get(ChessboardBlock.FACING)) {
-                    case UP:
-                    case DOWN:
-                    case NORTH:
-                        bx = 7 - ax;
-                        by = 7 - ay;
-                        break;
-                    case EAST:
-                        bx = ay;
-                        by = 7 - ax;
-                        break;
-                    case SOUTH:
-                        break;
-                    case WEST:
-                        bx = 7 - ay;
-                        by = ax;
-                        break;
-                }
-
-
-                Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(ax, ay));
+        for (int by = 0; by < 8; by++) {
+            for (int bx = 0; bx < 8; bx++) {
+                Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(bx, by));
                 if (piece != null) switch (piece.getCharacter()) {
                     case 'r':
                         drawRook(bx, by, bufferbuilder);
@@ -154,36 +131,20 @@ public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardT
             }
         }
 
-        bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
         tessellator.draw();
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
 
         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
-        bufferbuilder.setTranslation(x, y, z);
+
+        rotateForBoardFacing(tileEntityIn, x,  y,  z);
         this.bindTexture(white);
 
-        for (int ay = 0; ay < 8; ay++) {
-            for (int ax = 0; ax < 8; ax++) {
-                int bx = ax;
-                int by = ay;
-                switch (tileEntityIn.getBlockState().get(ChessboardBlock.FACING)) {
-                    case UP:
-                    case DOWN:
-                    case NORTH:
-                        bx = 7 - ax;
-                        by = 7 - ay;
-                        break;
-                    case EAST:
-                        bx = ay;
-                        by = 7 - ax;
-                        break;
-                    case SOUTH:
-                        break;
-                    case WEST:
-                        bx = 7 - ay;
-                        by = ax;
-                        break;
-                }
-                Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(ax, ay));
+        for (int by = 0; by < 8; by++) {
+            for (int bx = 0; bx < 8; bx++) {
+
+                Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(bx, by));
                 if (piece != null) switch (piece.getCharacter()) {
                     case 'R':
                         drawRook(bx, by, bufferbuilder);
@@ -214,6 +175,30 @@ public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardT
         BlockModelRenderer.disableCache();
         GlStateManager.enableCull();
         GlStateManager.popMatrix();
+    }
+
+    private void rotateForBoardFacing(ChessboardTileEntity tileEntity, double x, double y, double z) {
+
+        GlStateManager.translated(x, y, z);
+        switch (tileEntity.getBlockState().get(ChessboardBlock.FACING)) {
+            case UP: //We should never have this cse, but it'll look like SOUTH if we do
+            case DOWN:
+                break;
+            case NORTH:
+                GlStateManager.rotatef(180,0, 1, 0);
+                GlStateManager.translated(-1, 0, -1);
+                break;
+            case EAST:
+                GlStateManager.rotatef(90,0, 1, 0);
+                GlStateManager.translated(-1, 0, 0);
+                break;
+            case SOUTH:
+                break;
+            case WEST:
+                GlStateManager.rotatef(270,0, 1, 0);
+                GlStateManager.translated(0, 0, -1);
+                break;
+        }
     }
 
     private void drawBishop(int bx, int bz, BufferBuilder bufferbuilder) {
