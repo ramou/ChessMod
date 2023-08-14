@@ -2,19 +2,20 @@ package chessmod.common.network;
 
 import java.util.function.Supplier;
 
-import chessmod.blockentity.ChessboardBlockEntity;
-import chessmod.blockentity.WoodChessboardBlockEntity;
 import chessmod.common.dom.model.chess.PieceInitializer;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.Piece;
-import chessmod.setup.Registration;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent;
+import chessmod.init.ModSounds;
+import chessmod.tileentity.ChessboardTileEntity;
+import chessmod.tileentity.WoodChessboardTileEntity;
+
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 public class ArbitraryPlacement {
 	private final int point;
@@ -22,10 +23,7 @@ public class ArbitraryPlacement {
 	private final double x;
 	private final double y;
 	private final double z;
-
-	public int getPiece() {
-		return piece;
-	}
+	
 
 	public ArbitraryPlacement(Piece piece, BlockPos pos) {
 		this(piece.getPosition().serialize(), piece.serialize(), pos.getX(), pos.getY(), pos.getZ());
@@ -39,7 +37,7 @@ public class ArbitraryPlacement {
 		this.z = z;
 	}
 
-	public static ArbitraryPlacement decode(FriendlyByteBuf buf) {
+	public static ArbitraryPlacement decode(PacketBuffer buf) {
 		int point  = buf.readInt();
 		int piece  = buf.readInt();
 		double x = buf.readDouble();
@@ -48,7 +46,7 @@ public class ArbitraryPlacement {
 		return new ArbitraryPlacement(point, piece, x, y, z);
 	}
 
-	public static void encode(ArbitraryPlacement msg, FriendlyByteBuf buf) {
+	public static void encode(ArbitraryPlacement msg, PacketBuffer buf) {
 		buf.writeInt(msg.point);
 		buf.writeInt(msg.piece);
 		buf.writeDouble(msg.x);
@@ -63,19 +61,18 @@ public class ArbitraryPlacement {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
-
-						Level level = ctx.get().getSender().level();
-						BlockPos pos = new BlockPos((int) message.x, (int) message.y, (int) message.z);
-						
-						if(level.isLoaded(pos)) {
-							BlockEntity blockEntity = level.getBlockEntity(pos);
-							if (blockEntity instanceof WoodChessboardBlockEntity) { //If we want this stuff for other boards, we have to reconsider move format.
-								Board board = ((ChessboardBlockEntity)blockEntity).getBoard();
+						World world = ctx.get().getSender().world;
+						BlockPos pos = new BlockPos(message.x, message.y, message.z);
+						if(world.isAreaLoaded(pos, 1)) {
+							
+							TileEntity tileEntity = world.getTileEntity(pos);
+							if (tileEntity instanceof WoodChessboardTileEntity) { //If we want this stuff for other boards, we have to reconsider move format.
+								Board board = ((ChessboardTileEntity)tileEntity).getBoard();
 								Point point = Point.create(message.point);
 								Piece piece = PieceInitializer.create(point, message.piece);
 								board.setPiece(piece, point);
-								((ChessboardBlockEntity)blockEntity).notifyClientOfBoardChange();
-								level.playSound(null, pos, Registration.PLACE_PIECE_SOUND.get(), SoundSource.BLOCKS, 1F, 1F);
+								((ChessboardTileEntity)tileEntity).notifyClientOfBoardChange();
+								world.playSound(null, pos, ModSounds.place_piece, SoundCategory.BLOCKS, 1F, 1F);
 							}
 							
 						}

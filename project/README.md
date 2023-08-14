@@ -1,12 +1,8 @@
 = My First Crappy Mod =
 
 
-The biggest fix I need to do often is run these (I'm sure there's some redundancy):
+The biggest fix I need to do often is run this:
 ```
-.\gradlew clean
-.\gradlew cleanEclipse
-.\gradlew --refresh-dependencies
-.\gradlew eclipse
 .\gradlew genEclipseRuns
 ```
 in the workspace directory.
@@ -19,10 +15,9 @@ To get a final build, use
 The `.jar` that isn't a .sources can be stuck in a mod folder.
 
 Here are some of the resources I've been using:
- * https://leo3418.github.io/2021/02/06/forge-mod-migrate-to-1-16.html
- * https://cadiboo.github.io/tutorials/1.15.2/forge/
- * https://mcforge.readthedocs.io/en/1.15.x/
- * https://wiki.mcjty.eu/modding/index.php?title=Tut15_Ep14
+ * https://github.com/ramou/FirstMod/tree/master/forge-1.14.4-28.2.0-mdk
+ * https://cadiboo.github.io/tutorials/1.14.4/forge/
+ * https://mcforge.readthedocs.io/en/1.14.x/
  * http://greyminecraftcoder.blogspot.com/p/list-of-topics-1144.html
  * https://minecraft.gamepedia.com/Tutorials/Creating_a_resource_pack
  * http://greyminecraftcoder.blogspot.com/2014/12/block-models-texturing-quads-faces.html
@@ -34,7 +29,6 @@ Here are some of the resources I've been using:
  * https://github.com/Vazkii/Botania
  * https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
  * http://greyminecraftcoder.blogspot.com/2013/08/the-tessellator.html
- * http://jabelarminecraft.blogspot.com/p/minecraft-17x.html
  
 Here are resources around Gradle usage in this context
  * https://forgegradle.readthedocs.io/en/latest/reference/tasks/
@@ -64,10 +58,9 @@ Use the right version of forge! I really must change my structure so it doesn't 
 === building jar ===
 I had to manually set my `JAVA_HOME` to a JDK since it was defaulting to the JRE. I don't know how to make it pull this from eclipse like seems sensible, so I did:
 ```
-$Env:JAVA_HOME = "C:\Program Files\Java\jdk-17.0.1"
-```
-Note that you do need Java 17 for MC 1.18.2. I heard 16 works, but why bother checking?
+$Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_251"
 
+```
 
 == Chess ==
 And of course, what I'm basing the actual chess off:

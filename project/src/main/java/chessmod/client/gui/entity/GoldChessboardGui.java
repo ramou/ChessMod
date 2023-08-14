@@ -5,10 +5,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.client.gui.GuiGraphics;
+import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import chessmod.ChessMod;
-import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Point.InvalidPoint;
@@ -17,11 +18,12 @@ import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.InvalidMoveException;
 import chessmod.common.dom.model.chess.piece.Pawn;
 import chessmod.common.dom.model.chess.piece.Piece;
-import net.minecraft.resources.ResourceLocation;
+import chessmod.tileentity.ChessboardTileEntity;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public class GoldChessboardGui extends ChessboardGUI {
 
-	public GoldChessboardGui(ChessboardBlockEntity board) {
+	public GoldChessboardGui(ChessboardTileEntity board) {
 		super(board);
 
 		//I find that if I don't do this, Pieces
@@ -41,30 +43,28 @@ public class GoldChessboardGui extends ChessboardGUI {
 	protected static HashMap<Integer, TilePiece> whiteSideboardMap = new HashMap<Integer, TilePiece>();
 	Point promotionPosition = null;
 	
-	
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-				
+	public void render(int par1, int par2, float par3) {
 	    //Draw the background
-		drawBackground(guiGraphics);
-		showTurnColor(guiGraphics);
+		drawBackground();
+		showTurnColor();
 
 		//Draw the existing pieces
-		drawPieces(guiGraphics);
+		drawPieces();
 	    
 	    //Test highlighting squares
-	    if(selected!=null)highlightSelected(guiGraphics);
+	    if(selected!=null)highlightSelected();
 	
 	    
 	    //Draw highlights of any selected pieces and their valid moves
-		highlightPossibleMoves(guiGraphics);
+		highlightPossibleMoves();
 	    
 		
 		//Show sideboard for current player if they're trying to promote
 		if(promotionPosition != null) {
 			Map<Integer, TilePiece> map = board.getBoard().getCurrentPlayer().equals(Side.WHITE)?whiteSideboardMap:blackSideboardMap;
 			for(TilePiece p: map.values()) {
-				drawSideboardPiece(guiGraphics, p);
+				drawSideboardPiece(p);
 			} 
 		}
 
@@ -72,14 +72,14 @@ public class GoldChessboardGui extends ChessboardGUI {
 		Point kingPoint = board.getBoard().getCheckMate();
 		if(kingPoint == null) {
 			kingPoint = board.getBoard().getCheck();
-			if(kingPoint != null) highlightSquare(guiGraphics, kingPoint, CHECK);
-		} else highlightSquare(guiGraphics, kingPoint, CHECKMATE);
+			if(kingPoint != null) highlightSquare(kingPoint, Color4f.CHECK);
+		} else highlightSquare(kingPoint, Color4f.CHECKMATE);
 		
 	}
 
-	private void highlightPossibleMoves(GuiGraphics guiGraphics) {
+	private void highlightPossibleMoves() {
 	    for(Move m: possibleMoves) {
-	    	highlightSquare(guiGraphics, m.getTarget(), POSSIBLE);
+	    	highlightSquare(m.getTarget(), Color4f.POSSIBLE);
 	    }
 	}
 	
@@ -152,6 +152,9 @@ public class GoldChessboardGui extends ChessboardGUI {
 					}
 				}
 				
+
+				
+				
 			} 
 
 		}
@@ -188,28 +191,46 @@ public class GoldChessboardGui extends ChessboardGUI {
 		return null;
 	}
 
-	protected void showTurnColor(GuiGraphics guiGraphics) {
-		ResourceLocation c = BLACK;		
-		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) c = WHITE;
-
-		final int boardOriginX = (int)(width / 2f - 128);
-		final int boardOriginY = (int)(height / 2f - 128);
-		int x1Outter = boardOriginX + 26;
-		int x2Inner = boardOriginX + 256 - 30;
-		int y1Outter = boardOriginY + 26;
-		int y2Inner = boardOriginY + 256 - 30;
-
+	protected void showTurnColor() {
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.disableTexture();
+		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) GlStateManager.color4f(1f, 1f, 1f, 1f);
+		else GlStateManager.color4f(0f, 0f, 0f, 1f);
+		
+		float myHeight=Math.min(height, 256);
+		final float boardOriginX = width/2f - 128;
+		final float boardOriginY = height/2f - myHeight/2f;
+		  
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		//top
-		highlightSquare(guiGraphics, x1Outter, y1Outter, 204, 4, c);
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+30F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+30F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
 
 		//left
-		highlightSquare(guiGraphics, x1Outter, y1Outter, 4, 204, c);
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+30, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+30, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
 
 		//right
-		highlightSquare(guiGraphics, x2Inner, y1Outter, 4, 204, c);
-
+		bufferbuilder.pos(boardOriginX+256-30, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+256-30, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();		
+		
 		//bottom
-		highlightSquare(guiGraphics, x1Outter, y2Inner, 204, 4, c);
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-30F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-30F*myHeight/256F, blitOffset).endVertex();		
+		tessellator.draw();
+		
+		GlStateManager.color4f(1f, 1f, 1f, 1f);
+		GlStateManager.enableTexture();
+		GlStateManager.disableBlend();
 	}
 	
 }

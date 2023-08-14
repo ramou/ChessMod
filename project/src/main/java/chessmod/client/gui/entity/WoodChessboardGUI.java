@@ -2,27 +2,26 @@ package chessmod.client.gui.entity;
 
 import java.util.HashMap;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import org.lwjgl.opengl.GL11;
 
-import chessmod.blockentity.ChessboardBlockEntity;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import chessmod.common.dom.model.chess.Move;
-import chessmod.common.dom.model.chess.PieceInitializer;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Point.InvalidPoint;
 import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.PacketHandler;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
+import chessmod.tileentity.ChessboardTileEntity;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class WoodChessboardGUI extends ChessboardGUI {
 
-	public WoodChessboardGUI(ChessboardBlockEntity board) {
+	public WoodChessboardGUI(ChessboardTileEntity board) {
 		super(board);
 		
 		for(TilePiece p: TilePiece.values()) {
@@ -35,41 +34,45 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	protected TilePiece sideBoardSelected = null;
 	protected static HashMap<Integer, TilePiece> blackSideboardMap = new HashMap<Integer, TilePiece>();
 	protected static HashMap<Integer, TilePiece> whiteSideboardMap = new HashMap<Integer, TilePiece>();
-
-
+	
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-
+	public void render(int par1, int par2, float par3) {
 	    //Draw the background
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, background);
-		drawBackground(guiGraphics);
+		drawBackground();
+		
 		//Draw sideboard
 		//Also, if we don't use p, it doesn't get loaded and things get weird fast!
-		for(TilePiece p: TilePiece.values()) {
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			drawSideboardPiece(guiGraphics, p);
-		}
-
+		for(TilePiece p: TilePiece.values()) drawSideboardPiece(p);
+	
 		//Draw the existing pieces
-		drawPieces(guiGraphics);
-
+		drawPieces();
+	    
 	    //Test highlighting squares
-	    if(selected!=null) {
-	    	highlightSelected(guiGraphics);
-	    }
-	    
-	    if(sideBoardSelected!=null) {
-	    	highlightSideBoardSelected(guiGraphics);
-	    }
-	    
+	    if(selected!=null)highlightSelected();
+	    if(sideBoardSelected!=null)highlightSideBoardSelected();
 
 	}
 
-	protected void highlightSideBoardSelected(GuiGraphics guiGraphics) {
-		int x = (int)(width/2f - 128 + (sideBoardSelected.getSide().equals(Side.BLACK)?0:16+24*9));
-		int y = (int)(height/2f - 128 + (32+sideBoardSelected.index*24));
-		highlightSquare(guiGraphics, x, y, POSSIBLE);
+	protected void highlightSideBoardSelected() {
+		GlStateManager.enableBlend();
+		GlStateManager.disableTexture();
+		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.color4f(0.5f, 0.8f, 0.5f, 0.5f);
+		  
+		float myHeight=Math.min(height, 256);
+		float x1 = width/2f - 128 + (sideBoardSelected.getSide().equals(Side.BLACK)?0:16+24*9);
+		float x2 = x1+24;
+		float y1 = height/2f - myHeight/2f+(32+sideBoardSelected.index*24)*myHeight/256f;
+		float y2 = y1+24*myHeight/256f;
+		  
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+		bufferbuilder.pos(x1, y2, blitOffset).endVertex();
+		bufferbuilder.pos(x2, y2, blitOffset).endVertex();
+		bufferbuilder.pos(x2, y1, blitOffset).endVertex();
+		bufferbuilder.pos(x1, y1, blitOffset).endVertex();
+		tessellator.draw();
+		GlStateManager.enableTexture();
+		GlStateManager.disableBlend();
 	}
 	
 	@Override
@@ -118,16 +121,6 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	}
 	
 	protected void notifyServerOfArbitraryPlacement(Piece pi) {
-		ArbitraryPlacement move = new ArbitraryPlacement(pi, board.getBlockPos());
-		
-		//When running on a local server the client update doesn't happen till
-		//you "unpause" by closing the gui, so this fudges things.
-		if(getMinecraft().isLocalServer()) {
-			Piece piece = PieceInitializer.create(pi.getPosition(), move.getPiece());
-			board.getBoard().setPiece(piece, pi.getPosition());
-		}
-
-		
-		PacketHandler.sendToServer(move);
+		PacketHandler.sendToServer(new ArbitraryPlacement(pi, board.getPos()));
 	}
 }

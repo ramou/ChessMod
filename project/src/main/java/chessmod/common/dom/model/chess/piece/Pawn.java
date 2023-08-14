@@ -120,10 +120,10 @@ public class Pawn extends Piece {
 	public Move createPromotionMove(Board b, Point t, Piece p) {
 		return Move.createPawnPromotion(this, t, p);
 	}
-	
+
 	@Override
 	public boolean hasMoved() {
 		return getSide().equals(Side.BLACK)?getPosition().y != 6:getPosition().y != 1;
 	}
-	
+
 }
