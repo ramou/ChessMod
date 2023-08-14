@@ -14,6 +14,8 @@ import chessmod.blockentity.WoodChessboardBlockEntity;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
+import chessmod.item.ChessWrench;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -59,6 +61,7 @@ public class Registration {
 							pOutput.accept(Registration.CHESSES_CHESSBOARD.get());
 							pOutput.accept(Registration.AI_CHESSBOARD.get());
 							pOutput.accept(Registration.PUZZLE_CHESSBOARD.get());
+							pOutput.accept(Registration.CHESS_WRENCH.get());
 						})
 						.build());
 		
@@ -89,6 +92,9 @@ public class Registration {
 	public static final RegistryObject<BlockEntityType<PuzzleChessboardBlockEntity>> PUZZLE_CHESSBOARD_BE =
 			BLOCK_ENTITY_TYPES.register("puzzle_chessboard",
 					() -> BlockEntityType.Builder.of(PuzzleChessboardBlockEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
+
+	public static final RegistryObject<Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new Item(new Item.Properties()));
+
 
 	static {
 		ITEMS.register(WOOD_CHESSBOARD.getId().getPath(), () -> new BlockItem(WOOD_CHESSBOARD.get(), new Item.Properties()));
