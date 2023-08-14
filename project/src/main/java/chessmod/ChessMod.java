@@ -24,5 +24,5 @@ public class ChessMod {
 	public void setupAdditional (final FMLCommonSetupEvent event){
 		EloCapability.register();
 	}
-	
+
 }

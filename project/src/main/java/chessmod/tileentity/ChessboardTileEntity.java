@@ -1,13 +1,10 @@
 package chessmod.tileentity;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import chessmod.client.render.ChessboardRenderer;
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.board.BoardFactory;
 import chessmod.common.dom.model.chess.board.SerializedBoard;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -15,18 +12,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class ChessboardTileEntity extends TileEntity {
-
-	@Nullable
-	@OnlyIn(Dist.CLIENT)
-	public ChessboardRenderer chessboardRenderer;
-
 	protected Board board = BoardFactory.createBoard();
 	
 	public Board getBoard() {
@@ -37,10 +28,6 @@ public abstract class ChessboardTileEntity extends TileEntity {
 	@Override
 	public void onLoad() {
 		super.onLoad();
-		World world = getWorld();
-		if (world == null || !world.isRemote)
-			return; // Return if the world is null or if we are on the logical server
-		chessboardRenderer = ChessboardRenderer.forTileEntity(this);
 	}
 
 	@Override

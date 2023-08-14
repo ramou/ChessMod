@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -193,10 +194,12 @@ public class GoldChessboardGui extends ChessboardGUI {
 
 	protected void showTurnColor() {
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.disableTexture();
-		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) GlStateManager.color4f(1f, 1f, 1f, 1f);
-		else GlStateManager.color4f(0f, 0f, 0f, 1f);
+		
+		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) Color4f.WHITE.apply();
+		else Color4f.BLACK.apply();
+
 		
 		float myHeight=Math.min(height, 256);
 		final float boardOriginX = width/2f - 128;
@@ -204,31 +207,31 @@ public class GoldChessboardGui extends ChessboardGUI {
 		  
 		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		//top
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+30F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+30F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+30F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+30F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();
 
 		//left
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+30, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+30, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+30, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+30, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();
 
 		//right
-		bufferbuilder.pos(boardOriginX+256-30, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-30, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, blitOffset).endVertex();		
+		bufferbuilder.pos(boardOriginX+256-30, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+256-30, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();		
 		
 		//bottom
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-30F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, blitOffset).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-30F*myHeight/256F, blitOffset).endVertex();		
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-30F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
+		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-30F*myHeight/256F, getBlitOffset()).endVertex();		
 		tessellator.draw();
 		
-		GlStateManager.color4f(1f, 1f, 1f, 1f);
+		GL11.glColor4f(1f, 1f, 1f, 1f);
 		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();
 	}

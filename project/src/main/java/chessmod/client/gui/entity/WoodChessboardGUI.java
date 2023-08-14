@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.Point;
@@ -56,8 +57,7 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	protected void highlightSideBoardSelected() {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture();
-		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		GlStateManager.color4f(0.5f, 0.8f, 0.5f, 0.5f);
+		RenderSystem.color4f(0.5f, 0.8f, 0.5f, 0.5f);
 		  
 		float myHeight=Math.min(height, 256);
 		float x1 = width/2f - 128 + (sideBoardSelected.getSide().equals(Side.BLACK)?0:16+24*9);
@@ -66,10 +66,10 @@ public class WoodChessboardGUI extends ChessboardGUI {
 		float y2 = y1+24*myHeight/256f;
 		  
 		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		bufferbuilder.pos(x1, y2, blitOffset).endVertex();
-		bufferbuilder.pos(x2, y2, blitOffset).endVertex();
-		bufferbuilder.pos(x2, y1, blitOffset).endVertex();
-		bufferbuilder.pos(x1, y1, blitOffset).endVertex();
+		bufferbuilder.pos(x1, y2, getBlitOffset()).endVertex();
+		bufferbuilder.pos(x2, y2, getBlitOffset()).endVertex();
+		bufferbuilder.pos(x2, y1, getBlitOffset()).endVertex();
+		bufferbuilder.pos(x1, y1, getBlitOffset()).endVertex();
 		tessellator.draw();
 		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();

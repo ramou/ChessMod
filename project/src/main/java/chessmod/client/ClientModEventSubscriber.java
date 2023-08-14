@@ -32,12 +32,11 @@ public final class ClientModEventSubscriber {
 	public static void onFMLClientSetupEvent(final FMLClientSetupEvent event) {
 
 		// Register TileEntity Renderers
-		ClientRegistry.bindTileEntitySpecialRenderer(WoodChessboardTileEntity.class, new ChessboardTileEntityRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(GoldChessBoardTileEntity.class, new ChessboardTileEntityRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(AIChessboardTileEntity.class, new ChessboardTileEntityRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(ChessesChessboardTileEntity.class, new ChessboardTileEntityRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(PuzzleChessboardTileEntity.class, new ChessboardTileEntityRenderer());
-
+		ClientRegistry.bindTileEntityRenderer(WoodChessboardTileEntity.TYPE, ChessboardTileEntityRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(GoldChessBoardTileEntity.TYPE, ChessboardTileEntityRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(PuzzleChessboardTileEntity.TYPE,ChessboardTileEntityRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ChessesChessboardTileEntity.TYPE, ChessboardTileEntityRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(AIChessboardTileEntity.TYPE, ChessboardTileEntityRenderer::new);
 		LOGGER.debug("Registered TileEntity Renderers");
 
 	}

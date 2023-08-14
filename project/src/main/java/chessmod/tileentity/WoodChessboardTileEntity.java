@@ -2,14 +2,15 @@ package chessmod.tileentity;
 
 import chessmod.ChessMod;
 import chessmod.init.ModTileEntityTypes;
-
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ObjectHolder;
 
 @Mod.EventBusSubscriber(modid = ChessMod.MODID)
 public class WoodChessboardTileEntity extends ChessboardTileEntity{
 	
-	public WoodChessboardTileEntity(final TileEntityType<?> type) {
+	@ObjectHolder(ChessMod.MODID+ ":" + "wood_chessboard") public static TileEntityType<WoodChessboardTileEntity> TYPE;
+	public WoodChessboardTileEntity(TileEntityType<?> type) {
 		super(type);
 	}
 	

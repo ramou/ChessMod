@@ -2,37 +2,66 @@ package chessmod.client.render.tileentity;
 
 import chessmod.block.ChessboardBlock;
 import chessmod.common.Point2f;
-import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Side;
-import chessmod.common.dom.model.chess.piece.Piece;
-import chessmod.tileentity.ChessboardTileEntity;
 import chessmod.tileentity.GoldChessBoardTileEntity;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.*;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
+import chessmod.ChessMod;
+import chessmod.client.gui.entity.ChessboardGUI.Color4f;
+import chessmod.common.dom.model.chess.Point;
+import chessmod.common.dom.model.chess.piece.Piece;
+import chessmod.tileentity.ChessboardTileEntity;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
+
 public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardTileEntity> {
+    public static final ResourceLocation black = new ResourceLocation("chessmod", "textures/block/black.png");
+    public static final ResourceLocation white = new ResourceLocation("chessmod", "textures/block/white.png");
+    public static final ResourceLocation shadeblack = new ResourceLocation("chessmod", "textures/gui/shadeblack.png");
+    public static final ResourceLocation shadewhite = new ResourceLocation("chessmod", "textures/gui/shadewhite.png");
+    public static final RenderType BLACK_PIECE;
+    public static final RenderType WHITE_PIECE;
 
+    public static final RenderType SHADE_BLACK;
+    public static final RenderType SHADE_WHITE;
 
-    public void draw2DRect(BufferBuilder bufferbuilder, Point2f p1, Point2f p2) {
-        bufferbuilder.pos(p2.x, 1.001, p1.y).tex(1, 1).normal(0, 1, 0).endVertex();
-        bufferbuilder.pos(p1.x, 1.001, p1.y).tex(1, 0).normal(0, 1, 0).endVertex();
-        bufferbuilder.pos(p1.x, 1.001, p2.y).tex(0, 0).normal(0, 1, 0).endVertex();
-        bufferbuilder.pos(p2.x, 1.001, p2.y).tex(0, 1).normal(0, 1, 0).endVertex();
+    static {
+        RenderType.State glState = RenderType.State.getBuilder().texture(new RenderState.TextureState(black, false, true)).diffuseLighting(new RenderState.DiffuseLightingState(true)).build(true);
+        BLACK_PIECE = RenderType.makeType(ChessMod.MODID + "piece", DefaultVertexFormats.POSITION_TEX, GL11.GL_QUADS, 64, glState);
+        glState = RenderType.State.getBuilder().texture(new RenderState.TextureState(white, false, true)).diffuseLighting(new RenderState.DiffuseLightingState(true)).build(true);
+        WHITE_PIECE = RenderType.makeType(ChessMod.MODID + "piece", DefaultVertexFormats.POSITION_TEX, GL11.GL_QUADS, 64, glState);
+        glState = RenderType.State.getBuilder().texture(new RenderState.TextureState(shadeblack, false, true)).diffuseLighting(new RenderState.DiffuseLightingState(true)).build(true);
+        SHADE_BLACK = RenderType.makeType(ChessMod.MODID + "piece", DefaultVertexFormats.POSITION_TEX, GL11.GL_QUADS, 64, glState);
+        glState = RenderType.State.getBuilder().texture(new RenderState.TextureState(shadewhite, false, true)).diffuseLighting(new RenderState.DiffuseLightingState(true)).build(true);
+        SHADE_WHITE = RenderType.makeType(ChessMod.MODID + "piece", DefaultVertexFormats.POSITION_TEX, GL11.GL_QUADS, 64, glState);
     }
 
-    protected void showTurnColor(BufferBuilder bufferbuilder, Side s) {
+    public ChessboardTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn);
+    }
 
+    public void draw2DRect(MatrixStack matrixStackIn, IVertexBuilder bufferbuilder, Point2f p1, Point2f p2) {
+        Matrix4f model = matrixStackIn.getLast().getMatrix();
+        bufferbuilder.pos(model, p2.x, 1.001F, p1.y).tex(1, 1).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(model, p1.x, 1.001F, p1.y).tex(1, 0).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(model, p1.x, 1.001F, p2.y).tex(0, 0).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(model, p2.x, 1.001F, p2.y).tex(0, 1).normal(0, 1, 0).endVertex();
+    }
+
+    protected void showTurnColor(MatrixStack matrixStackIn, IRenderTypeBuffer b, Side s) {
+        IVertexBuilder bufferbuilder = null;
         if (s.equals(Side.WHITE)) {
-            this.bindTexture(new ResourceLocation("chessmod", "textures/gui/shadewhite.png"));
+            bufferbuilder = b.getBuffer(SHADE_WHITE);
         } else {
-            this.bindTexture(new ResourceLocation("chessmod", "textures/gui/shadeblack.png"));
+            bufferbuilder = b.getBuffer(SHADE_BLACK);
         }
 
         float x1Outter = 26f / 256f;
@@ -49,189 +78,161 @@ public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardT
         //top
         Point2f p1 = new Point2f(x1Outter, z1Outter);
         Point2f p2 = new Point2f(x2Outter, z1Inner);
-        draw2DRect(bufferbuilder, p1, p2);
+        draw2DRect(matrixStackIn, bufferbuilder, p1, p2);
         //left
         p2 = new Point2f(x1Inner, z2Outter);
-        draw2DRect(bufferbuilder, p1, p2);
+        draw2DRect(matrixStackIn, bufferbuilder, p1, p2);
 
         //right
         p1 = new Point2f(x2Inner, z1Outter);
         p2 = new Point2f(x2Outter, z2Outter);
-        draw2DRect(bufferbuilder, p1, p2);
+        draw2DRect(matrixStackIn, bufferbuilder, p1, p2);
 
         //bottom
         p1 = new Point2f(x1Outter, z2Inner);
-        draw2DRect(bufferbuilder, p1, p2);
+        draw2DRect(matrixStackIn, bufferbuilder, p1, p2);
     }
 
     /**
      * Render our TileEntity
      */
     @Override
-    public void render(final ChessboardTileEntity tileEntityIn, final double x, final double y, final double z, final float partialTicks, final int destroyStage) {
-        Tessellator tessellator = Tessellator.getInstance();
-
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        ResourceLocation black = new ResourceLocation("chessmod", "textures/block/black.png");
-        ResourceLocation white = new ResourceLocation("chessmod", "textures/block/white.png");
-
-        GlStateManager.pushMatrix();
+    public void render(ChessboardTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer b, int combinedLightIn, int combinedOverlayIn) {
+        final double x = 0;
+        final double y = 0;
+        final double z = 0;
 
         GlStateManager.disableCull();
-        if (Minecraft.isAmbientOcclusionEnabled()) {
-            GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        } else {
-            GlStateManager.shadeModel(GL11.GL_FLAT);
-        }
-
-        BlockModelRenderer.enableCache();
-
-        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
-
-        bufferbuilder.setTranslation(x, y, z);
-
-
+        GlStateManager.enableTexture();
+        Color4f.WHITE.apply();
 
         if (tileEntityIn instanceof GoldChessBoardTileEntity) {
             //Draw current-turn indicator:
-            showTurnColor(bufferbuilder, tileEntityIn.getBoard().getCurrentPlayer());
-            bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
-            tessellator.draw();
-            bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+            matrixStackIn.push();
+            showTurnColor(matrixStackIn, b, tileEntityIn.getBoard().getCurrentPlayer());
+            matrixStackIn.pop();
         }
 
-        rotateForBoardFacing(tileEntityIn, x,  y,  z);
+        matrixStackIn.push();
+        IVertexBuilder bufferbuilder = b.getBuffer(BLACK_PIECE);
+        rotateForBoardFacing(tileEntityIn, matrixStackIn);
 
-
-        this.bindTexture(black);
         for (int by = 0; by < 8; by++) {
             for (int bx = 0; bx < 8; bx++) {
                 Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(bx, by));
                 if (piece != null) switch (piece.getCharacter()) {
                     case 'r':
-                        drawRook(bx, by, bufferbuilder);
+                        drawRook(bx, by, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     case 'n':
-                        drawKnight(bx, by, false, bufferbuilder);
+                        drawKnight(bx, by, false, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     case 'b':
-                        drawBishop(bx, by, bufferbuilder);
+                        drawBishop(bx, by, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     case 'q':
-                        drawQueen(bx, by, bufferbuilder);
+                        drawQueen(bx, by, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     case 'k':
-                        drawKing(bx, by, bufferbuilder);
+                        drawKing(bx, by, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     case 'p':
-                        drawPawn(bx, by, bufferbuilder);
+                        drawPawn(bx, by, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     default:
                 }
             }
         }
+        matrixStackIn.pop();
 
-        tessellator.draw();
-        GlStateManager.popMatrix();
-
-        GlStateManager.pushMatrix();
-
-        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
-
-        rotateForBoardFacing(tileEntityIn, x,  y,  z);
-        this.bindTexture(white);
+        matrixStackIn.push();
+        Color4f.WHITE.apply();
+        bufferbuilder = b.getBuffer(WHITE_PIECE);
+        rotateForBoardFacing(tileEntityIn, matrixStackIn);
 
         for (int by = 0; by < 8; by++) {
             for (int bx = 0; bx < 8; bx++) {
-
                 Piece piece = tileEntityIn.getBoard().pieceAt(Point.create(bx, by));
-                if (piece != null) switch (piece.getCharacter()) {
+                if (piece != null) switch (tileEntityIn.getBoard().pieceAt(Point.create(bx, by)).getCharacter()) {
                     case 'R':
-                        drawRook(bx, by, bufferbuilder);
+                        drawRook(bx, by, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     case 'N':
-                        drawKnight(bx, by, true, bufferbuilder);
+                        drawKnight(bx, by, true, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     case 'B':
-                        drawBishop(bx, by, bufferbuilder);
+                        drawBishop(bx, by, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     case 'Q':
-                        drawQueen(bx, by, bufferbuilder);
+                        drawQueen(bx, by, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     case 'K':
-                        drawKing(bx, by, bufferbuilder);
+                        drawKing(bx, by, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     case 'P':
-                        drawPawn(bx, by, bufferbuilder);
+                        drawPawn(bx, by, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
                         break;
                     default:
                 }
             }
         }
 
-        bufferbuilder.setTranslation(0.0D, 0.0D, 0.0D);
-        tessellator.draw();
-
-        BlockModelRenderer.disableCache();
+        matrixStackIn.pop();
         GlStateManager.enableCull();
-        GlStateManager.popMatrix();
     }
 
-    private void rotateForBoardFacing(ChessboardTileEntity tileEntity, double x, double y, double z) {
+    private void rotateForBoardFacing(ChessboardTileEntity tileEntityIn, MatrixStack matrixStackIn) {
+        BlockPos pos = tileEntityIn.getPos();
+        switch (tileEntityIn.getBlockState().get(ChessboardBlock.FACING)) {
+            case UP:
 
-        GlStateManager.translated(x, y, z);
-        switch (tileEntity.getBlockState().get(ChessboardBlock.FACING)) {
-            case UP: //We should never have this cse, but it'll look like SOUTH if we do
             case DOWN:
-                break;
+
             case NORTH:
-                GlStateManager.rotatef(180,0, 1, 0);
-                GlStateManager.translated(-1, 0, -1);
+                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180F));
+                matrixStackIn.translate(-1.0D, 0.0D, -1.0D);
                 break;
             case EAST:
-                GlStateManager.rotatef(90,0, 1, 0);
-                GlStateManager.translated(-1, 0, 0);
+                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90F));
+                matrixStackIn.translate(-1.0D, 0.0D, 0.0D);
                 break;
             case SOUTH:
                 break;
             case WEST:
-                GlStateManager.rotatef(270,0, 1, 0);
-                GlStateManager.translated(0, 0, -1);
+                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(270F));
+                matrixStackIn.translate(0.0D, 0.0D, -1.0D);
                 break;
         }
     }
 
-    private void drawBishop(int bx, int bz, BufferBuilder bufferbuilder) {
-        drawPiece(0.02f, bx, bz, bufferbuilder, 0, 0, 0);
-        drawPiece(0.02f, bx, bz, bufferbuilder, 0, 0.04, 0);
+    private void drawBishop(int bx, int bz, MatrixStack matrixStackIn, IVertexBuilder bufferbuilder, int combinedLightIn, int combinedOverlayIn, final double x, final double y, final double z) {
+        drawPiece(0.02f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
+        drawPiece(0.02f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y + 0.04, z);
     }
 
-    private void drawKnight(int bx, int bz, boolean flip, BufferBuilder bufferbuilder) {
-        float x = flip ? 0.01f : -0.01f;
-        float z = flip ? -0.01f : 0.01f;
-
-        drawPiece(0.02f, bx, bz, bufferbuilder, +x, 0, +z);
-        drawPiece(0.02f, bx, bz, bufferbuilder, -x, 0.04, -z);
+    private void drawKnight(int bx, int bz, boolean flip, MatrixStack matrixStackIn, IVertexBuilder bufferbuilder, int combinedLightIn, int combinedOverlayIn, final double x, final double y, final double z) {
+        drawPiece(0.02f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
+        drawPiece(0.02f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x + 0.02 * ((flip) ? -1 : 1), y + 0.04, z);
     }
 
-    private void drawRook(int bx, int bz, BufferBuilder bufferbuilder) {
-        drawPiece(0.03f, bx, bz, bufferbuilder, 0, 0, 0);
+    private void drawRook(int bx, int bz, MatrixStack matrixStackIn, IVertexBuilder bufferbuilder, int combinedLightIn, int combinedOverlayIn, final double x, final double y, final double z) {
+        drawPiece(0.03f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
     }
 
-    private void drawKing(int bx, int bz, BufferBuilder bufferbuilder) {
-        drawPiece(0.04f, bx, bz, bufferbuilder, 0, 0, 0);
+    private void drawKing(int bx, int bz, MatrixStack matrixStackIn, IVertexBuilder bufferbuilder, int combinedLightIn, int combinedOverlayIn, final double x, final double y, final double z) {
+        drawPiece(0.04f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
     }
 
-    private void drawQueen(int bx, int bz, BufferBuilder bufferbuilder) {
-        drawPiece(0.03f, bx, bz, bufferbuilder, 0, 0, 0);
-        drawPiece(0.02f, bx, bz, bufferbuilder, 0, 0.06, 0);
+    private void drawQueen(int bx, int bz, MatrixStack matrixStackIn, IVertexBuilder bufferbuilder, int combinedLightIn, int combinedOverlayIn, final double x, final double y, final double z) {
+        drawPiece(0.03f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
+        drawPiece(0.02f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y + 0.06, z);
     }
 
-    private void drawPawn(int bx, int bz, BufferBuilder bufferbuilder) {
-        drawPiece(0.02f, bx, bz, bufferbuilder, 0, 0, 0);
+    private void drawPawn(int bx, int bz, MatrixStack matrixStackIn, IVertexBuilder bufferbuilder, int combinedLightIn, int combinedOverlayIn, final double x, final double y, final double z) {
+        drawPiece(0.02f, bx, bz, matrixStackIn, bufferbuilder, combinedLightIn, combinedOverlayIn, x, y, z);
     }
 
-    private void drawPiece(float size, int bx, int bz, BufferBuilder bufferbuilder, final double x, final double y, final double z) {
+    private void drawPiece(float size, int bx, int bz, MatrixStack matrixStackIn, IVertexBuilder bufferbuilder, int combinedLightIn, int overlay, final double x, final double y, final double z) {
         float xOff = (float) (x + 2.75f / 16f + bx * 1.5f / 16f);
         float yOff = (float) (y + 1 + size);
         float zOff = (float) (z + 2.75f / 16f + bz * 1.5f / 16f);
@@ -241,41 +242,48 @@ public class ChessboardTileEntityRenderer extends TileEntityRenderer<ChessboardT
         final float UnitPieceSize = 0.04f;
         float scaledTextureOffset = (2 - UnitPieceSize / size) / 2 * PieceTileBorderSize / PieceTileSize;
 
+        Matrix4f model = matrixStackIn.getLast().getMatrix();
+
+        //bufferbuilder.setTranslation(x + 2.75D/16D + bx*1.5D/16D, y +1+size, z + 2.75D/16D + bz*1.5D/16D);
+        float textureScale = 0.5f * size / 0.03f;
+        //float textureScale=1;
+
         //south side [pos z] [parent x]
-        bufferbuilder.pos(xOff + size, yOff - size, zOff + size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, 1).endVertex();
-        bufferbuilder.pos(xOff + size, yOff + size, zOff + size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, 0, 1).endVertex();
-        bufferbuilder.pos(xOff - size, yOff + size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, 0, 1).endVertex();
-        bufferbuilder.pos(xOff - size, yOff - size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, 1).endVertex();
+
+        bufferbuilder.pos(model, xOff + size, yOff - size, zOff + size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, 1).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff + size, zOff + size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, 0, 1).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff + size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, 0, 1).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff - size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, 1).endVertex();
 
         //north side [neg z] [parent x]
-        bufferbuilder.pos(xOff - size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, -1).endVertex();
-        bufferbuilder.pos(xOff - size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, 0, -1).endVertex();
-        bufferbuilder.pos(xOff + size, yOff + size, zOff - size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, 0, -1).endVertex();
-        bufferbuilder.pos(xOff + size, yOff - size, zOff - size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, -1).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, -1).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, 0, -1).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff + size, zOff - size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, 0, -1).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff - size, zOff - size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 0, -1).endVertex();
 
         //east side [pos x] [parent z]
-        bufferbuilder.pos(xOff + size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(1, 0, 0).endVertex();
-        bufferbuilder.pos(xOff + size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(1, 0, 0).endVertex();
-        bufferbuilder.pos(xOff + size, yOff + size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(1, 0, 0).endVertex();
-        bufferbuilder.pos(xOff + size, yOff - size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(1, 0, 0).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(1, 0, 0).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(1, 0, 0).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff + size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(1, 0, 0).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff - size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(1, 0, 0).endVertex();
 
         //west side [neg x] [parent z]
-        bufferbuilder.pos(xOff - size, yOff - size, zOff + size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(-1, 0, 0).endVertex();
-        bufferbuilder.pos(xOff - size, yOff + size, zOff + size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(-1, 0, 0).endVertex();
-        bufferbuilder.pos(xOff - size, yOff + size, zOff - size).tex(scaledTextureOffset, scaledTextureOffset).normal(-1, 0, 0).endVertex();
-        bufferbuilder.pos(xOff - size, yOff - size, zOff - size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(-1, 0, 0).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff - size, zOff + size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(-1, 0, 0).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff + size, zOff + size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(-1, 0, 0).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff + size, zOff - size).tex(scaledTextureOffset, scaledTextureOffset).normal(-1, 0, 0).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff - size, zOff - size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(-1, 0, 0).endVertex();
 
         //top [pos y] [parent x & y]
-        bufferbuilder.pos(xOff + size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 1, 0).endVertex();
-        bufferbuilder.pos(xOff - size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, 1, 0).endVertex();
-        bufferbuilder.pos(xOff - size, yOff + size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, 1, 0).endVertex();
-        bufferbuilder.pos(xOff + size, yOff + size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff + size, zOff - size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff + size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, 1, 0).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff + size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, 1, 0).endVertex();
 
         //bottom [neg y] [parent x & y]
-        bufferbuilder.pos(xOff - size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, -1, 0).endVertex();
-        bufferbuilder.pos(xOff + size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, -1, 0).endVertex();
-        bufferbuilder.pos(xOff + size, yOff - size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, -1, 0).endVertex();
-        bufferbuilder.pos(xOff - size, yOff - size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, -1, 0).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, 1 - scaledTextureOffset).normal(0, -1, 0).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff - size, zOff - size).tex(1 - scaledTextureOffset, scaledTextureOffset).normal(0, -1, 0).endVertex();
+        bufferbuilder.pos(model, xOff + size, yOff - size, zOff + size).tex(scaledTextureOffset, scaledTextureOffset).normal(0, -1, 0).endVertex();
+        bufferbuilder.pos(model, xOff - size, yOff - size, zOff + size).tex(scaledTextureOffset, 1 - scaledTextureOffset).normal(0, -1, 0).endVertex();
 
     }
 
