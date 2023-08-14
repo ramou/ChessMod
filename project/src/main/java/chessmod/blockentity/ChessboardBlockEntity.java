@@ -37,16 +37,15 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 	public ChessboardBlockEntity(BlockEntityType<?> blockEntityTypeIn, BlockPos pWorldPosition, BlockState pBlockState) {
 		super(blockEntityTypeIn, pWorldPosition, pBlockState);
 	}
-
+	
 
 	@Override
-	public CompoundTag save(CompoundTag pTag) {
-		super.save(pTag);
+	protected void saveAdditional(CompoundTag pTag) {
+		super.saveAdditional(pTag);
 		SerializedBoard sb = SerializedBoard.serialize(board);
 		pTag.putLong("piece_mask", sb.piece_mask);
 		pTag.putLongArray("pieces", sb.pieces);
 		pTag.putLongArray("moves", sb.moves);
-		return pTag;
 	}
 	
 	@Override
@@ -62,9 +61,7 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 	
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		CompoundTag packet = new CompoundTag();
-		save(packet);
-		return new ClientboundBlockEntityDataPacket(getBlockPos(),0,packet);
+		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 
@@ -77,15 +74,17 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag tag = super.getUpdateTag();
-		save(tag);
+		saveAdditional(tag);
 		return tag;
 	}
+
 
 	@Override
 	public void handleUpdateTag(CompoundTag tag) {
 		super.handleUpdateTag(tag);
 		load(tag);
 	}
+
 
 	public void notifyClientOfBoardChange() {
 		ClientboundBlockEntityDataPacket packet = getUpdatePacket();

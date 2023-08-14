@@ -1,5 +1,7 @@
 package chessmod.common.network;
 
+import java.util.function.Supplier;
+
 import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.blockentity.WoodChessboardBlockEntity;
 import chessmod.common.dom.model.chess.PieceInitializer;
@@ -12,9 +14,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.network.NetworkEvent;
 
 public class ArbitraryPlacement {
 	private final int point;

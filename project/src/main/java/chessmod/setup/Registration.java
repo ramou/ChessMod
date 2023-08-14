@@ -22,10 +22,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.fmllegacy.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 
 /*
  * Stuart:: Used the tutorial of this as of May 30, 2022
@@ -36,13 +36,13 @@ import net.minecraftforge.fmllegacy.RegistryObject;
  * 
  */
 public class Registration {
-	private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ChessMod.MODID);
-	private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ChessMod.MODID);
-	private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ChessMod.MODID);
-	public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ChessMod.MODID);
-	public static final Item.Properties ITEM_PROPERTIES = new Item.Properties().tab(ModSetup.ITEM_GROUP);
+    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ChessMod.MODID);
+    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ChessMod.MODID);
+    private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ChessMod.MODID);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ChessMod.MODID);
 
-
+    public static final Item.Properties ITEM_PROPERTIES = new Item.Properties().tab(ModSetup.ITEM_GROUP);
+    
 	public static final RegistryObject<Block> WOOD_CHESSBOARD = BLOCKS.register("wood_chessboard", WoodChessboardBlock::new);
 	public static final RegistryObject<Item> WOOD_CHESSBOARD_ITEM = fromBlock(WOOD_CHESSBOARD);
 	public static final RegistryObject<BlockEntityType<WoodChessboardBlockEntity>> WOOD_CHESSBOARD_BE = 
@@ -95,15 +95,19 @@ public class Registration {
         SOUNDS.register(bus);
         int id = 0;
         PacketHandler.HANDLER.messageBuilder(ChessPlay.class, id++, NetworkDirection.PLAY_TO_SERVER)
-        .decoder(buf -> ChessPlay.decode(buf))
+        .decoder(buf->ChessPlay.decode(buf))
         .encoder(ChessPlay::encode)
         .consumer(ChessPlay.Handler::handle)
         .add();
         PacketHandler.HANDLER.messageBuilder(ArbitraryPlacement.class, id++, NetworkDirection.PLAY_TO_SERVER)
-        .decoder(buf -> ArbitraryPlacement.decode(buf))
+        .decoder(buf->ArbitraryPlacement.decode(buf))
         .encoder(ArbitraryPlacement::encode)
         .consumer(ArbitraryPlacement.Handler::handle)
         .add();
+		//PacketHandler.HANDLER.registerMessage(id++, ChessPlay.class, ChessPlay::encode, ChessPlay::decode, ChessPlay.Handler::handle);
+		//PacketHandler.HANDLER.registerMessage(id++, ArbitraryPlacement.class, ArbitraryPlacement::encode, ArbitraryPlacement::decode, ArbitraryPlacement.Handler::handle);
+        
+        
     }
 	
     // Conveniance function: Take a RegistryObject<Block> and make a corresponding RegistryObject<Item> from it
