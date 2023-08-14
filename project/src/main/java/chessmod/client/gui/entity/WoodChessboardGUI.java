@@ -34,7 +34,8 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	protected TilePiece sideBoardSelected = null;
 	protected static HashMap<Integer, TilePiece> blackSideboardMap = new HashMap<Integer, TilePiece>();
 	protected static HashMap<Integer, TilePiece> whiteSideboardMap = new HashMap<Integer, TilePiece>();
-	
+
+
 	@Override
 	public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 

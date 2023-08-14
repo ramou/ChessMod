@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import chessmod.ChessMod;
 import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.Move;
@@ -18,9 +17,8 @@ import chessmod.common.network.PacketHandler;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-
+import org.jetbrains.annotations.NotNull;
 
 
 public abstract class ChessboardGUI extends Screen {
@@ -36,7 +34,7 @@ public abstract class ChessboardGUI extends Screen {
 	public static ResourceLocation WHITE = new ResourceLocation(ChessMod.MODID, "textures/gui/shadewhite.png");
 	public static ResourceLocation BLACK = new ResourceLocation(ChessMod.MODID, "textures/gui/shadeblack.png");
 	
-	protected static HashMap<Character, TilePiece> pieceMap = new HashMap<Character, TilePiece>();
+	protected static HashMap<Character, TilePiece> pieceMap = new HashMap<>();
 
 	protected enum TilePiece {
 		WHITE_KING(0, Side.WHITE, PieceInitializer.nmK, 'K', new ResourceLocation(ChessMod.MODID, "textures/gui/wk.png")),
@@ -76,16 +74,12 @@ public abstract class ChessboardGUI extends Screen {
 			return pi.create(p, side);
 		}
 	
-		int index;
-		Side side;
-		char piece;
-		PieceInitializer pi;
-		ResourceLocation tile;
-		
-		public ResourceLocation getTile() {
-			return tile;
-		}
-	
+		final int index;
+		final Side side;
+		final char piece;
+		final PieceInitializer pi;
+		final ResourceLocation tile;
+
 		TilePiece(int i, Side s, PieceInitializer pi, char c, ResourceLocation tile) {
 			this.index=i;
 			this.side=s;
@@ -98,24 +92,20 @@ public abstract class ChessboardGUI extends Screen {
 	}
 
 	public ChessboardGUI(ChessboardBlockEntity board) {
-		super(null);
+		super(Component.empty());
 		background = new ResourceLocation(ChessMod.MODID, "textures/gui/chessboard.png");
 		this.board = board;
 	}
 
 	
 	@Override
-	public Component getNarrationMessage() {
-		return new TextComponent("");
+	public @NotNull Component getNarrationMessage() {
+		return Component.literal("");
 	}
 
-	@Override
-	public boolean shouldCloseOnEsc() {
-		return true;
-	}
 
 	@Override
-	public boolean isPauseScreen() {
+	public boolean isPauseScreen (){
 		return false;
 	}
 
@@ -168,17 +158,15 @@ public abstract class ChessboardGUI extends Screen {
 	protected void highlightSquare(PoseStack poseStack, int x, int y, int width, int height, ResourceLocation shade) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, shade);
-		blit(poseStack, x, y, width, height, width, height);
+		blit(poseStack,x, y, width, height, width, height);
 	}
 
 
 	protected void drawPiece(PoseStack poseStack, int bx, int by, ResourceLocation piece) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, piece);
-		
 		int x1 = (int)(width/2f - 128 + 32 + bx * 24);
 		int y1 = (int)(height/2f - 128 + 32 + by * 24);
-
 		blit(poseStack, x1, y1, 0, 0, 24, 24, 24, 24);
 	}
 

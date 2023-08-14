@@ -3,9 +3,9 @@ package chessmod.client.render.blockentity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Matrix4f;
+import org.joml.Matrix3f;
 
 import chessmod.block.ChessboardBlock;
 import chessmod.blockentity.ChessboardBlockEntity;
@@ -32,7 +32,6 @@ public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<Chessb
 	public void draw2DRect(VertexConsumer  bufferbuilder, PoseStack pPoseStack, Point2f p1, Point2f p2, float r, float g, float b, float a, int pPackedLight, int pPackedOverlay) {
 		Matrix4f model = pPoseStack.last().pose();
 		Matrix3f matrix3f = pPoseStack.last().normal();
-
 		bufferbuilder.vertex(model, p2.x, 1.001f, p1.y).color(r, g, b, a).uv(0, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
 		bufferbuilder.vertex(model, p1.x, 1.001f, p1.y).color(r, g, b, a).uv(0, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
 		bufferbuilder.vertex(model, p1.x, 1.001f, p2.y).color(r, g, b, a).uv(0, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
@@ -41,7 +40,7 @@ public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<Chessb
 	
 	protected void showTurnColor(MultiBufferSource pBufferSource, PoseStack pPoseStack, Side s, int pPackedLight, int pPackedOverlay) {
 		//It does not seem to care what the texture is for this...
-		VertexConsumer bufferbuilder = pBufferSource.getBuffer(RenderType.entitySolid(ChessboardGUI.WHITE));;
+		VertexConsumer bufferbuilder = pBufferSource.getBuffer(RenderType.entitySolid(ChessboardGUI.WHITE));
 
 		pPoseStack.pushPose();
 		float c = 0;
@@ -169,18 +168,18 @@ public class ChessboardBlockEntityRenderer implements BlockEntityRenderer<Chessb
 	        }
 			case DOWN  -> {//We should never have this cse, but it'll look like SOUTH if we do  
 	        }
-	        case NORTH -> { 
-	        	pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
+	        case NORTH -> {
+				pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
 	        	pPoseStack.translate(-1.0D, 0.0D, -1.0D);
 	        }
 	        case EAST ->  { 
-	        	pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90.0F));
+	        	pPoseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
 	        	pPoseStack.translate(-1.0D, 0.0D, 0.0D);
 	        }
 	        case SOUTH -> {  
 	        }
 	        case WEST ->  { 
-	        	pPoseStack.mulPose(Vector3f.YP.rotationDegrees(270.0F));
+	        	pPoseStack.mulPose(Axis.YP.rotationDegrees(270.0F));
 	        	pPoseStack.translate(0.0D, 0.0D, -1.0D);
 	        }
         }

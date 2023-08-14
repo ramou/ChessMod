@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import chessmod.ChessMod;
 import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.Move;
@@ -188,7 +187,7 @@ public class GoldChessboardGui extends ChessboardGUI {
 		return null;
 	}
 
-	protected void showTurnColor(PoseStack poseStack) {	
+	protected void showTurnColor(PoseStack poseStack) {
 		ResourceLocation c = BLACK;		
 		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) c = WHITE;
 
