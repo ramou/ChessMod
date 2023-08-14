@@ -1,35 +1,12 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
+/.gradle/
+/bin/
+/build/
 .classpath
 .project
-
-# idea
-out
-*.ipr
-*.iws
-*.iml
-.idea
-
-# gradle
-build
-.gradle
-
-# other
-eclipse
-run
-
-# Files from Forge MDK
-forge*changelog.txt
-
-# Logs
-*.log
-
-CREDITS.txt
-LICENSE.txt
-/changelog.txt
-/hs_err_pid24648.log
-/replay_pid24648.log
-/run2/
+/runClient.launch
+/runData.launch
+/runServer.launch
+/runClientTag.launch
+/runRamou.launch
+/.settings/
+/run/

@@ -5,12 +5,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import chessmod.ChessMod;
+import chessmod.common.Point2f;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Point.InvalidPoint;
@@ -44,8 +47,9 @@ public class GoldChessboardGui extends ChessboardGUI {
 	protected static HashMap<Integer, TilePiece> whiteSideboardMap = new HashMap<Integer, TilePiece>();
 	Point promotionPosition = null;
 	
+	
 	@Override
-	public void render(int par1, int par2, float par3) {
+	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 	    //Draw the background
 		drawBackground();
 		showTurnColor();
@@ -147,6 +151,7 @@ public class GoldChessboardGui extends ChessboardGUI {
 					
 					try {
 						possibleMoves.addAll(targetPiece.getAllowedMoves(b));
+						System.out.println(targetPiece + " has moves: " + possibleMoves);
 					} catch (InvalidMoveException e) {
 						ChessMod.LOGGER.debug(e.getMessage());
 						possibleMoves.clear();
@@ -193,47 +198,51 @@ public class GoldChessboardGui extends ChessboardGUI {
 	}
 
 	protected void showTurnColor() {
-		GlStateManager.enableBlend();
-		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.disableTexture();
+		RenderSystem.enableBlend();
+		RenderSystem.disableTexture();
+		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		
-		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) Color4f.WHITE.apply();
-		else Color4f.BLACK.apply();
+		Color4f c = Color4f.BLACK;
+		
+		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) c = Color4f.WHITE;
 
 		
-		float myHeight=Math.min(height, 256);
-		final float boardOriginX = width/2f - 128;
-		final float boardOriginY = height/2f - myHeight/2f;
-		  
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+		float myHeight = Math.min(height, 256);
+		final float boardOriginX = width / 2f - 128;
+		final float boardOriginY = height / 2f - myHeight / 2f;
+		float x1Outter = boardOriginX + 26;
+		float x1Inner = x1Outter + 4;
+		float x2Inner = boardOriginX + 256 - 30;
+		float x2Outter = x2Inner + 4;
+
+		float y1Outter = boardOriginY + 26F * myHeight / 256F;
+		float y1Inner = y1Outter + 4 * myHeight / 256F;
+		float y2Inner = boardOriginY + myHeight - 30F * myHeight / 256F;
+		float y2Outter = y2Inner + 4 * myHeight / 256F;
+
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		//top
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+30F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+30F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();
+		
+		Point2f p1 = new Point2f(x1Outter, y1Outter);
+		Point2f p2 = new Point2f(x2Outter, y1Inner);
+		c.draw2DRect(bufferbuilder, p1, p2);
 
 		//left
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+30, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+30, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();
+		p2 = new Point2f(x1Inner, y2Outter);
+		c.draw2DRect(bufferbuilder, p1, p2);
 
 		//right
-		bufferbuilder.pos(boardOriginX+256-30, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+256-30, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+26F*myHeight/256F, getBlitOffset()).endVertex();		
-		
+		p1 = new Point2f(x2Inner, y1Outter);
+		p2 = new Point2f(x2Outter, y2Outter);
+		c.draw2DRect(bufferbuilder, p1, p2);
+
 		//bottom
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-30F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+26, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-26F*myHeight/256F, getBlitOffset()).endVertex();
-		bufferbuilder.pos(boardOriginX+256-26, boardOriginY+myHeight-30F*myHeight/256F, getBlitOffset()).endVertex();		
-		tessellator.draw();
+		p1 = new Point2f(x1Outter, y2Inner);
+		c.draw2DRect(bufferbuilder, p1, p2);
+		tessellator.end();
 		
-		GL11.glColor4f(1f, 1f, 1f, 1f);
-		GlStateManager.enableTexture();
-		GlStateManager.disableBlend();
+		RenderSystem.enableTexture();		
+		RenderSystem.disableBlend();
 	}
 	
 }

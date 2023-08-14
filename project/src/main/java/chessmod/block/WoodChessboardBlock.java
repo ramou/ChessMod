@@ -3,9 +3,8 @@ package chessmod.block;
 import javax.annotation.Nullable;
 
 import chessmod.client.gui.entity.WoodChessboardGUI;
-import chessmod.init.ModTileEntityTypes;
 import chessmod.tileentity.ChessboardTileEntity;
-
+import chessmod.tileentity.WoodChessboardTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -23,16 +22,15 @@ public class WoodChessboardBlock extends ChessboardBlock {
 	@Nullable
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		// Always use TileEntityType#create to allow registry overrides to work.
-		return ModTileEntityTypes.wood_chessboard.create();
+		return new WoodChessboardTileEntity(WoodChessboardTileEntity.TYPE);
 	}
 	
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	protected void openGui(final World worldIn, final BlockPos pos) {
-		final TileEntity tileEntity = worldIn.getTileEntity(pos);
+		final TileEntity tileEntity = worldIn.getBlockEntity(pos);
 		if (tileEntity instanceof ChessboardTileEntity) {
-			Minecraft.getInstance().displayGuiScreen(new WoodChessboardGUI((ChessboardTileEntity)tileEntity));
+			Minecraft.getInstance().setScreen(new WoodChessboardGUI((ChessboardTileEntity)tileEntity));
 		}
 	}
 	

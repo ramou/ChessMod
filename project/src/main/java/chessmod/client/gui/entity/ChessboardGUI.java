@@ -31,7 +31,7 @@ public abstract class ChessboardGUI extends Screen {
 	protected final ResourceLocation background;
 	protected ChessboardTileEntity board;
 	Tessellator tessellator = Tessellator.getInstance();
-	BufferBuilder bufferbuilder = tessellator.getBuffer();
+	BufferBuilder bufferbuilder = tessellator.getBuilder();
 	protected Point selected = null;
 
 	protected static HashMap<Character, TilePiece> pieceMap = new HashMap<Character, TilePiece>();
@@ -127,23 +127,23 @@ public abstract class ChessboardGUI extends Screen {
 	}
 	
 	protected void notifyServerOfMove(Move m) {
-		PacketHandler.sendToServer(new ChessPlay(m.serialize(), board.getPos()));
+		PacketHandler.sendToServer(new ChessPlay(m.serialize(), board.getBlockPos()));
 	}
 
 
 	protected void drawBackground() {
-		this.minecraft.getTextureManager().bindTexture(background);
+		this.minecraft.getTextureManager().bind(background);
 		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		float myHeight=Math.min(height, 256);
 		float x1 = width/2f - 128;
 		float x2 = x1+256;
 		float y1 = height/2f - myHeight/2F;
 		float y2 = y1+myHeight;
-		bufferbuilder.pos(x1, y2, getBlitOffset()).tex(0,1).endVertex();
-		bufferbuilder.pos(x2, y2, getBlitOffset()).tex(1,1).endVertex();
-		bufferbuilder.pos(x2, y1, getBlitOffset()).tex(1,0).endVertex();
-		bufferbuilder.pos(x1, y1, getBlitOffset()).tex(0,0).endVertex();
-		tessellator.draw();
+		bufferbuilder.vertex(x1, y2, getBlitOffset()).uv(0,1).endVertex();
+		bufferbuilder.vertex(x2, y2, getBlitOffset()).uv(1,1).endVertex();
+		bufferbuilder.vertex(x2, y1, getBlitOffset()).uv(1,0).endVertex();
+		bufferbuilder.vertex(x1, y1, getBlitOffset()).uv(0,0).endVertex();
+		tessellator.end();
 	}
 
 	public static class Color4f {
@@ -163,10 +163,15 @@ public abstract class ChessboardGUI extends Screen {
 		public static Color4f CHECKMATE = new Color4f(0.9F, 0.1F, 0.1F, 0.9F);
 		public static Color4f WHITE = new Color4f(1F, 1F, 1F, 1F);
 		public static Color4f BLACK = new Color4f(0F, 0F, 0F, 1F);
+
 		
-		public void apply() {
-			RenderSystem.color4f(r, g, b, a);
+		public void draw2DRect(BufferBuilder bufferbuilder, Point2f p1, Point2f p2) {
+			bufferbuilder.vertex(p1.x, p2.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
+			bufferbuilder.vertex(p2.x, p2.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
+			bufferbuilder.vertex(p2.x, p1.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
+			bufferbuilder.vertex(p1.x, p1.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
 		}
+		
 	}
 	
 	protected void highlightSelected() {
@@ -191,18 +196,10 @@ public abstract class ChessboardGUI extends Screen {
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
 		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		
-		c.apply();
-		  
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		bufferbuilder.pos(p1.x, p2.y, getBlitOffset()).endVertex();
-		bufferbuilder.pos(p2.x, p2.y, getBlitOffset()).endVertex();
-		bufferbuilder.pos(p2.x, p1.y, getBlitOffset()).endVertex();
-		bufferbuilder.pos(p1.x, p1.y, getBlitOffset()).endVertex();
-		tessellator.draw();
-		RenderSystem.enableTexture();
-		
-		Color4f.WHITE.apply();
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		c.draw2DRect(bufferbuilder, p1, p2);
+		tessellator.end();
+		RenderSystem.enableTexture();		
 		RenderSystem.disableBlend();
 	}
 
@@ -210,22 +207,22 @@ public abstract class ChessboardGUI extends Screen {
 
 	protected void drawPiece(int bx, int by, ResourceLocation piece) {
 		float myHeight=Math.min(height, 256);
-		this.minecraft.getTextureManager().bindTexture(piece);
+		this.minecraft.getTextureManager().bind(piece);
 		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		float x1 = width/2f - 128+32+bx*24;
 		float x2 = x1+24;
 		float y1 = height/2f - myHeight/2f+(32+by*24)*myHeight/256f;
 		float y2 = y1+24*myHeight/256f;
-		bufferbuilder.pos(x1, y2, getBlitOffset()).tex(0,1).endVertex();
-		bufferbuilder.pos(x2, y2, getBlitOffset()).tex(1,1).endVertex();
-		bufferbuilder.pos(x2, y1, getBlitOffset()).tex(1,0).endVertex();
-		bufferbuilder.pos(x1, y1, getBlitOffset()).tex(0,0).endVertex();
-		tessellator.draw();
+		bufferbuilder.vertex(x1, y2, getBlitOffset()).uv(0,1).endVertex();
+		bufferbuilder.vertex(x2, y2, getBlitOffset()).uv(1,1).endVertex();
+		bufferbuilder.vertex(x2, y1, getBlitOffset()).uv(1,0).endVertex();
+		bufferbuilder.vertex(x1, y1, getBlitOffset()).uv(0,0).endVertex();
+		tessellator.end();
 	}
 
 	protected void drawSideboardPiece(TilePiece piece) {
 		float myHeight=Math.min(height, 256);
-		this.minecraft.getTextureManager().bindTexture(piece.tile);
+		this.minecraft.getTextureManager().bind(piece.tile);
 	
 		float x1 = width/2f - 128+(piece.side.equals(Side.BLACK)?0:16+9*24);
 		float x2 = x1+24;
@@ -235,11 +232,11 @@ public abstract class ChessboardGUI extends Screen {
 		
 		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 	
-		bufferbuilder.pos(x1, y2, getBlitOffset()).tex(0,1).endVertex();
-		bufferbuilder.pos(x2, y2, getBlitOffset()).tex(1,1).endVertex();
-		bufferbuilder.pos(x2, y1, getBlitOffset()).tex(1,0).endVertex();
-		bufferbuilder.pos(x1, y1, getBlitOffset()).tex(0,0).endVertex();
-		tessellator.draw();
+		bufferbuilder.vertex(x1, y2, getBlitOffset()).uv(0,1).endVertex();
+		bufferbuilder.vertex(x2, y2, getBlitOffset()).uv(1,1).endVertex();
+		bufferbuilder.vertex(x2, y1, getBlitOffset()).uv(1,0).endVertex();
+		bufferbuilder.vertex(x1, y1, getBlitOffset()).uv(0,0).endVertex();
+		tessellator.end();
 	}
 
 	protected void drawPieces() {

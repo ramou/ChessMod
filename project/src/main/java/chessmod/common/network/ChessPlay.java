@@ -1,16 +1,14 @@
 package chessmod.common.network;
 
-import java.util.function.Supplier;
-
 import chessmod.ChessMod;
+import chessmod.common.capability.elo.Elo;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.InvalidMoveException;
 import chessmod.common.dom.model.chess.piece.Knight;
 import chessmod.init.ModSounds;
 import chessmod.tileentity.ChessboardTileEntity;
-import chessmod.tileentity.GoldChessBoardTileEntity;
-
+import chessmod.tileentity.GoldChessboardTileEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
@@ -18,6 +16,9 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 public class ChessPlay {
 	private final long move;
@@ -61,11 +62,11 @@ public class ChessPlay {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
-						World world = ctx.get().getSender().world;
+						World world = ctx.get().getSender().level;
 						BlockPos pos = new BlockPos(message.x, message.y, message.z);
 						if(world.isAreaLoaded(pos, 1)) {
 							
-							TileEntity tileEntity = world.getTileEntity(pos);
+							TileEntity tileEntity = world.getBlockEntity(pos);
 							if (tileEntity instanceof ChessboardTileEntity) {
 								Board board = ((ChessboardTileEntity)tileEntity).getBoard();
 								Move m = Move.create((int)message.move, board);
@@ -86,8 +87,12 @@ public class ChessPlay {
 								}
 
 								try { //On GoldChessBoard confirm that it is a valid move!
-									if (tileEntity instanceof GoldChessBoardTileEntity) {
+									if (tileEntity instanceof GoldChessboardTileEntity) {
 										board.moveSafely(m);
+										if(board.getCheckMate() != null) {
+											Logger.getGlobal().info(ctx.get().getSender().getName().getString() + " has won a chess game with themselves!");
+											Elo.updateElo(ctx.get().getSender(), ctx.get().getSender(), true);
+										}
 									} else {
 										board.move(m);
 									}

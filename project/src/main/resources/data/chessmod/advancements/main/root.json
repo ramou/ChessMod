@@ -19,7 +19,7 @@
       "conditions": {
         "items": [
           {
-            "item": "chessmod:wood_chessboard"
+            "item":"chessmod:wood_chessboard"
           }
         ]
       }

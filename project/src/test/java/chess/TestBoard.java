@@ -88,7 +88,7 @@ class TestBoard {
 			
 		}
 	}
-
+	
 	@Test
 	void testBadPawnDoubleMove() {
 		try {
@@ -102,10 +102,10 @@ class TestBoard {
 			doubleAdvancePawn(b, 7, 4);
 			fail("You cannot double move a pawn that has already moved!");
 		} catch (InvalidMoveException e) {
-
+			
 		}
 	}
-
+	
 	@Test
 	void testBadPawnDoubleMoveOnClonedBoard() {
 		try {
@@ -120,10 +120,10 @@ class TestBoard {
 			doubleAdvancePawn(b, 7, 4);
 			fail("You cannot double move a pawn that has already moved!");
 		} catch (InvalidMoveException e) {
-
+			
 		}
 	}
-
+	
 	@Test
 	void testFailMovingIntoCheck() {
 		try {

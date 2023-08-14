@@ -27,18 +27,14 @@ public abstract class ChessboardBlock extends GlassBlock {
 
 	public ChessboardBlock(Properties properties) {
 		super(properties);
-		this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
-	}
-
-	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		builder.add(FACING);
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		VoxelShape BOARD = Block.makeCuboidShape(0.0D, 12.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-		VoxelShape STAND = Block.makeCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 12.0D, 10.0D);
+		VoxelShape BOARD = Block.box(0.0D, 12.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+		VoxelShape STAND = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 12.0D, 10.0D);
+
 		return VoxelShapes.or(BOARD, STAND);
 	}
 
@@ -51,14 +47,13 @@ public abstract class ChessboardBlock extends GlassBlock {
 	public boolean hasTileEntity(final BlockState state) {
 		return true;
 	}
-	
+
 	@Override
-	public ActionResultType onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
-		// Only open the gui on the physical client
+	public ActionResultType use(BlockState bs, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> openGui(worldIn, pos));
 		return ActionResultType.PASS;
 	}
-	
+
 	protected abstract void openGui(final World worldIn, final BlockPos pos);
 
 	@Override
@@ -69,8 +64,12 @@ public abstract class ChessboardBlock extends GlassBlock {
 
 		Direction face = context.getNearestLookingDirection().getOpposite();
 		if(face == Direction.UP || face == Direction.DOWN) face = Direction.NORTH;
-		return this.getDefaultState().with(FACING, face);
+		return this.defaultBlockState().setValue(FACING, face);
 	}
 
+	@Override
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+	}
 
 }

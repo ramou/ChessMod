@@ -1,8 +1,8 @@
 package chessmod.common;
 
 import chessmod.ChessMod;
-import chessmod.init.ModSounds;
 
+import chessmod.init.ModSounds;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,6 +20,6 @@ public class ModEventSubscriber {
 		r.register(ModSounds.place_piece);
 		r.register(ModSounds.place_piece_take);
 		
-		ChessMod.LOGGER.debug("Registered Sosunds!");
+		ChessMod.LOGGER.debug("Registered Sounds!");
 	}
 }

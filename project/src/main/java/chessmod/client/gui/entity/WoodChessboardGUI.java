@@ -4,9 +4,12 @@ import java.util.HashMap;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import chessmod.common.Point2f;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Point.InvalidPoint;
@@ -37,7 +40,7 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	protected static HashMap<Integer, TilePiece> whiteSideboardMap = new HashMap<Integer, TilePiece>();
 	
 	@Override
-	public void render(int par1, int par2, float par3) {
+	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 	    //Draw the background
 		drawBackground();
 		
@@ -55,9 +58,9 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	}
 
 	protected void highlightSideBoardSelected() {
-		GlStateManager.enableBlend();
-		GlStateManager.disableTexture();
-		RenderSystem.color4f(0.5f, 0.8f, 0.5f, 0.5f);
+		RenderSystem.enableBlend();
+		RenderSystem.disableTexture();
+		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		  
 		float myHeight=Math.min(height, 256);
 		float x1 = width/2f - 128 + (sideBoardSelected.getSide().equals(Side.BLACK)?0:16+24*9);
@@ -65,14 +68,12 @@ public class WoodChessboardGUI extends ChessboardGUI {
 		float y1 = height/2f - myHeight/2f+(32+sideBoardSelected.index*24)*myHeight/256f;
 		float y2 = y1+24*myHeight/256f;
 		  
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		bufferbuilder.pos(x1, y2, getBlitOffset()).endVertex();
-		bufferbuilder.pos(x2, y2, getBlitOffset()).endVertex();
-		bufferbuilder.pos(x2, y1, getBlitOffset()).endVertex();
-		bufferbuilder.pos(x1, y1, getBlitOffset()).endVertex();
-		tessellator.draw();
-		GlStateManager.enableTexture();
-		GlStateManager.disableBlend();
+		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		Color4f.POSSIBLE.draw2DRect(bufferbuilder, new Point2f(x1,y1), new Point2f(x2,y2));
+
+		tessellator.end();
+		RenderSystem.enableTexture();		
+		RenderSystem.disableBlend();
 	}
 	
 	@Override
@@ -121,6 +122,6 @@ public class WoodChessboardGUI extends ChessboardGUI {
 	}
 	
 	protected void notifyServerOfArbitraryPlacement(Piece pi) {
-		PacketHandler.sendToServer(new ArbitraryPlacement(pi, board.getPos()));
+		PacketHandler.sendToServer(new ArbitraryPlacement(pi, board.getBlockPos()));
 	}
 }
