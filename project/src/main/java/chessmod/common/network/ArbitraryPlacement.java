@@ -1,6 +1,5 @@
 package chessmod.common.network;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 import chessmod.blockentity.ChessboardBlockEntity;
@@ -64,7 +63,8 @@ public class ArbitraryPlacement {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
-						Level level = Objects.requireNonNull(ctx.get().getSender()).level;
+
+						Level level = ctx.get().getSender().level();
 						BlockPos pos = new BlockPos((int) message.x, (int) message.y, (int) message.z);
 						
 						if(level.isLoaded(pos)) {
