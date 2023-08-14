@@ -5,13 +5,17 @@
       <configuration>
         <autoDetectTypes>
           <platformType>FORGE</platformType>
-          <platformType>MCP</platformType>
           <platformType>MIXIN</platformType>
+          <platformType>MCP</platformType>
         </autoDetectTypes>
       </configuration>
     </facet>
   </component>
   <component name="McpModuleSettings">
-    <option name="srgType" value="SRG" />
+    <option name="mappingFile" value="C:\Users\Stuart Thiel\IdeaProjects\ChessMod\project\build\createMcpToSrg\output.tsrg" />
+    <option name="mcpVersion" value="official_1.17.1" />
+    <option name="minecraftVersion" value="1.17.1" />
+    <option name="platformVersion" value="37.1.1" />
+    <option name="srgType" value="TSRG" />
   </component>
 </module>

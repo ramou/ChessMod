@@ -2,35 +2,34 @@ package chessmod.block;
 
 import javax.annotation.Nullable;
 
+import chessmod.blockentity.ChessboardBlockEntity;
+import chessmod.blockentity.ChessesChessboardBlockEntity;
 import chessmod.client.gui.entity.GoldChessboardGui;
-import chessmod.tileentity.ChessboardTileEntity;
-import chessmod.tileentity.ChessesChessboardTileEntity;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ChessesChessboardBlock extends ChessboardBlock {
-	public ChessesChessboardBlock(Properties properties) {
-		super(properties);
+	public ChessesChessboardBlock() {
+		super();
 	}
 	
 	@Nullable
 	@Override
-	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return new ChessesChessboardTileEntity(ChessesChessboardTileEntity.TYPE);
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new ChessesChessboardBlockEntity(pos, state);
 	}
 	
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	protected void openGui(final World worldIn, final BlockPos pos) {
-		final TileEntity tileEntity = worldIn.getBlockEntity(pos);
-		if (tileEntity instanceof ChessboardTileEntity) {
-			Minecraft.getInstance().setScreen(new GoldChessboardGui((ChessboardTileEntity)tileEntity));
+	protected void openGui(final Level levelIn, final BlockPos pos) {
+		final BlockEntity blockEntity = levelIn.getBlockEntity(pos);
+		if (blockEntity instanceof ChessboardBlockEntity) {
+			Minecraft.getInstance().setScreen(new GoldChessboardGui((ChessboardBlockEntity)blockEntity));
 		}
 	}
 	

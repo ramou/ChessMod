@@ -5,15 +5,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
-import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import chessmod.ChessMod;
-import chessmod.common.Point2f;
+import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.Point.InvalidPoint;
@@ -22,12 +17,11 @@ import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.InvalidMoveException;
 import chessmod.common.dom.model.chess.piece.Pawn;
 import chessmod.common.dom.model.chess.piece.Piece;
-import chessmod.tileentity.ChessboardTileEntity;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.resources.ResourceLocation;
 
 public class GoldChessboardGui extends ChessboardGUI {
 
-	public GoldChessboardGui(ChessboardTileEntity board) {
+	public GoldChessboardGui(ChessboardBlockEntity board) {
 		super(board);
 
 		//I find that if I don't do this, Pieces
@@ -49,27 +43,28 @@ public class GoldChessboardGui extends ChessboardGUI {
 	
 	
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+				
 	    //Draw the background
-		drawBackground();
-		showTurnColor();
+		drawBackground(poseStack);
+		showTurnColor(poseStack);
 
 		//Draw the existing pieces
-		drawPieces();
+		drawPieces(poseStack);
 	    
 	    //Test highlighting squares
-	    if(selected!=null)highlightSelected();
+	    if(selected!=null)highlightSelected(poseStack);
 	
 	    
 	    //Draw highlights of any selected pieces and their valid moves
-		highlightPossibleMoves();
+		highlightPossibleMoves(poseStack);
 	    
 		
 		//Show sideboard for current player if they're trying to promote
 		if(promotionPosition != null) {
 			Map<Integer, TilePiece> map = board.getBoard().getCurrentPlayer().equals(Side.WHITE)?whiteSideboardMap:blackSideboardMap;
 			for(TilePiece p: map.values()) {
-				drawSideboardPiece(p);
+				drawSideboardPiece(poseStack, p);
 			} 
 		}
 
@@ -77,14 +72,14 @@ public class GoldChessboardGui extends ChessboardGUI {
 		Point kingPoint = board.getBoard().getCheckMate();
 		if(kingPoint == null) {
 			kingPoint = board.getBoard().getCheck();
-			if(kingPoint != null) highlightSquare(kingPoint, Color4f.CHECK);
-		} else highlightSquare(kingPoint, Color4f.CHECKMATE);
+			if(kingPoint != null) highlightSquare(poseStack, kingPoint, CHECK);
+		} else highlightSquare(poseStack, kingPoint, CHECKMATE);
 		
 	}
 
-	private void highlightPossibleMoves() {
+	private void highlightPossibleMoves(PoseStack poseStack) {
 	    for(Move m: possibleMoves) {
-	    	highlightSquare(m.getTarget(), Color4f.POSSIBLE);
+	    	highlightSquare(poseStack, m.getTarget(), POSSIBLE);
 	    }
 	}
 	
@@ -151,15 +146,11 @@ public class GoldChessboardGui extends ChessboardGUI {
 					
 					try {
 						possibleMoves.addAll(targetPiece.getAllowedMoves(b));
-						System.out.println(targetPiece + " has moves: " + possibleMoves);
 					} catch (InvalidMoveException e) {
 						ChessMod.LOGGER.debug(e.getMessage());
 						possibleMoves.clear();
 					}
 				}
-				
-
-				
 				
 			} 
 
@@ -197,52 +188,28 @@ public class GoldChessboardGui extends ChessboardGUI {
 		return null;
 	}
 
-	protected void showTurnColor() {
-		RenderSystem.enableBlend();
-		RenderSystem.disableTexture();
-		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		
-		Color4f c = Color4f.BLACK;
-		
-		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) c = Color4f.WHITE;
+	protected void showTurnColor(PoseStack poseStack) {	
+		ResourceLocation c = BLACK;		
+		if(board.getBoard().getCurrentPlayer().equals(Side.WHITE)) c = WHITE;
 
-		
-		float myHeight = Math.min(height, 256);
-		final float boardOriginX = width / 2f - 128;
-		final float boardOriginY = height / 2f - myHeight / 2f;
-		float x1Outter = boardOriginX + 26;
-		float x1Inner = x1Outter + 4;
-		float x2Inner = boardOriginX + 256 - 30;
-		float x2Outter = x2Inner + 4;
+		final int boardOriginX = (int)(width / 2f - 128);
+		final int boardOriginY = (int)(height / 2f - 128);
+		int x1Outter = boardOriginX + 26;
+		int x2Inner = boardOriginX + 256 - 30;
+		int y1Outter = boardOriginY + 26;
+		int y2Inner = boardOriginY + 256 - 30;
 
-		float y1Outter = boardOriginY + 26F * myHeight / 256F;
-		float y1Inner = y1Outter + 4 * myHeight / 256F;
-		float y2Inner = boardOriginY + myHeight - 30F * myHeight / 256F;
-		float y2Outter = y2Inner + 4 * myHeight / 256F;
-
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		//top
-		
-		Point2f p1 = new Point2f(x1Outter, y1Outter);
-		Point2f p2 = new Point2f(x2Outter, y1Inner);
-		c.draw2DRect(bufferbuilder, p1, p2);
+		highlightSquare(poseStack, x1Outter, y1Outter, 204, 4, c);
 
 		//left
-		p2 = new Point2f(x1Inner, y2Outter);
-		c.draw2DRect(bufferbuilder, p1, p2);
+		highlightSquare(poseStack, x1Outter, y1Outter, 4, 204, c);
 
 		//right
-		p1 = new Point2f(x2Inner, y1Outter);
-		p2 = new Point2f(x2Outter, y2Outter);
-		c.draw2DRect(bufferbuilder, p1, p2);
+		highlightSquare(poseStack, x2Inner, y1Outter, 4, 204, c);
 
 		//bottom
-		p1 = new Point2f(x1Outter, y2Inner);
-		c.draw2DRect(bufferbuilder, p1, p2);
-		tessellator.end();
-		
-		RenderSystem.enableTexture();		
-		RenderSystem.disableBlend();
+		highlightSquare(poseStack, x1Outter, y2Inner, 204, 4, c);
 	}
 	
 }

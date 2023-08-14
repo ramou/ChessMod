@@ -1,24 +1,26 @@
 package chessmod.common.network;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+import java.util.logging.Logger;
+
 import chessmod.ChessMod;
+import chessmod.blockentity.ChessboardBlockEntity;
+import chessmod.blockentity.GoldChessboardBlockEntity;
 import chessmod.common.capability.elo.Elo;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.InvalidMoveException;
 import chessmod.common.dom.model.chess.piece.Knight;
-import chessmod.init.ModSounds;
-import chessmod.tileentity.ChessboardTileEntity;
-import chessmod.tileentity.GoldChessboardTileEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkEvent;
+import chessmod.setup.Registration;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
-import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 public class ChessPlay {
 	private final long move;
@@ -40,7 +42,7 @@ public class ChessPlay {
 
 
 
-	public static ChessPlay decode(PacketBuffer buf) {
+	public static ChessPlay decode(FriendlyByteBuf buf) {
 		long move   = buf.readLong();
 		double x = buf.readDouble();
 		double y = buf.readDouble();
@@ -48,7 +50,7 @@ public class ChessPlay {
 		return new ChessPlay(move, x, y, z);
 	}
 
-	public static void encode(ChessPlay msg, PacketBuffer buf) {
+	public static void encode(ChessPlay msg, FriendlyByteBuf buf) {
 		buf.writeLong(msg.move);
 		buf.writeDouble(msg.x);
 		buf.writeDouble(msg.y);
@@ -56,48 +58,48 @@ public class ChessPlay {
 	}
 
 	public static class Handler {
-		public static void handle(final ChessPlay message, final Supplier<NetworkEvent.Context> ctx) {
+		public static boolean handle(final ChessPlay message, final Supplier<NetworkEvent.Context> ctx) {
 			if (ctx.get().getDirection().getReceptionSide().isServer()) {
 				ctx.get().enqueueWork(new Runnable() {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
-						World world = ctx.get().getSender().level;
+						Level world = ctx.get().getSender().level;
 						BlockPos pos = new BlockPos(message.x, message.y, message.z);
-						if(world.isAreaLoaded(pos, 1)) {
+						if(world.isLoaded(pos)) {
 							
-							TileEntity tileEntity = world.getBlockEntity(pos);
-							if (tileEntity instanceof ChessboardTileEntity) {
-								Board board = ((ChessboardTileEntity)tileEntity).getBoard();
+							BlockEntity blockEntity = world.getBlockEntity(pos);
+							if (blockEntity instanceof ChessboardBlockEntity) {
+								Board board = ((ChessboardBlockEntity)blockEntity).getBoard();
 								Move m = Move.create((int)message.move, board);
 								
 								SoundEvent sound = null;
 								if(board.pieceAt(m.getSource()) instanceof Knight) {
 									if(board.pieceAt(m.getTarget()) == null) {
-										sound = ModSounds.place_piece;
+										sound = Registration.PLACE_PIECE_SOUND.get();
 									} else {
-										sound = ModSounds.place_piece_take;
+										sound = Registration.PLACE_PIECE_TAKE_SOUND.get();
 									}
 								} else {
 									if(board.pieceAt(m.getTarget()) == null) {
-										sound = ModSounds.slide_piece;
+										sound = Registration.SLIDE_PIECE_SOUND.get();
 									} else {
-										sound = ModSounds.slide_piece_take;
+										sound = Registration.SLIDE_PIECE_TAKE_SOUND.get();
 									}
 								}
 
 								try { //On GoldChessBoard confirm that it is a valid move!
-									if (tileEntity instanceof GoldChessboardTileEntity) {
+									if (blockEntity instanceof GoldChessboardBlockEntity) {
 										board.moveSafely(m);
 										if(board.getCheckMate() != null) {
-											Logger.getGlobal().info(ctx.get().getSender().getName().getString() + " has won a chess game with themselves!");
-											Elo.updateElo(ctx.get().getSender(), ctx.get().getSender(), true);
+											Logger.getGlobal().info(Objects.requireNonNull(ctx.get().getSender()).getName().getString() + " has won a chess game with themselves!");
+											Elo.updateElo(Objects.requireNonNull(ctx.get().getSender()), Objects.requireNonNull(ctx.get().getSender()), true);
 										}
 									} else {
 										board.move(m);
 									}
-									((ChessboardTileEntity)tileEntity).notifyClientOfBoardChange();
-									world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1F, 1F);
+									((ChessboardBlockEntity)blockEntity).notifyClientOfBoardChange();
+									world.playSound(null, pos, sound, SoundSource.BLOCKS, 1F, 1F);
 								} catch (InvalidMoveException e) {
 									ChessMod.LOGGER.debug(e.getMessage());
 									e.printStackTrace();
@@ -111,6 +113,7 @@ public class ChessPlay {
 			}
 
 			ctx.get().setPacketHandled(true);
+			return true;
 		}
 	}
 }

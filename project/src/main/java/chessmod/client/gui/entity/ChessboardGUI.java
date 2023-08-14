@@ -2,14 +2,11 @@ package chessmod.client.gui.entity;
 
 import java.util.HashMap;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
-import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import chessmod.ChessMod;
-import chessmod.common.Point2f;
+import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.PieceInitializer;
 import chessmod.common.dom.model.chess.Point;
@@ -18,22 +15,27 @@ import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.piece.Piece;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
-import chessmod.tileentity.ChessboardTileEntity;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+
 
 
 public abstract class ChessboardGUI extends Screen {
-
+	
 	protected final ResourceLocation background;
-	protected ChessboardTileEntity board;
-	Tessellator tessellator = Tessellator.getInstance();
-	BufferBuilder bufferbuilder = tessellator.getBuilder();
+	protected ChessboardBlockEntity board;
 	protected Point selected = null;
 
+	public static ResourceLocation SELECTED = new ResourceLocation(ChessMod.MODID, "textures/gui/shadeselected.png");
+	public static ResourceLocation POSSIBLE = new ResourceLocation(ChessMod.MODID, "textures/gui/shadepossible.png");
+	public static ResourceLocation CHECK = new ResourceLocation(ChessMod.MODID, "textures/gui/shadecheck.png");
+	public static ResourceLocation CHECKMATE = new ResourceLocation(ChessMod.MODID, "textures/gui/shadecheckmate.png");
+	public static ResourceLocation WHITE = new ResourceLocation(ChessMod.MODID, "textures/gui/shadewhite.png");
+	public static ResourceLocation BLACK = new ResourceLocation(ChessMod.MODID, "textures/gui/shadeblack.png");
+	
 	protected static HashMap<Character, TilePiece> pieceMap = new HashMap<Character, TilePiece>();
 
 	protected enum TilePiece {
@@ -50,8 +52,8 @@ public abstract class ChessboardGUI extends Screen {
 		BLACK_BISHOP(4, Side.BLACK, PieceInitializer.B, 'b', new ResourceLocation(ChessMod.MODID, "textures/gui/bb.png")),
 		BLACK_PAWN(5, Side.BLACK, PieceInitializer.P, 'p', new ResourceLocation(ChessMod.MODID, "textures/gui/bp.png"));
 	
-		public void draw(ChessboardGUI current, int x, int y) {
-			current.drawPiece(x, y, tile);
+		public void draw(PoseStack poseStack, ChessboardGUI current, int x, int y) {
+			current.drawPiece(poseStack, x, y, tile);
 		}
 		
 		public char getPiece() {
@@ -95,15 +97,16 @@ public abstract class ChessboardGUI extends Screen {
 		
 	}
 
-	public ChessboardGUI(ChessboardTileEntity board) {
+	public ChessboardGUI(ChessboardBlockEntity board) {
 		super(null);
 		background = new ResourceLocation(ChessMod.MODID, "textures/gui/chessboard.png");
 		this.board = board;
 	}
 
+	
 	@Override
-	public String getNarrationMessage() {
-		return "";
+	public Component getNarrationMessage() {
+		return new TextComponent("");
 	}
 
 	@Override
@@ -113,7 +116,7 @@ public abstract class ChessboardGUI extends Screen {
 
 	@Override
 	public boolean isPauseScreen() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -127,125 +130,74 @@ public abstract class ChessboardGUI extends Screen {
 	}
 	
 	protected void notifyServerOfMove(Move m) {
+		//When running on a local server the client update doesn't happen till
+		//you "unpause" by closing the gui, so this fudges things.
+		if(getMinecraft().isLocalServer()) {
+			m.doMove(board.getBoard());
+		}
+		
 		PacketHandler.sendToServer(new ChessPlay(m.serialize(), board.getBlockPos()));
 	}
 
 
-	protected void drawBackground() {
-		this.minecraft.getTextureManager().bind(background);
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		float myHeight=Math.min(height, 256);
-		float x1 = width/2f - 128;
-		float x2 = x1+256;
-		float y1 = height/2f - myHeight/2F;
-		float y2 = y1+myHeight;
-		bufferbuilder.vertex(x1, y2, getBlitOffset()).uv(0,1).endVertex();
-		bufferbuilder.vertex(x2, y2, getBlitOffset()).uv(1,1).endVertex();
-		bufferbuilder.vertex(x2, y1, getBlitOffset()).uv(1,0).endVertex();
-		bufferbuilder.vertex(x1, y1, getBlitOffset()).uv(0,0).endVertex();
-		tessellator.end();
+	protected void drawBackground(PoseStack poseStack) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, background);
+
+		int x1 = (int)(width/2f - 128);
+		int y1 = (int)(height/2f - 128);
+		blit(poseStack, x1, y1, 0, 0, 256, 256);
 	}
 
-	public static class Color4f {
-		float r,g,b,a;
-
-		public Color4f(float r, float g, float b, float a) {
-			super();
-			this.r = r;
-			this.g = g;
-			this.b = b;
-			this.a = a;
-		}
-		
-		public static Color4f SELECTED = new Color4f(0.5F, 0.5F, 0.8F, 0.5F);
-		public static Color4f POSSIBLE = new Color4f(0.5F, 0.8F, 0.5F, 0.5F);
-		public static Color4f CHECK = new Color4f(0.9F, 0.1F, 0.1F, 0.5F);
-		public static Color4f CHECKMATE = new Color4f(0.9F, 0.1F, 0.1F, 0.9F);
-		public static Color4f WHITE = new Color4f(1F, 1F, 1F, 1F);
-		public static Color4f BLACK = new Color4f(0F, 0F, 0F, 1F);
-
-		
-		public void draw2DRect(BufferBuilder bufferbuilder, Point2f p1, Point2f p2) {
-			bufferbuilder.vertex(p1.x, p2.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
-			bufferbuilder.vertex(p2.x, p2.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
-			bufferbuilder.vertex(p2.x, p1.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
-			bufferbuilder.vertex(p1.x, p1.y, 0.01f, r, g, b, a, 0, 0, 0, 0, 0, 0, 0);
-		}
-		
-	}
 	
-	protected void highlightSelected() {
-		highlightSquare(selected, Color4f.SELECTED);
+	protected void highlightSelected(PoseStack poseStack) {
+		highlightSquare(poseStack, selected, SELECTED);
 	}
 
-	public void highlightSquare(Point thisselected, Color4f chosenColor) {
-		float myHeight=Math.min(height, 256);
-		float x1 = width/2f - 128+32+thisselected.x*24;
-		float x2 = x1+24;
-		float y1 = height/2f - myHeight/2f+(32+thisselected.y*24)*myHeight/256f;
-		float y2 = y1+24*myHeight/256f;
-		
-		Point2f p1 = new Point2f(x1, y1);
-		Point2f p2 = new Point2f(x2, y2);
-		
-		
-		highlightSquare(p1, p2, chosenColor);
+	public void highlightSquare(PoseStack poseStack, Point target, ResourceLocation shade) {
+		int x = (int)(width/2f - 128+32+target.x*24);
+		int y = (int)(height/2f - 128 + (32+target.y*24));
+
+		highlightSquare(poseStack, x, y, shade);
 	}
 
-	protected void highlightSquare(Point2f p1, Point2f p2, Color4f c) {
-		RenderSystem.enableBlend();
-		RenderSystem.disableTexture();
-		RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-		c.draw2DRect(bufferbuilder, p1, p2);
-		tessellator.end();
-		RenderSystem.enableTexture();		
-		RenderSystem.disableBlend();
+	protected void highlightSquare(PoseStack poseStack, int x, int y, ResourceLocation shade) {
+		highlightSquare(poseStack, x, y, 24, 24, shade);
+	}
+
+	protected void highlightSquare(PoseStack poseStack, int x, int y, int width, int height, ResourceLocation shade) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, shade);
+		blit(poseStack, x, y, width, height, width, height);
 	}
 
 
+	protected void drawPiece(PoseStack poseStack, int bx, int by, ResourceLocation piece) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, piece);
+		
+		int x1 = (int)(width/2f - 128 + 32 + bx * 24);
+		int y1 = (int)(height/2f - 128 + 32 + by * 24);
 
-	protected void drawPiece(int bx, int by, ResourceLocation piece) {
-		float myHeight=Math.min(height, 256);
-		this.minecraft.getTextureManager().bind(piece);
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		float x1 = width/2f - 128+32+bx*24;
-		float x2 = x1+24;
-		float y1 = height/2f - myHeight/2f+(32+by*24)*myHeight/256f;
-		float y2 = y1+24*myHeight/256f;
-		bufferbuilder.vertex(x1, y2, getBlitOffset()).uv(0,1).endVertex();
-		bufferbuilder.vertex(x2, y2, getBlitOffset()).uv(1,1).endVertex();
-		bufferbuilder.vertex(x2, y1, getBlitOffset()).uv(1,0).endVertex();
-		bufferbuilder.vertex(x1, y1, getBlitOffset()).uv(0,0).endVertex();
-		tessellator.end();
+		blit(poseStack, x1, y1, 0, 0, 24, 24, 24, 24);
 	}
 
-	protected void drawSideboardPiece(TilePiece piece) {
-		float myHeight=Math.min(height, 256);
-		this.minecraft.getTextureManager().bind(piece.tile);
-	
-		float x1 = width/2f - 128+(piece.side.equals(Side.BLACK)?0:16+9*24);
-		float x2 = x1+24;
-		float y1 = height/2f - myHeight/2f+(32+piece.index*24)*myHeight/256f;
-		float y2 = y1+24*myHeight/256f;
-		
-		
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-	
-		bufferbuilder.vertex(x1, y2, getBlitOffset()).uv(0,1).endVertex();
-		bufferbuilder.vertex(x2, y2, getBlitOffset()).uv(1,1).endVertex();
-		bufferbuilder.vertex(x2, y1, getBlitOffset()).uv(1,0).endVertex();
-		bufferbuilder.vertex(x1, y1, getBlitOffset()).uv(0,0).endVertex();
-		tessellator.end();
+	protected void drawSideboardPiece(PoseStack poseStack, TilePiece piece) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, piece.tile);
+		int x1 = (int)(width/2f - 128+(piece.side.equals(Side.BLACK)?0:16+9*24));
+		int y1 = (int)(height/2f - 128 + 32 + piece.index * 24);
+		blit(poseStack, x1, y1, 0, 0, 24, 24, 24, 24);
 	}
 
-	protected void drawPieces() {
+	protected void drawPieces(PoseStack poseStack) {
 		Board b = board.getBoard();
 	    for(int by = 0; by < 8; by++) { 
 			for(int bx = 0; bx < 8; bx++) {
 				Piece piece = b.pieceAt(Point.create(bx, by));
 				if(piece != null) {
-					pieceMap.get(piece.getCharacter()).draw(this, bx, by);
+					RenderSystem.setShader(GameRenderer::getPositionTexShader);
+					pieceMap.get(piece.getCharacter()).draw(poseStack, this, bx, by);
 				}
 			}
 	    }

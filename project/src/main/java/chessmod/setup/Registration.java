@@ -1,25 +1,31 @@
 package chessmod.setup;
 
 import chessmod.ChessMod;
-import chessmod.block.*;
+import chessmod.block.AIChessboardBlock;
+import chessmod.block.ChessesChessboardBlock;
+import chessmod.block.GoldChessboardBlock;
+import chessmod.block.PuzzleChessboardBlock;
+import chessmod.block.WoodChessboardBlock;
+import chessmod.blockentity.AIChessboardBlockEntity;
+import chessmod.blockentity.ChessesChessboardBlockEntity;
+import chessmod.blockentity.GoldChessboardBlockEntity;
+import chessmod.blockentity.PuzzleChessboardBlockEntity;
+import chessmod.blockentity.WoodChessboardBlockEntity;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
-import chessmod.tileentity.*;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.fmllegacy.RegistryObject;
 
 /*
  * Stuart:: Used the tutorial of this as of May 30, 2022
@@ -30,42 +36,42 @@ import net.minecraftforge.registries.ForgeRegistries;
  * 
  */
 public class Registration {
-	public static final Item.Properties ITEM_PROPERTIES = new Item.Properties();
+	private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ChessMod.MODID);
+	private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ChessMod.MODID);
+	private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ChessMod.MODID);
+	public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ChessMod.MODID);
+	public static final Item.Properties ITEM_PROPERTIES = new Item.Properties().tab(ModSetup.ITEM_GROUP);
 
-    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ChessMod.MODID);
-    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ChessMod.MODID);
-    private static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, ChessMod.MODID);
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ChessMod.MODID);
 
-	public static final RegistryObject<Block> WOOD_CHESSBOARD = BLOCKS.register("wood_chessboard", () -> new WoodChessboardBlock(AbstractBlock.Properties.of(Material.STONE)));
+	public static final RegistryObject<Block> WOOD_CHESSBOARD = BLOCKS.register("wood_chessboard", WoodChessboardBlock::new);
 	public static final RegistryObject<Item> WOOD_CHESSBOARD_ITEM = fromBlock(WOOD_CHESSBOARD);
-	public static final RegistryObject<TileEntityType<?>> WOOD_CHESSBOARD_TE =
-			TILE_ENTITIES.register("wood_chessboard",
-					() -> TileEntityType.Builder.of(WoodChessboardTileEntity::new, WOOD_CHESSBOARD.get()).build(null));
+	public static final RegistryObject<BlockEntityType<WoodChessboardBlockEntity>> WOOD_CHESSBOARD_BE = 
+			BLOCK_ENTITIES.register("wood_chessboard", 
+					() -> BlockEntityType.Builder.of(WoodChessboardBlockEntity::new, WOOD_CHESSBOARD.get()).build(null));
 	
-	public static final RegistryObject<Block> GOLD_CHESSBOARD = BLOCKS.register("gold_chessboard", () -> new GoldChessboardBlock(AbstractBlock.Properties.of(Material.STONE)));
+	public static final RegistryObject<Block> GOLD_CHESSBOARD = BLOCKS.register("gold_chessboard", GoldChessboardBlock::new);
 	public static final RegistryObject<Item> GOLD_CHESSBOARD_ITEM = fromBlock(GOLD_CHESSBOARD);
-	public static final RegistryObject<TileEntityType<GoldChessboardTileEntity>> GOLD_CHESSBOARD_BE =
-			TILE_ENTITIES.register("gold_chessboard",
-					() -> TileEntityType.Builder.of(GoldChessboardTileEntity::new, GOLD_CHESSBOARD.get()).build(null));
+	public static final RegistryObject<BlockEntityType<GoldChessboardBlockEntity>> GOLD_CHESSBOARD_BE = 
+			BLOCK_ENTITIES.register("gold_chessboard", 
+					() -> BlockEntityType.Builder.of(GoldChessboardBlockEntity::new, GOLD_CHESSBOARD.get()).build(null));
 	
-	public static final RegistryObject<Block> CHESSES_CHESSBOARD = BLOCKS.register("chesses_chessboard", () -> new ChessesChessboardBlock(AbstractBlock.Properties.of(Material.STONE)));
+	public static final RegistryObject<Block> CHESSES_CHESSBOARD = BLOCKS.register("chesses_chessboard", ChessesChessboardBlock::new);
 	public static final RegistryObject<Item> CHESSES_CHESSBOARD_ITEM = fromBlock(CHESSES_CHESSBOARD);
-	public static final RegistryObject<TileEntityType<ChessesChessboardTileEntity>> CHESSES_CHESSBOARD_BE =
-			TILE_ENTITIES.register("chesses_chessboard",
-					() -> TileEntityType.Builder.of(ChessesChessboardTileEntity::new, CHESSES_CHESSBOARD.get()).build(null));
+	public static final RegistryObject<BlockEntityType<ChessesChessboardBlockEntity>> CHESSES_CHESSBOARD_BE = 
+			BLOCK_ENTITIES.register("chesses_chessboard", 
+					() -> BlockEntityType.Builder.of(ChessesChessboardBlockEntity::new, CHESSES_CHESSBOARD.get()).build(null));
 	
-	public static final RegistryObject<Block> AI_CHESSBOARD = BLOCKS.register("ai_chessboard", () -> new AIChessboardBlock(AbstractBlock.Properties.of(Material.STONE)));
+	public static final RegistryObject<Block> AI_CHESSBOARD = BLOCKS.register("ai_chessboard", AIChessboardBlock::new);
 	public static final RegistryObject<Item> AI_CHESSBOARD_ITEM = fromBlock(AI_CHESSBOARD);
-	public static final RegistryObject<TileEntityType<AIChessboardTileEntity>> AI_CHESSBOARD_BE =
-			TILE_ENTITIES.register("ai_chessboard",
-					() -> TileEntityType.Builder.of(AIChessboardTileEntity::new, AI_CHESSBOARD.get()).build(null));
+	public static final RegistryObject<BlockEntityType<AIChessboardBlockEntity>> AI_CHESSBOARD_BE = 
+			BLOCK_ENTITIES.register("ai_chessboard",
+					() -> BlockEntityType.Builder.of(AIChessboardBlockEntity::new, AI_CHESSBOARD.get()).build(null));
 	
-	public static final RegistryObject<Block> PUZZLE_CHESSBOARD = BLOCKS.register("puzzle_chessboard", () -> new PuzzleChessboardBlock(AbstractBlock.Properties.of(Material.STONE)));
+	public static final RegistryObject<Block> PUZZLE_CHESSBOARD = BLOCKS.register("puzzle_chessboard", PuzzleChessboardBlock::new);
 	public static final RegistryObject<Item> PUZZLE_CHESSBOARD_ITEM = fromBlock(PUZZLE_CHESSBOARD);
-	public static final RegistryObject<TileEntityType<PuzzleChessboardTileEntity>> PUZZLE_CHESSBOARD_BE =
-			TILE_ENTITIES.register("puzzle_chessboard",
-					() -> TileEntityType.Builder.of(PuzzleChessboardTileEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
+	public static final RegistryObject<BlockEntityType<PuzzleChessboardBlockEntity>> PUZZLE_CHESSBOARD_BE = 
+			BLOCK_ENTITIES.register("puzzle_chessboard", 
+					() -> BlockEntityType.Builder.of(PuzzleChessboardBlockEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
     
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND=
             SOUNDS.register("slide_piece", 
@@ -85,23 +91,19 @@ public class Registration {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(bus);
         ITEMS.register(bus);
-        TILE_ENTITIES.register(bus);
+        BLOCK_ENTITIES.register(bus);
         SOUNDS.register(bus);
         int id = 0;
         PacketHandler.HANDLER.messageBuilder(ChessPlay.class, id++, NetworkDirection.PLAY_TO_SERVER)
-        .decoder(buf->ChessPlay.decode(buf))
+        .decoder(buf -> ChessPlay.decode(buf))
         .encoder(ChessPlay::encode)
         .consumer(ChessPlay.Handler::handle)
         .add();
         PacketHandler.HANDLER.messageBuilder(ArbitraryPlacement.class, id++, NetworkDirection.PLAY_TO_SERVER)
-        .decoder(buf->ArbitraryPlacement.decode(buf))
+        .decoder(buf -> ArbitraryPlacement.decode(buf))
         .encoder(ArbitraryPlacement::encode)
         .consumer(ArbitraryPlacement.Handler::handle)
         .add();
-		//PacketHandler.HANDLER.registerMessage(id++, ChessPlay.class, ChessPlay::encode, ChessPlay::decode, ChessPlay.Handler::handle);
-		//PacketHandler.HANDLER.registerMessage(id++, ArbitraryPlacement.class, ArbitraryPlacement::encode, ArbitraryPlacement::decode, ArbitraryPlacement.Handler::handle);
-        
-        
     }
 	
     // Conveniance function: Take a RegistryObject<Block> and make a corresponding RegistryObject<Item> from it
