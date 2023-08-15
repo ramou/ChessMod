@@ -1,9 +1,11 @@
 package chessmod.block;
 
+import chessmod.setup.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GlassBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -20,6 +22,10 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
+
+import java.util.logging.Level;
+
+import static net.minecraftforge.fml.network.NetworkHooks.openGui;
 
 public abstract class ChessboardBlock extends GlassBlock {
 
@@ -43,33 +49,81 @@ public abstract class ChessboardBlock extends GlassBlock {
 		return false;
 	}
 
-	@Override
-	public boolean hasTileEntity(final BlockState state) {
-		return true;
-	}
 
 	@Override
-	public ActionResultType use(BlockState bs, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> openGui(worldIn, pos));
-		return ActionResultType.PASS;
+	public ActionResultType use(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult hit) {
+
+		if (!world.isClientSide && playerEntity.getMainHandItem().getItem() == Registration.CHESS_WRENCH.get()) {
+			Direction currentFacing = blockState.getValue(FACING);
+			Direction newFacing = currentFacing.getClockWise();
+			world.setBlockAndUpdate(blockPos, blockState.setValue(FACING, newFacing));
+
+			return ActionResultType.PASS;
+		} else if (world.isClientSide && playerEntity.getMainHandItem().getItem() == Registration.CHESS_WRENCH.get()) {
+			/*
+			 * We want to know how much to rotate the screen by based on what direction they're facing.
+			 */
+			openGui(world, blockPos);
+		}
+
+		return ActionResultType.SUCCESS;
 	}
 
-	protected abstract void openGui(final World worldIn, final BlockPos pos);
+
+	/*
+	@Override
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
+								 BlockHitResult hit) {
+
+		if (!level.isClientSide && player.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
+			Direction currentFacing = state.getValue(FACING);
+			Direction newFacing = currentFacing.getClockWise();
+			level.setBlockAndUpdate(pos, state.setValue(FACING, newFacing));
+
+			return InteractionResult.PASS;
+		} else if (level.isClientSide && !player.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
+			/*
+			 * We want to know how much to rotate the screen by based on what direction they're facing.
+
+			openGui(level, pos);
+		}
+
+		return InteractionResult.SUCCESS;
+
+
+
+*/
+
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		//Don't mess around, if they're looking up or down, direction is east.
-		//If we really want to make this nice we can examine relative directions
-		//carefully at a later date.
-
-		Direction face = context.getNearestLookingDirection().getOpposite();
-		if(face == Direction.UP || face == Direction.DOWN) face = Direction.NORTH;
-		return this.defaultBlockState().setValue(FACING, face);
+	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
+		if (player.getMainHandItem().getItem() == Registration.CHESS_WRENCH.get()) {
+			if (!world.isClientSide && world.getBlockEntity(pos) instanceof ChessboardBlockEntity chessboard) {
+				chessboard.initialize();
+				chessboard.notifyClientOfBoardChange();
+				return false;
+			}
+		}
+		return super.removedByPlayer(state,level,pos,player,willHarvest,fluid);
 	}
 
-	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-		builder.add(FACING);
-	}
+		protected abstract void openGui ( final World worldIn, final BlockPos pos);
 
+		@Override
+		public BlockState getStateForPlacement (BlockItemUseContext context){
+			//Don't mess around, if they're looking up or down, direction is east.
+			//If we really want to make this nice we can examine relative directions
+			//carefully at a later date.
+
+			Direction face = context.getNearestLookingDirection().getOpposite();
+			if (face == Direction.UP || face == Direction.DOWN) face = Direction.NORTH;
+			return this.defaultBlockState().setValue(FACING, face);
+		}
+
+		@Override
+		protected void createBlockStateDefinition (StateContainer.Builder < Block, BlockState > builder){
+			builder.add(FACING);
+		}
+
+	}
 }

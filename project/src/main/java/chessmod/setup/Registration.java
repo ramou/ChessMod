@@ -1,10 +1,11 @@
 package chessmod.setup;
-
 import chessmod.ChessMod;
+import chessmod.ModEventSubscriber;
 import chessmod.block.*;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
+import chessmod.item.ChessWrench;
 import chessmod.tileentity.*;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -14,13 +15,15 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 /*
  * Stuart:: Used the tutorial of this as of May 30, 2022
  * https://wiki.mcjty.eu/modding/index.php?title=Tutorial_1.18_Episode_1
@@ -66,6 +69,17 @@ public class Registration {
 	public static final RegistryObject<TileEntityType<PuzzleChessboardTileEntity>> PUZZLE_CHESSBOARD_BE =
 			TILE_ENTITIES.register("puzzle_chessboard",
 					() -> TileEntityType.Builder.of(PuzzleChessboardTileEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
+
+	public static final RegistryObject <Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new Item(new Item.Properties().tab(Registration.ITEM_GROUP)));
+
+
+	public static final ItemGroup ITEM_GROUP = new ItemGroup("Chessmod") {
+		@Override
+		public ItemStack makeIcon() {
+			return new ItemStack(CHESS_WRENCH.get());
+		}
+	};
+
     
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND=
             SOUNDS.register("slide_piece", 
