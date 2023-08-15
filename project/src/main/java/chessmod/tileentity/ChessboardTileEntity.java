@@ -19,7 +19,11 @@ import net.minecraftforge.common.util.Constants;
 
 public abstract class ChessboardTileEntity extends TileEntity {
 	protected Board board = BoardFactory.createBoard();
-	
+
+	public void initialize() {
+		this.board = BoardFactory.createBoard();
+	}
+
 	public Board getBoard() {
 		return board;
 	}

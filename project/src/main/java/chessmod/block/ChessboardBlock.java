@@ -1,6 +1,7 @@
 package chessmod.block;
 
 import chessmod.setup.Registration;
+import chessmod.tileentity.ChessboardTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GlassBlock;
@@ -20,12 +21,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
-import java.util.logging.Level;
-
-import static net.minecraftforge.fml.network.NetworkHooks.openGui;
 
 public abstract class ChessboardBlock extends GlassBlock {
 
@@ -69,43 +65,21 @@ public abstract class ChessboardBlock extends GlassBlock {
 		return ActionResultType.SUCCESS;
 	}
 
-
-	/*
-	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-								 BlockHitResult hit) {
-
-		if (!level.isClientSide && player.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
-			Direction currentFacing = state.getValue(FACING);
-			Direction newFacing = currentFacing.getClockWise();
-			level.setBlockAndUpdate(pos, state.setValue(FACING, newFacing));
-
-			return InteractionResult.PASS;
-		} else if (level.isClientSide && !player.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
-			/*
-			 * We want to know how much to rotate the screen by based on what direction they're facing.
-
-			openGui(level, pos);
-		}
-
-		return InteractionResult.SUCCESS;
-
-
-
-*/
-
-
 	@Override
 	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
 		if (player.getMainHandItem().getItem() == Registration.CHESS_WRENCH.get()) {
-			if (!world.isClientSide && world.getBlockEntity(pos) instanceof ChessboardBlockEntity chessboard) {
+			if (!world.isClientSide && world.getBlockEntity(pos) instanceof ChessboardTileEntity) {
+
+				ChessboardTileEntity chessboard = (ChessboardTileEntity) world.getBlockEntity(pos);
 				chessboard.initialize();
 				chessboard.notifyClientOfBoardChange();
 				return false;
 			}
 		}
-		return super.removedByPlayer(state,level,pos,player,willHarvest,fluid);
+		return super.removedByPlayer(state,world,pos,player,willHarvest,fluid);
 	}
+
+
 
 		protected abstract void openGui ( final World worldIn, final BlockPos pos);
 
@@ -126,4 +100,4 @@ public abstract class ChessboardBlock extends GlassBlock {
 		}
 
 	}
-}
+

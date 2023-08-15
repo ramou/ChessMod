@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import chessmod.ChessMod;
 
+import chessmod.setup.Registration;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
@@ -19,7 +20,18 @@ public class ModItemGroups {
 	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(ChessMod.MODID, () -> new ItemStack(
 			ModBlocks.wood_chessboard.asItem()
 	));
-		
+
+
+	public static final ItemGroup ITEM_GROUP = new ItemGroup("Chessmod") {
+		@Override
+		public ItemStack makeIcon() {
+			return new ItemStack(Registration.CHESS_WRENCH.get());
+		}
+	};
+
+
+
+
 	public static final class ModItemGroup extends ItemGroup {
 
 		@Nonnull

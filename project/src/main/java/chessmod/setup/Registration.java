@@ -5,6 +5,7 @@ import chessmod.block.*;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
+import chessmod.init.ModItemGroups;
 import chessmod.item.ChessWrench;
 import chessmod.tileentity.*;
 import net.minecraft.block.AbstractBlock;
@@ -70,17 +71,9 @@ public class Registration {
 			TILE_ENTITIES.register("puzzle_chessboard",
 					() -> TileEntityType.Builder.of(PuzzleChessboardTileEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
 
-	public static final RegistryObject <Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new Item(new Item.Properties().tab(Registration.ITEM_GROUP)));
+	public static final RegistryObject <Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new Item(new Item.Properties().tab(ModItemGroups.ITEM_GROUP)));
 
 
-	public static final ItemGroup ITEM_GROUP = new ItemGroup("Chessmod") {
-		@Override
-		public ItemStack makeIcon() {
-			return new ItemStack(CHESS_WRENCH.get());
-		}
-	};
-
-    
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND=
             SOUNDS.register("slide_piece", 
             		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "slide_piece")));

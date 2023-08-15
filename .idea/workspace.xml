@@ -5,25 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="361ade78-f9ca-48f9-a9bc-8ccbff53d3a0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/project.main.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules/project.test.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/item/ChessWrench.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/resources/assets/chessmod/models/item/chess_wrench.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/resources/assets/chessmod/textures/item/chess_wrench.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/resources/data/chessmod/loot_tables/blocks/chess_wrench.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/resources/data/chessmod/recipes/chess_wrench.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/project.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/project.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/project.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/project.test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/ModEventSubscriber.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/ModEventSubscriber.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/block/ChessboardBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/block/ChessboardBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/init/ModItemGroups.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/init/ModItemGroups.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/init/ModItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/init/ModItems.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/item/ChessWrench.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/item/ChessWrench.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/setup/Registration.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/setup/Registration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/assets/chessmod/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/assets/chessmod/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/data/chessmod/advancements/main/chessboard_pickup.json" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/data/chessmod/advancements/main/chessboard_pickup.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/data/chessmod/advancements/main/root.json" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/data/chessmod/advancements/main/root.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/tileentity/ChessboardTileEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/tileentity/ChessboardTileEntity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +43,17 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="project" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="project" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="forgegradle runs" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="project" type="f1a62948:ProjectNode" />
                 <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
@@ -68,6 +71,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="1.17.1" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
@@ -80,17 +88,24 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Thomas Mejia\Documents\GitHub\ChessMod\project\src\main\resources\assets\chessmod\textures\item" />
@@ -102,7 +117,7 @@
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/project" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="--debug" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -144,7 +159,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1691078900705</updated>
+      <workItem from="1692120829596" duration="1952000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
