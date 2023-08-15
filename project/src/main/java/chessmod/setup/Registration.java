@@ -14,9 +14,12 @@ import chessmod.blockentity.WoodChessboardBlockEntity;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
+import chessmod.item.ChessWrench;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -72,7 +75,10 @@ public class Registration {
 	public static final RegistryObject<BlockEntityType<PuzzleChessboardBlockEntity>> PUZZLE_CHESSBOARD_BE = 
 			BLOCK_ENTITIES.register("puzzle_chessboard", 
 					() -> BlockEntityType.Builder.of(PuzzleChessboardBlockEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
-    
+
+	public static final RegistryObject <Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new Item(new Item.Properties().tab(ModSetup.ITEM_GROUP)));
+
+
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND=
             SOUNDS.register("slide_piece", 
             		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "slide_piece")));
