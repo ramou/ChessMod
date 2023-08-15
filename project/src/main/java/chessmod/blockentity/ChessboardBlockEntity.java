@@ -12,10 +12,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ChessboardBlockEntity extends BlockEntity {
-	protected Board board = BoardFactory.createBoard();
-	
+	protected Board board;
+
+	public void initialize() {
+		this.board = BoardFactory.createBoard();
+	}
+
 	public Board getBoard() {
 		return board;
 	}
@@ -36,6 +41,7 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 
 	public ChessboardBlockEntity(BlockEntityType<?> blockEntityTypeIn, BlockPos pWorldPosition, BlockState pBlockState) {
 		super(blockEntityTypeIn, pWorldPosition, pBlockState);
+		initialize();
 	}
 	
 

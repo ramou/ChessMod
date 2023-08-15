@@ -5,9 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="329c440c-cc04-44cd-8ad4-d303ec1691aa" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/project.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/project.test.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/item/ChessWrench.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/assets/chessmod/models/item/chess_wrench.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/assets/chessmod/textures/item/chess_wrench.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/data/chessmod/loot_tables/blocks/chess_wrench.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/data/chessmod/recipes/chess_wrench.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/client/render/blockentity/ChessboardBlockEntityRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/client/render/blockentity/ChessboardBlockEntityRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/block/ChessboardBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/block/ChessboardBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/blockentity/ChessboardBlockEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/blockentity/ChessboardBlockEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/setup/ClientSetup.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/setup/ClientSetup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/setup/ModSetup.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/setup/ModSetup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/setup/Registration.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/setup/Registration.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,6 +149,7 @@
       <workItem from="1690296934197" duration="247000" />
       <workItem from="1690307117717" duration="545000" />
       <workItem from="1690307711286" duration="1359000" />
+      <workItem from="1692036696944" duration="5842000" />
     </task>
     <servers />
   </component>

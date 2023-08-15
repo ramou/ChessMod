@@ -1,6 +1,7 @@
 package chessmod.setup;
 
 import chessmod.ChessMod;
+import chessmod.setup.ModSetup;
 import chessmod.block.AIChessboardBlock;
 import chessmod.block.ChessesChessboardBlock;
 import chessmod.block.GoldChessboardBlock;
@@ -14,9 +15,12 @@ import chessmod.blockentity.WoodChessboardBlockEntity;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
+import chessmod.item.ChessWrench;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -42,7 +46,6 @@ public class Registration {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ChessMod.MODID);
 
     public static final Item.Properties ITEM_PROPERTIES = new Item.Properties().tab(ModSetup.ITEM_GROUP);
-    
 	public static final RegistryObject<Block> WOOD_CHESSBOARD = BLOCKS.register("wood_chessboard", WoodChessboardBlock::new);
 	public static final RegistryObject<Item> WOOD_CHESSBOARD_ITEM = fromBlock(WOOD_CHESSBOARD);
 	public static final RegistryObject<BlockEntityType<WoodChessboardBlockEntity>> WOOD_CHESSBOARD_BE = 
@@ -72,21 +75,28 @@ public class Registration {
 	public static final RegistryObject<BlockEntityType<PuzzleChessboardBlockEntity>> PUZZLE_CHESSBOARD_BE = 
 			BLOCK_ENTITIES.register("puzzle_chessboard", 
 					() -> BlockEntityType.Builder.of(PuzzleChessboardBlockEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
-    
+
+	public static final RegistryObject <Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new Item(new Item.Properties().tab(ModSetup.ITEM_GROUP)));
+
+
+
+
+
+
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND=
-            SOUNDS.register("slide_piece", 
+            SOUNDS.register("slide_piece",
             		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "slide_piece")));
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_TAKE_SOUND=
-            SOUNDS.register("slide_piece_take", 
+            SOUNDS.register("slide_piece_take",
             		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "slide_piece_take")));
 	public static final RegistryObject<SoundEvent> PLACE_PIECE_SOUND=
-            SOUNDS.register("place_piece", 
+            SOUNDS.register("place_piece",
             		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "place_piece")));
 	public static final RegistryObject<SoundEvent> PLACE_PIECE_TAKE_SOUND=
-            SOUNDS.register("place_piece_take", 
+            SOUNDS.register("place_piece_take",
             		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "place_piece_take")));
-	
-	
+
+
 	public static void init() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(bus);
