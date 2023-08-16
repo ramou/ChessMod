@@ -1,0 +1,20 @@
+{
+  "itemGroup.chessmod": "Mod Échecs",
+  "chessmod.landing": "Aimez-vous jouer aux échecs? Ce mod permet de jouer aux échecs dans Minecraft de différentes façons.",
+  "chessmod.desc": "Un mod intégrant les échecs dans Minecraft.",
+
+  "chessmod.subtitle.slide_piece": "Pièce d'échecs glisse",
+  "chessmod.subtitle.slide_piece_take": "Pièce d'échecs glisse dans pièce",
+  "chessmod.subtitle.place_piece": "Pièce d'échecs placée",
+  "chessmod.subtitle.place_piece_take": "Pièce d'échecs placée contre pièce",
+
+  "block.chessmod.wood_chessboard": "Un échiquier en bois",
+  "block.chessmod.gold_chessboard": "Un échiquier en or",
+  "block.chessmod.chesses_chessboard": "Un échiquier pour Chesses",
+  "block.chessmod.ai_chessboard": "Un échiquier IA",
+  "block.chessmod.puzzle_chessboard": "Un échiquier casse-tête",
+
+  "item.chessmod.chess_wrench": "Une clé à échecs",
+  "advancement.chessmod:woodChessboardPickup": "Ça devient sérieux!",
+  "advancement.chessmod:woodChessboardPickup.desc": "Ramassez un échiquier du monde"
+}
