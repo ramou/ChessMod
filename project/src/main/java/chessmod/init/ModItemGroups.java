@@ -22,11 +22,13 @@ public class ModItemGroups {
 	));
 
 
-	public static final ItemGroup ITEM_GROUP = new ItemGroup("Chessmod") {
+	public static final ItemGroup ITEM_GROUP = new ItemGroup("chessmod") {
+
 		@Override
 		public ItemStack makeIcon() {
 			return new ItemStack(Registration.CHESS_WRENCH.get());
 		}
+
 	};
 
 

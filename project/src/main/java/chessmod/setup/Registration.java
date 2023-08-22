@@ -71,7 +71,7 @@ public class Registration {
 			TILE_ENTITIES.register("puzzle_chessboard",
 					() -> TileEntityType.Builder.of(PuzzleChessboardTileEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
 
-	public static final RegistryObject <Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new Item(new Item.Properties().tab(ModItemGroups.ITEM_GROUP)));
+	public static final RegistryObject <Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new ChessWrench(new Item.Properties().tab(ModItemGroups.ITEM_GROUP)));
 
 
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND=

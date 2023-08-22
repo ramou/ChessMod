@@ -21,6 +21,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 
 public abstract class ChessboardBlock extends GlassBlock {
@@ -30,6 +32,11 @@ public abstract class ChessboardBlock extends GlassBlock {
 	public ChessboardBlock(Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+	}
+
+    @Override
+	public boolean hasTileEntity(final BlockState state) {
+		return true;
 	}
 
 	@Override
@@ -59,7 +66,7 @@ public abstract class ChessboardBlock extends GlassBlock {
 			/*
 			 * We want to know how much to rotate the screen by based on what direction they're facing.
 			 */
-			openGui(world, blockPos);
+			DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> openGui(world, blockPos));
 		}
 
 		return ActionResultType.SUCCESS;
@@ -69,8 +76,8 @@ public abstract class ChessboardBlock extends GlassBlock {
 	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
 		if (player.getMainHandItem().getItem() == Registration.CHESS_WRENCH.get()) {
 			if (!world.isClientSide && world.getBlockEntity(pos) instanceof ChessboardTileEntity) {
-
 				ChessboardTileEntity chessboard = (ChessboardTileEntity) world.getBlockEntity(pos);
+				assert chessboard != null;
 				chessboard.initialize();
 				chessboard.notifyClientOfBoardChange();
 				return false;

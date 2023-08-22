@@ -53,7 +53,7 @@ public class ModEventSubscriber {
 	}
 	
 	/**
-	 * This method will be called by Forge when it is time for the mod to register its Items.
+	 * This metho d will be called by Forge when it is time for the mod to register its Items.
 	 * This method will always be called after the Block registry method.
 	 */
 	@SubscribeEvent
@@ -62,7 +62,7 @@ public class ModEventSubscriber {
 		registry.registerAll(
 				// This is a very simple Item. It has no special properties except for being on our creative tab.
 				//setup(new Item(new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)), "wood_chessboard")
-
+                 setup(new ChessWrench(new Item.Properties().tab(ModItemGroups.ITEM_GROUP)),"chess_wrench")
 				//We'd do the other ones here.
 		);
 
