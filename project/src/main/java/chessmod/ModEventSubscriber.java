@@ -5,6 +5,8 @@ import javax.annotation.Nonnull;
 import chessmod.block.*;
 import chessmod.item.ChessWrench;
 import chessmod.tileentity.*;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,7 +58,7 @@ public class ModEventSubscriber {
 		registry.registerAll(
 				// This is a very simple Item. It has no special properties except for being on our creative tab.
 				//setup(new Item(new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)), "wood_chessboard")
-				setup(new Item(new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)),"chess_wrench")
+				setup(new Item(new Item.Properties().group(ModItemGroups.ITEM_GROUP)),"chess_wrench")
 				//We'd do the other ones here.
 		);
 
@@ -79,6 +81,7 @@ public class ModEventSubscriber {
 			// Setup the new BlockItem with the block's registry name and register it
 			registry.register(setup(blockItem, blockRegistryName));
 		}
+
 		LOGGER.debug("Registered Items");
 	}
 	

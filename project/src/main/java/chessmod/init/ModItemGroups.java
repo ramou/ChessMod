@@ -16,9 +16,19 @@ import net.minecraft.item.ItemStack;
  * 
  */
 public class ModItemGroups {
+
 	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(ChessMod.MODID, () -> new ItemStack(
-		ModItems.chess_wrench.asItem()
+		ModBlocks.wood_chessboard.asItem()
 	));
+
+	public static final ItemGroup ITEM_GROUP = new ItemGroup("chessmod") {
+		@Override
+		public ItemStack createIcon() {
+			return new ItemStack(ModItems.chess_wrench.getItem());
+		}
+	};
+
+
 
 	public static final class ModItemGroup extends ItemGroup {
 
