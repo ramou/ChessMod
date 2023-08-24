@@ -6,8 +6,8 @@ import net.minecraft.item.Item;
 
 public class ChessWrench extends Item {
 
-    public ChessWrench(Properties p_41383_) {
-        super(p_41383_);
+    public ChessWrench(Properties properties) {
+        super(properties);
     }
 
 }

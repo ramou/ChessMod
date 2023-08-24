@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="361ade78-f9ca-48f9-a9bc-8ccbff53d3a0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/project.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/project.main.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/project.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/project.test.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2023-08-15__12_07_p_m___Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2023-08-15__12_07_p_m___Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/ModEventSubscriber.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/ModEventSubscriber.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/block/ChessboardBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/block/ChessboardBlock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/init/ModItemGroups.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/init/ModItemGroups.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/init/ModItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/init/ModItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/setup/Registration.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/setup/Registration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/assets/chessmod/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/assets/chessmod/lang/en_us.json" afterDir="false" />
-    </list>
+    <list default="true" id="361ade78-f9ca-48f9-a9bc-8ccbff53d3a0" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -161,6 +149,7 @@
       <option name="presentableId" value="Default" />
       <updated>1691078900705</updated>
       <workItem from="1692120829596" duration="1952000" />
+      <workItem from="1692899640055" duration="66000" />
     </task>
     <servers />
   </component>

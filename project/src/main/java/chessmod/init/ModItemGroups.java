@@ -22,17 +22,6 @@ public class ModItemGroups {
 	));
 
 
-	public static final ItemGroup ITEM_GROUP = new ItemGroup("chessmod") {
-
-		@Override
-		public ItemStack makeIcon() {
-			return new ItemStack(Registration.CHESS_WRENCH.get());
-		}
-
-	};
-
-
-
 
 	public static final class ModItemGroup extends ItemGroup {
 
