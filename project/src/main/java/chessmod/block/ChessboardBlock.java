@@ -9,6 +9,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -54,30 +56,29 @@ public abstract class ChessboardBlock extends GlassBlock {
 	}
 
 
+
 	@Override
 	public ActionResultType use(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult hit) {
 
 
-		//if (playerEntity.getMainHandItem().getItem() == Registration.CHESS_WRENCH.get()) {
-		if (!world.isClientSide && playerEntity.getItemBySlot(EquipmentSlotType.MAINHAND).getItem().equals(Registration.CHESS_WRENCH.get())) {
+		if (!world.isClientSide && !playerEntity.getMainHandItem().isEmpty() && playerEntity.getMainHandItem().getItem().equals(Registration.CHESS_WRENCH.get())) {
 			Direction currentFacing = blockState.getValue(FACING);
 			Direction newFacing = currentFacing.getClockWise();
 			world.setBlockAndUpdate(blockPos, blockState.setValue(FACING, newFacing));
 
-			return ActionResultType.SUCCESS;
+			return ActionResultType.PASS;
 		}
-		else if (world.isClientSide && playerEntity.getItemBySlot(EquipmentSlotType.MAINHAND).getItem().equals(Registration.CHESS_WRENCH.get())) {
-			/*
-			 * We want to know how much to rotate the screen by based on what direction they're facing.
-			 */
-			DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> openGui(world, blockPos));
-		}
-
+		 else if (world.isClientSide && playerEntity.getMainHandItem().isEmpty() && !playerEntity.getMainHandItem().getItem().equals(Registration.CHESS_WRENCH.get())){
+				/*
+				 * We want to know how much to rotate the screen by based on what direction they're facing.
+				 */
+				openGui(world, blockPos);
+			}
 
 		return ActionResultType.SUCCESS;
 }
 
-	/*
+/*
 	@Override
 	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
 		if (player.getMainHandItem().getItem() == Registration.CHESS_WRENCH.get()) {
