@@ -1,5 +1,6 @@
 package chessmod.block;
 
+import chessmod.item.ChessWrench;
 import chessmod.setup.Registration;
 import chessmod.tileentity.ChessboardTileEntity;
 import net.minecraft.block.Block;
@@ -61,14 +62,14 @@ public abstract class ChessboardBlock extends GlassBlock {
 	public ActionResultType use(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult hit) {
 
 
-		if (!world.isClientSide && playerEntity.getMainHandItem().getItem().equals(Registration.CHESS_WRENCH.isPresent())) {
+		if (!world.isClientSide && playerEntity.getMainHandItem().equals(Registration.CHESS_WRENCH.isPresent()) == Registration.CHESS_WRENCH.isPresent()) {
 			Direction currentFacing = blockState.getValue(FACING);
 			Direction newFacing = currentFacing.getClockWise();
 			world.setBlockAndUpdate(blockPos, blockState.setValue(FACING, newFacing));
 
 			return ActionResultType.SUCCESS;
 		}
-		if (world.isClientSide && !playerEntity.getMainHandItem().getItem().equals(Registration.CHESS_WRENCH.isPresent())){
+		else if (world.isClientSide && !playerEntity.getMainHandItem().equals(Registration.CHESS_WRENCH.isPresent()) == !Registration.CHESS_WRENCH.isPresent()){
 				/*
 				 * We want to know how much to rotate the screen by based on what direction they're facing.
 				 */
