@@ -21,13 +21,6 @@ public class ModItemGroups {
 		ModBlocks.wood_chessboard.asItem()
 	));
 
-	public static final ItemGroup ITEM_GROUP = new ItemGroup("chessmod") {
-		@Override
-		public ItemStack createIcon() {
-			return new ItemStack(ModItems.chess_wrench.getItem());
-		}
-	};
-
 
 
 	public static final class ModItemGroup extends ItemGroup {
