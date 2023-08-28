@@ -61,14 +61,14 @@ public abstract class ChessboardBlock extends GlassBlock {
 	public ActionResultType use(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult hit) {
 
 
-		if (!world.isClientSide && !playerEntity.getMainHandItem().isEmpty() && playerEntity.getMainHandItem().getItem().equals(Registration.CHESS_WRENCH.get())) {
+		if (!world.isClientSide && playerEntity.getMainHandItem().getItem().equals(Registration.CHESS_WRENCH.isPresent())) {
 			Direction currentFacing = blockState.getValue(FACING);
 			Direction newFacing = currentFacing.getClockWise();
 			world.setBlockAndUpdate(blockPos, blockState.setValue(FACING, newFacing));
 
-			return ActionResultType.PASS;
+			return ActionResultType.SUCCESS;
 		}
-		 else if (world.isClientSide && playerEntity.getMainHandItem().isEmpty() && !playerEntity.getMainHandItem().getItem().equals(Registration.CHESS_WRENCH.get())){
+		if (world.isClientSide && !playerEntity.getMainHandItem().getItem().equals(Registration.CHESS_WRENCH.isPresent())){
 				/*
 				 * We want to know how much to rotate the screen by based on what direction they're facing.
 				 */
@@ -78,10 +78,10 @@ public abstract class ChessboardBlock extends GlassBlock {
 		return ActionResultType.SUCCESS;
 }
 
-/*
+
 	@Override
 	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
-		if (player.getMainHandItem().getItem() == Registration.CHESS_WRENCH.get()) {
+		if (!player.getMainHandItem().getItem().equals(Registration.CHESS_WRENCH.isPresent())) {
 			if (!world.isClientSide && world.getBlockEntity(pos) instanceof ChessboardTileEntity) {
 				ChessboardTileEntity chessboard = (ChessboardTileEntity) world.getBlockEntity(pos);
 				assert chessboard != null;
@@ -93,7 +93,7 @@ public abstract class ChessboardBlock extends GlassBlock {
 		return super.removedByPlayer(state,world,pos,player,willHarvest,fluid);
 	}
 
-*/
+
 
 		protected abstract void openGui ( final World worldIn, final BlockPos pos);
 

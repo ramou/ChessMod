@@ -110,7 +110,7 @@
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/project" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--scan" />
+        <option name="scriptParameters" value="--stacktrace" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -140,6 +140,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.project [runClient]" />
         <item itemvalue="Gradle.project [runClient]" />
       </list>
     </recent_temporary>
