@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4bd4f99e-bd50-419d-ac26-96672e64952a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/ModEventSubscriber.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/ModEventSubscriber.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/chessmod/block/ChessboardBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/chessmod/block/ChessboardBlock.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

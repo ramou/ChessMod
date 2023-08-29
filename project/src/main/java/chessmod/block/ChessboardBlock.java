@@ -1,9 +1,11 @@
 package chessmod.block;
 
+import chessmod.tileentity.ChessboardTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GlassBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -51,14 +53,58 @@ public abstract class ChessboardBlock extends GlassBlock {
 	public boolean hasTileEntity(final BlockState state) {
 		return true;
 	}
-	
+
+	private static final Direction[] ClockWise_Directions = {
+			Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST
+	};
+
+
 	@Override
 	public ActionResultType onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
 		// Only open the gui on the physical client
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> openGui(worldIn, pos));
+		DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
+			if (handIn.equals(Hand.MAIN_HAND) && player.getHeldItemMainhand().getItem().getRegistryName().getPath().equals("chess_wrench")) {
+				Direction currentFacing = state.get(FACING);
+				Direction newFacing = getDirection(currentFacing);
+				worldIn.setBlockState(pos, state.with(FACING, newFacing));
+			}
+		});
+
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			if (player.getHeldItemMainhand().getItem().getRegistryName().getPath().equals("chess_wrench")) {
+				if(handIn.equals(Hand.MAIN_HAND)) {
+					Direction currentFacing = state.get(FACING);
+					Direction newFacing = getDirection(currentFacing);
+					worldIn.setBlockState(pos, state.with(FACING, newFacing));
+				}
+			} else {
+				openGui(worldIn, pos);
+			}
+		});
 		return ActionResultType.PASS;
 	}
-	
+
+	private Direction getDirection(Direction direction){
+		int index = direction.getHorizontalIndex();
+		return ClockWise_Directions[(index+1) % ClockWise_Directions.length];
+	}
+
+	@Override
+	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
+		if(player.getHeldItemMainhand().getItem().getRegistryName().getPath().equals("chess_wrench")) {
+			if(world.getBlockState(pos) instanceof ChessboardTileEntity) {
+				ChessboardTileEntity chessboard = (ChessboardTileEntity) world.getBlockState(pos);
+				chessboard.initialize();
+				chessboard.notifyClientOfBoardChange();
+				return false;
+			}
+		}
+		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+	}
+
+
+
+
 	protected abstract void openGui(final World worldIn, final BlockPos pos);
 
 	@Override
