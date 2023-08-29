@@ -3,6 +3,7 @@ package chessmod;
 import javax.annotation.Nonnull;
 
 import chessmod.block.*;
+import chessmod.setup.Registration;
 import net.minecraft.block.material.Material;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,6 +64,17 @@ public class ModEventSubscriber {
 				//We'd do the other ones here.
 		);
 
+		for (final Item registryItem : ForgeRegistries.ITEMS.getValues()) {
+
+			final ResourceLocation itemRegistryName = registryItem.getRegistryName();
+			if (!itemRegistryName.getNamespace().equals(ChessMod.MODID)) {
+				continue;
+			}
+
+			System.out.println("Registering Item " + itemRegistryName);
+
+		}
+
 		// We need to go over the entire registry so that we include any potential Registry Overrides
 		for (final Block block : ForgeRegistries.BLOCKS.getValues()) {
 
@@ -74,9 +86,9 @@ public class ModEventSubscriber {
 			if (!blockRegistryName.getNamespace().equals(ChessMod.MODID)) {
 				continue;
 			}
-
+			System.out.println("Registering block " + blockRegistryName);
 			// Make the properties, and make it so that the item will be on our ItemGroup (CreativeTab)
-			final Item.Properties properties = new Item.Properties().tab(ModItemGroups.MOD_ITEM_GROUP);
+			final Item.Properties properties = Registration.createChessModItemProperties();
 			// Create the new BlockItem with the block and it's properties
 			final BlockItem blockItem = new BlockItem(block, properties);
 			// Setup the new BlockItem with the block's registry name and register it
