@@ -2,9 +2,6 @@ package chessmod.setup;
 
 import chessmod.ChessMod;
 import chessmod.block.*;
-import chessmod.common.network.ArbitraryPlacement;
-import chessmod.common.network.ChessPlay;
-import chessmod.common.network.PacketHandler;
 import chessmod.tileentity.*;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -17,7 +14,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -81,27 +77,12 @@ public class Registration {
             		() -> new SoundEvent(new ResourceLocation(ChessMod.MODID, "place_piece_take")));
 	
 	
-	public static void init() {
+	public static void register() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(bus);
         ITEMS.register(bus);
         TILE_ENTITIES.register(bus);
         SOUNDS.register(bus);
-        int id = 0;
-        PacketHandler.HANDLER.messageBuilder(ChessPlay.class, id++, NetworkDirection.PLAY_TO_SERVER)
-        .decoder(buf->ChessPlay.decode(buf))
-        .encoder(ChessPlay::encode)
-        .consumer(ChessPlay.Handler::handle)
-        .add();
-        PacketHandler.HANDLER.messageBuilder(ArbitraryPlacement.class, id++, NetworkDirection.PLAY_TO_SERVER)
-        .decoder(buf->ArbitraryPlacement.decode(buf))
-        .encoder(ArbitraryPlacement::encode)
-        .consumer(ArbitraryPlacement.Handler::handle)
-        .add();
-		//PacketHandler.HANDLER.registerMessage(id++, ChessPlay.class, ChessPlay::encode, ChessPlay::decode, ChessPlay.Handler::handle);
-		//PacketHandler.HANDLER.registerMessage(id++, ArbitraryPlacement.class, ArbitraryPlacement::encode, ArbitraryPlacement::decode, ArbitraryPlacement.Handler::handle);
-        
-        
     }
 	
     // Conveniance function: Take a RegistryObject<Block> and make a corresponding RegistryObject<Item> from it
