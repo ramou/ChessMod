@@ -1,13 +1,16 @@
 package chessmod.block;
 
+import chessmod.tileentity.ChessboardTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GlassBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -51,13 +54,57 @@ public abstract class ChessboardBlock extends GlassBlock {
 		return true;
 	}
 
+	private static final Direction[] ClockWise_Directions = {
+			Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST
+	};
+
+
 	@Override
-	public boolean onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
+	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		// Only open the gui on the physical client
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> openGui(worldIn, pos));
-		return true;
+		DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
+			if (handIn.equals(Hand.MAIN_HAND) && player.getHeldItemMainhand().getItem().getRegistryName().getPath().equals("chess_wrench")) {
+				Direction currentFacing = state.get(FACING);
+				Direction newFacing = getDirection(currentFacing);
+				worldIn.setBlockState(pos, state.with(FACING, newFacing));
+			}
+		});
+
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			if (player.getHeldItemMainhand().getItem().getRegistryName().getPath().equals("chess_wrench")) {
+				if(handIn.equals(Hand.MAIN_HAND)) {
+					Direction currentFacing = state.get(FACING);
+					Direction newFacing = getDirection(currentFacing);
+					worldIn.setBlockState(pos, state.with(FACING, newFacing));
+				}
+			} else {
+				openGui(worldIn, pos);
+			}
+		});
+
+		return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
 	}
-	
+	private Direction getDirection(Direction direction){
+		int index = direction.getHorizontalIndex();
+		return ClockWise_Directions[(index+1) % ClockWise_Directions.length];
+	}
+
+/*
+	@Override
+	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
+		if(player.getHeldItemMainhand().getItem().getRegistryName().getPath().equals("chess_wrench")) {
+			if(world.getTileEntity(pos) instanceof ChessboardTileEntity) {
+				ChessboardTileEntity chessboard = (ChessboardTileEntity) world.getTileEntity(pos);
+				chessboard.initialize();
+				chessboard.notifyClientOfBoardChange();
+				return false;
+			}
+		}
+		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+	}
+
+*/
+
 	protected abstract void openGui(final World worldIn, final BlockPos pos);
 
 

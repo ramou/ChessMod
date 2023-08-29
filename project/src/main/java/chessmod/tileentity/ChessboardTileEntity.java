@@ -28,9 +28,13 @@ public abstract class ChessboardTileEntity extends TileEntity {
 	public ChessboardRenderer chessboardRenderer;
 
 	protected Board board = BoardFactory.createBoard();
-	
+
 	public Board getBoard() {
 		return board;
+	}
+
+	public void initialize() {
+		this.board = BoardFactory.createBoard();
 	}
 
 	@OnlyIn(Dist.CLIENT)
