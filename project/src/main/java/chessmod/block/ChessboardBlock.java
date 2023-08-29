@@ -92,8 +92,8 @@ public abstract class ChessboardBlock extends GlassBlock {
 	@Override
 	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
 		if(player.getHeldItemMainhand().getItem().getRegistryName().getPath().equals("chess_wrench")) {
-			if(world.getBlockState(pos) instanceof ChessboardTileEntity) {
-				ChessboardTileEntity chessboard = (ChessboardTileEntity) world.getBlockState(pos);
+			if(world.getTileEntity(pos) instanceof ChessboardTileEntity) {
+				ChessboardTileEntity chessboard = (ChessboardTileEntity) world.getTileEntity(pos);
 				chessboard.initialize();
 				chessboard.notifyClientOfBoardChange();
 				return false;
@@ -101,9 +101,6 @@ public abstract class ChessboardBlock extends GlassBlock {
 		}
 		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
 	}
-
-
-
 
 	protected abstract void openGui(final World worldIn, final BlockPos pos);
 

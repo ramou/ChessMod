@@ -24,6 +24,10 @@ public abstract class ChessboardTileEntity extends TileEntity {
 		return board;
 	}
 
+	public void initialize() {
+		this.board = BoardFactory.createBoard();
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void onLoad() {
