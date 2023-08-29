@@ -1,9 +1,12 @@
 package chessmod.block;
 
+import chessmod.setup.Registration;
+import chessmod.tileentity.ChessboardTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.GlassBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -50,8 +53,41 @@ public abstract class ChessboardBlock extends GlassBlock {
 
 	@Override
 	public ActionResultType use(BlockState bs, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> openGui(worldIn, pos));
+
+		DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
+			if (handIn.equals(Hand.MAIN_HAND) && player.getMainHandItem().getItem().getRegistryName().getPath().equals("chess_wrench")) {
+				Direction currentFacing = bs.getValue(FACING);
+				Direction newFacing = currentFacing.getClockWise();
+				worldIn.setBlockAndUpdate(pos, bs.setValue(FACING, newFacing));
+			}
+		});
+
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			if (player.getMainHandItem().getItem().getRegistryName().getPath().equals("chess_wrench")) {
+				if(handIn.equals(Hand.MAIN_HAND)) {
+					Direction currentFacing = bs.getValue(FACING);
+					Direction newFacing = currentFacing.getClockWise();
+					worldIn.setBlockAndUpdate(pos, bs.setValue(FACING, newFacing));
+				}
+			} else {
+				openGui(worldIn, pos);
+			}
+		});
 		return ActionResultType.PASS;
+	}
+
+	@Override
+	public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
+
+		if(player.getMainHandItem().getItem().getRegistryName().getPath().equals("chess_wrench")) {
+			if(world.getBlockEntity(pos) instanceof ChessboardTileEntity) {
+				ChessboardTileEntity chessboard = (ChessboardTileEntity)world.getBlockEntity(pos);
+				chessboard.initialize();
+				chessboard.notifyClientOfBoardChange();
+				return false;
+			}
+		}
+		return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
 	}
 
 	protected abstract void openGui(final World worldIn, final BlockPos pos);
