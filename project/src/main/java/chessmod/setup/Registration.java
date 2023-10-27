@@ -1,16 +1,8 @@
 package chessmod.setup;
 
 import chessmod.ChessMod;
-import chessmod.block.AIChessboardBlock;
-import chessmod.block.ChessesChessboardBlock;
-import chessmod.block.GoldChessboardBlock;
-import chessmod.block.PuzzleChessboardBlock;
-import chessmod.block.WoodChessboardBlock;
-import chessmod.blockentity.AIChessboardBlockEntity;
-import chessmod.blockentity.ChessesChessboardBlockEntity;
-import chessmod.blockentity.GoldChessboardBlockEntity;
-import chessmod.blockentity.PuzzleChessboardBlockEntity;
-import chessmod.blockentity.WoodChessboardBlockEntity;
+import chessmod.block.*;
+import chessmod.blockentity.*;
 import chessmod.common.network.ArbitraryPlacement;
 import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
@@ -74,6 +66,11 @@ public class Registration {
 			BLOCK_ENTITY_TYPES.register("puzzle_chessboard",
 					() -> BlockEntityType.Builder.of(PuzzleChessboardBlockEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
 
+	public static final RegistryObject<Block> QUANTUM_CHESSBOARD = BLOCKS.register("quantum_chessboard", QuantumChessBoardBlock::new);
+	public static final RegistryObject<BlockEntityType<QuantumChessBoardBlockEntity>> QUANTUM_CHESSBOARD_BE =
+			BLOCK_ENTITY_TYPES.register("quantum_chessboard",
+			()-> BlockEntityType.Builder.of(QuantumChessBoardBlockEntity::new, QUANTUM_CHESSBOARD.get()).build(null));
+
 	public static final RegistryObject<Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new Item(new Item.Properties()));
 
 
@@ -83,6 +80,7 @@ public class Registration {
 		ITEMS.register(CHESSES_CHESSBOARD.getId().getPath(), () -> new BlockItem(CHESSES_CHESSBOARD.get(), new Item.Properties()));
 		ITEMS.register(AI_CHESSBOARD.getId().getPath(), () -> new BlockItem(AI_CHESSBOARD.get(), new Item.Properties()));
 		ITEMS.register(PUZZLE_CHESSBOARD.getId().getPath(), () -> new BlockItem(PUZZLE_CHESSBOARD.get(), new Item.Properties()));
+		ITEMS.register(QUANTUM_CHESSBOARD.getId().getPath(), () -> new BlockItem(QUANTUM_CHESSBOARD.get(), new Item.Properties()));
 	}
 
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND =
@@ -129,6 +127,7 @@ public class Registration {
 							pOutput.accept(Registration.CHESSES_CHESSBOARD.get());
 							pOutput.accept(Registration.AI_CHESSBOARD.get());
 							pOutput.accept(Registration.PUZZLE_CHESSBOARD.get());
+							pOutput.accept(Registration.QUANTUM_CHESSBOARD.get());
 							pOutput.accept(Registration.CHESS_WRENCH.get());
 						})
 						.build());

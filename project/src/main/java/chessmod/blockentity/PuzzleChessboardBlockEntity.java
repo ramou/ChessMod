@@ -9,5 +9,4 @@ public class PuzzleChessboardBlockEntity extends ChessboardBlockEntity {
 	public PuzzleChessboardBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
 		super(Registration.PUZZLE_CHESSBOARD_BE.get(), pWorldPosition, pBlockState);
 	}
-	
 }

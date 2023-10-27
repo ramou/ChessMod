@@ -2,6 +2,7 @@ package chessmod.setup;
 
 import chessmod.ChessMod;
 import chessmod.common.capability.elo.EloEvents;
+import chessmod.common.capability.enderPearlEvent.EnderPearlEventHandler;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,6 +17,7 @@ public class ModSetup {
         bus.addGenericListener(Entity.class, EloEvents::onAttachCapabilitiesPlayer);
         bus.addListener(EloEvents::onPlayerCloned);
         bus.addListener(EloEvents::onRegisterCapabilities);
+        bus.register(new EnderPearlEventHandler());
     }
 
 }

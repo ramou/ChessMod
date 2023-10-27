@@ -13,6 +13,7 @@
   "block.chessmod.chesses_chessboard": "A Chesses Chess Board",
   "block.chessmod.ai_chessboard": "An AI Chess Board",
   "block.chessmod.puzzle_chessboard": "An Puzzle Chess Board",
+  "block.chessmod.quantum_chessboard": "A Quantum Board",
 
   "item.chessmod.chess_wrench": "A Chess Wrench",
   "advancement.chessmod:woodChessboardPickup": "Getting Board!",

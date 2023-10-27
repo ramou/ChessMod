@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.stuartthiel.chessmod.project.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.stuartthiel.chessmod.project.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.stuartthiel.chessmod.project.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.stuartthiel.chessmod.project.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/project.main.iml" filepath="$PROJECT_DIR$/.idea/modules/project.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/project.test.iml" filepath="$PROJECT_DIR$/.idea/modules/project.test.iml" />
     </modules>

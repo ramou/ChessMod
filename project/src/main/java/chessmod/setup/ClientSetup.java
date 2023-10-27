@@ -12,6 +12,7 @@ public class ClientSetup {
             BlockEntityRenderers.register(Registration.CHESSES_CHESSBOARD_BE.get(),ChessboardBlockEntityRenderer::new);
             BlockEntityRenderers.register(Registration.AI_CHESSBOARD_BE.get(),ChessboardBlockEntityRenderer::new);
             BlockEntityRenderers.register(Registration.PUZZLE_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
+            BlockEntityRenderers.register(Registration.QUANTUM_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
 
         });
     }
