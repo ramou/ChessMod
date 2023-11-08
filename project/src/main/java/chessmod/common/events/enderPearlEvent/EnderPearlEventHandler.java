@@ -28,10 +28,23 @@ public class EnderPearlEventHandler {
     private long currentNonce = 0;
     private long firstNonce = -1;
 
+
+    private static final long COOLDOWN = 1000; // 1 second cooldown
+    private long lastClickTime = -1;
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        System.out.println("Event fired for hand: " + event.getHand().toString());
+        long currentTime = System.currentTimeMillis();
 
+        // Cooldown check
+        if (currentTime - lastClickTime < COOLDOWN) {
+            return; // Exit if we are within cooldown period
+        }
+
+        // Update last click time
+        lastClickTime = currentTime;
+
+        System.out.println("Event fired for hand: " + event.getHand().toString());
         // Check if the player is holding an enderpearl
         if (event.getHand() == InteractionHand.MAIN_HAND && event.getItemStack().getItem() == Items.ENDER_PEARL) {
             Block clickedBlock = event.getLevel().getBlockState(event.getPos()).getBlock();
@@ -41,24 +54,27 @@ public class EnderPearlEventHandler {
                 synchronized (lock) {
                     long thisNonce = getNextNonce();
                     if (firstPos == null) {
+                        // Select the first chessboard
                         firstPos = event.getPos();
                         firstNonce = thisNonce;
                         event.getEntity().displayClientMessage(Component.literal("First chessboard selected at: " + firstPos), false);
                     } else if (!firstPos.equals(event.getPos()) && thisNonce != firstNonce) {
-                        event.getEntity().displayClientMessage(Component.literal("Second chessboard 1"), false);
-
-                        secondPos = event.getPos();
+                        // Select the second chessboard and link
+                        BlockPos secondPos = event.getPos();
                         event.getEntity().displayClientMessage(Component.literal("Second chessboard selected at: " + secondPos), false);
-                        event.getEntity().displayClientMessage(Component.literal("Second chessboard 2"), false);
 
                         // Link the two chessboards
                         linkChessboards(firstPos, secondPos);
 
                         // Reset for the next pair
                         firstPos = null;
-                        secondPos = null;
                         firstNonce = -1;
-
+                    }
+                    // If the same block is selected twice or if there's an attempt to link a board to itself, reset the first selection
+                    else if (firstPos.equals(event.getPos()) || thisNonce == firstNonce) {
+                        event.getEntity().displayClientMessage(Component.literal("The same chessboard cannot be linked. Reselect the first chessboard."), false);
+                        firstPos = null;
+                        firstNonce = -1;
                     }
                 }
 
