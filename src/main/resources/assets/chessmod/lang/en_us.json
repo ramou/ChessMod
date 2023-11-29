@@ -1,0 +1,21 @@
+{
+  "itemGroup.chessmod": "Chess Mod",
+  "chessmod.landing": "Do you like playing Chess? Do you like playing Chesses? This mod allows a variety of Minecraft chess playing.",
+  "chessmod.desc": "A mod incorporating Chess into Minecraft.",
+  
+  "chessmod.subtitle.slide_piece": "Chess piece slides",
+  "chessmod.subtitle.slide_piece_take": "Chess piece slides into piece",
+  "chessmod.subtitle.place_piece": "Chess piece placed",
+  "chessmod.subtitle.place_piece_take": "Chess piece placed against piece",
+  
+  "block.chessmod.wood_chessboard": "A Wooden Chess Board",
+  "block.chessmod.gold_chessboard": "A Golden Chess Board",
+  "block.chessmod.chesses_chessboard": "A Chesses Chess Board",
+  "block.chessmod.ai_chessboard": "An AI Chess Board",
+  "block.chessmod.puzzle_chessboard": "An Puzzle Chess Board",
+  "block.chessmod.quantum_chessboard": "A Quantum Board",
+
+  "item.chessmod.chess_wrench": "A Chess Wrench",
+  "advancement.chessmod:woodChessboardPickup": "Getting Board!",
+  "advancement.chessmod:woodChessboardPickup.desc": "Pick up a Chess Board from the world"
+}

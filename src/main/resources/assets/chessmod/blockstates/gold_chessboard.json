@@ -1,0 +1,24 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "chessmod:block/gold_chessboard",
+			"x": 0,
+			"y": 0
+		},
+		"facing=east": {
+			"model": "chessmod:block/gold_chessboard",
+			"x": 0,
+			"y": 90
+		},
+		"facing=south": {
+			"model": "chessmod:block/gold_chessboard",
+			"x": 0,
+			"y": 180
+		},
+		"facing=west": {
+			"model": "chessmod:block/gold_chessboard",
+			"x": 0,
+			"y": 270
+		}
+	}
+}

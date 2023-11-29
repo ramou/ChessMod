@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"dab",
+		"dba",
+		"ccc"
+	],
+	"key": {
+		"a": {
+			"item": "minecraft:iron_ingot"
+		},
+		"b": {
+			"item": "minecraft:coal"
+		},
+		"c": {
+			"item": "minecraft:gold_block"
+		},
+		"d": {
+			"item": "minecraft:gold_nugget"
+		}
+	},
+	"result": {
+		"item": "chessmod:gold_chessboard"
+	}
+}

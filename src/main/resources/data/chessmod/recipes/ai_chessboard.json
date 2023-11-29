@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"dab",
+		"dba",
+		"ccc"
+	],
+	"key": {
+		"a": {
+			"item": "minecraft:iron_ingot"
+		},
+		"b": {
+			"item": "minecraft:coal"
+		},
+		"c": {
+			"item": "minecraft:redstone_block"
+		},
+		"d": {
+			"item": "minecraft:redstone"
+		}
+	},
+	"result": {
+		"item": "chessmod:ai_chessboard"
+	}
+}
