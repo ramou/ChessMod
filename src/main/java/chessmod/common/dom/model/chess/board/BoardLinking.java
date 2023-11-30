@@ -3,6 +3,7 @@ package chessmod.common.dom.model.chess.board;
 import chessmod.common.dom.model.chess.Point;
 import chessmod.common.dom.model.chess.piece.InvalidMoveException;
 import chessmod.common.dom.model.chess.Move;
+import chessmod.common.dom.model.chess.board.Board;
 
 public class BoardLinking {
 
@@ -24,8 +25,11 @@ public class BoardLinking {
         // check if both boards are not null before linking
         if (boardOne != null && boardTwo != null) {
             // Set references to each other
-            boardOne.initializeLinking(boardTwo);
-            boardTwo.initializeLinking(boardOne);
+            boardOne.setLinkedBoard(boardTwo);
+            boardTwo.setLinkedBoard(boardOne);
+//            boardOne.initializeLinking(boardTwo);
+//            boardTwo.initializeLinking(boardOne);
+
             // flag to indicate that the boards are linked
             boolean boardsAreLinked = true;
         }

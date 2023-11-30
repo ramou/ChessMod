@@ -21,8 +21,9 @@ import chessmod.common.dom.model.chess.piece.Piece;
 public class Board {
 
 	private BoardLinking boardLinking;
+	private Board linkedBoard; //to store the reference to the linked board
 
-	// Method to initialize board linking
+	// method to initialize board linking
 	public void initializeLinking(Board otherBoard) {
 		if(this.boardLinking != null) {
 			this.boardLinking.linkBoards();
@@ -37,6 +38,26 @@ public class Board {
 		//}
 
 		this.boardLinking.linkBoards();
+	}
+
+	public void setBoardLinking(BoardLinking boardLinking) {
+
+		this.boardLinking = boardLinking;
+	}
+
+	// method to set the linked board
+	public void setLinkedBoard(Board linkedBoard) {
+		this.linkedBoard = linkedBoard;
+	}
+
+	// method to check if the board is linked
+	public boolean isLinked() {
+		return this.linkedBoard != null;
+	}
+
+	// method to get the linked board
+	public Board getLinkedBoard() {
+		return this.linkedBoard;
 	}
 
 	public Side getCurrentPlayer() {

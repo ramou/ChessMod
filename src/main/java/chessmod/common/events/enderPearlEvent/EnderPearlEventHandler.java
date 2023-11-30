@@ -110,13 +110,16 @@ public class EnderPearlEventHandler {
         Board boardOne = BoardFactory.createBoard();
         Board boardTwo = BoardFactory.createBoard();
 
-        // Create a BoardLinking instance to link these boards
+        // Initialize linking for both boards
+        boardOne.initializeLinking(boardTwo);
+        boardTwo.initializeLinking(boardOne);
+
+        // Directly set the boardLinking field for both boards
         BoardLinking boardLinking = new BoardLinking(boardOne, boardTwo);
+        boardOne.setBoardLinking(boardLinking);
+        boardTwo.setBoardLinking(boardLinking);
 
-        // Link the boards together
-        boardLinking.linkBoards();
-
-        // Optional/abandoned idea -> can store the linked boards in a map or data structure for future reference
+        // Store the linked boards in a map for future reference
         linkedChessboards.put(first, second);
         linkedChessboards.put(second, first);
 
