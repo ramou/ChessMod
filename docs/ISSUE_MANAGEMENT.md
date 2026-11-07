@@ -42,10 +42,11 @@ no network calls other than reviewed `gh` commands, and no secrets.
    the proposed issue actions, including labels, milestone and targets.
 2. The maintainer invokes `bash run.sh` locally. The AI does **not** run it or
    assert that GitHub has changed merely because the script was generated.
-3. The script checks live state again before any mutation, prints what it did,
-   and retrieves the created issue number from the returned URL using
-   `gh issue view "$url" --json number --jq '.number'` (or prints the number
-   after a guarded edit). Print issue URL and number for the human to share.
+3. The script checks live state again before **each** mutation and reports an
+   outcome for **each requested issue**: `CREATED`, `UPDATED`, `SKIPPED` (verified
+   existing issue), or `BLOCKED`/`FAILED` (with the reason). Print the actual
+   issue number and URL wherever known; retrieve created numbers with
+   `gh issue view "$url" --json number --jq '.number'`.
 4. The maintainer **manually deletes** `run.sh` afterwards. Do not include a
    self-deletion step, `trap` on `run.sh`, or any automatic cleanup of that file.
    (Temporary body files created with `mktemp` may be cleaned automatically.)
@@ -53,8 +54,37 @@ no network calls other than reviewed `gh` commands, and no secrets.
    previous ZIP remains a historical snapshot, not a synchronised state.
 
 The normal order is **prepare → review → run → report IDs → manually remove**.
-A single script may make several explicitly scoped changes, but should print
-an ID/URL and stop on any error. Avoid mixing unrelated issue updates.
+A single script may make several explicitly scoped changes. Process them
+**independently**: an already-existing issue must not prevent unrelated issues
+from being created. Never mix unrelated issue *edits* into a batch merely for
+convenience.
+
+## Multi-issue scripts: idempotence and partial success
+
+1. Before writing **each** issue, perform its own live duplicate/identity and
+   metadata checks, including open and closed issues. Do not rely solely on a
+   preflight performed at the start of the script or on the exported snapshot.
+2. An **unambiguous exact match** is `SKIPPED` (successful no-op): print its
+   number, URL and current state; do not recreate, edit, or reopen it without a
+   separately approved action. This applies on reruns after partial success.
+3. A **plausible but uncertain duplicate**, competing exact matches, a changed
+   edit preimage, or an unavailable prerequisite is `BLOCKED` for that issue:
+   print candidate IDs/URLs and require human review. **Do not** guess or write
+   that issue. Continue with independent requests if doing so is safe.
+4. A failed `gh` API call, including a failed duplicate search, must **never**
+   be interpreted as "no match". Record `FAILED`, with enough information to
+   retry safely; continue only if other requests are independent.
+5. Creation/editing must retrieve and report the **real** issue number and URL.
+   If a write might have succeeded but its confirmation failed, re-query GitHub
+   before retrying: don't risk a duplicate write.
+6. Finish with a per-issue summary (`CREATED`, `UPDATED`, `SKIPPED`, `BLOCKED`,
+   `FAILED`) and an overall nonzero exit if any issue remains blocked/failed.
+   A rerun should safely skip completed requests and attempt outstanding ones.
+
+With `set -euo pipefail`, use **explicit command-result checks** and controlled
+per-issue handling; don't let an expected skip abort the entire script. In
+particular, invoking a Bash function from an `if` can suppress `errexit` inside
+that function, so check failures explicitly rather than relying on `set -e`.
 
 ## Guarded creation pattern
 
@@ -80,21 +110,29 @@ ISSUE_BODY
 # separately for semantic duplicates that this search can miss.
 gh issue list --repo "$repo" --state all --search "\"$title\" in:title" \
   --json number,title,state,url --limit 200 > "$candidates_file"
-if ! python3 - "$title" "$candidates_file" <<'CHECK'
+decision="$(python3 - "$title" "$candidates_file" <<'CHECK'
 import json, sys
-title = sys.argv[1].casefold()
+title = ' '.join(sys.argv[1].casefold().split())
 with open(sys.argv[2], encoding='utf-8') as source:
     matches = json.load(source)
+exact = [m for m in matches if ' '.join(m['title'].casefold().split()) == title]
 for item in matches:
-    exact = item['title'].casefold() == title
-    kind = 'EXISTING ISSUE' if exact else 'POSSIBLE DUPLICATE'
-    print(f"{kind}: #{item['number']} {item['state']} {item['title']} {item['url']}")
-sys.exit(1 if matches else 0)
+    print(f"CANDIDATE: #{item['number']} {item['state']} {item['title']} {item['url']}", file=sys.stderr)
+if len(exact) == 1:
+    item = exact[0]
+    print(f"skip:{item['number']}:{item['url']}:{item['state']}")
+elif matches:
+    print('block')  # Uncertain or competing matches require review.
+else:
+    print('create')
 CHECK
-then
-  echo 'Issue already exists or may be related: inspect and revise run.sh.' >&2
-  exit 1
-fi
+)"
+case "$decision" in
+  skip:*) echo "SKIPPED existing issue ${decision#skip:}"; exit 0 ;;
+  block) echo 'BLOCKED: inspect candidate issues before writing.' >&2; exit 2 ;;
+  create) ;;
+  *) echo 'FAILED: unexpected duplicate-check result.' >&2; exit 3 ;;
+esac
 
 # Approved labels and milestone can be added here after live validation.
 url="$(gh issue create --repo "$repo" --title "$title" --body-file "$body_file")"
@@ -103,11 +141,13 @@ printf 'Created issue #%s: %s\n' "$number" "$url"
 ```
 
 
-A generated script must **abort by default** on exact or plausible duplicate
-matches unless the maintainer explicitly approves proceeding. Existing closed
-issues count: consider reopening instead. If `gh issue create` reports an error,
-do not blindly rerun it—creation might have partially succeeded. Recheck live
-state first.
+This is a **single-issue** reference pattern: its `exit` statements are not a
+model for multi-issue execution. In a multi-issue `run.sh`, wrap each issue in
+an independently checked operation that records its outcome and returns control
+to the batch. An exact match is a successful skip; plausible duplicates are
+blocked **for that issue** pending review. Closed matches still count; reopening
+requires explicit approval. If `gh issue create` fails, do not blindly rerun
+it—creation might have partially succeeded. Recheck live state first.
 
 ## Guarded modification pattern
 
