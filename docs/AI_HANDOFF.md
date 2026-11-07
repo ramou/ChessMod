@@ -18,6 +18,9 @@ to load at the start of any development session.
   their executability has not yet been established across all version branches.
 - The long-term unified modding API concept is **proposed**, not approved for
   implementation. See [ADR-0001](decisions/0001-unified-modding-api.md).
+- Future GitHub Release distribution has a documented, **not yet executed**
+  procedure in [RELEASING.md](RELEASING.md); do not publish or push tags
+  without explicit human approval.
 
 ## Mandatory development boundaries
 

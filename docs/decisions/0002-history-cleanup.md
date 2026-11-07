@@ -30,7 +30,9 @@ binaries. Source, tests, images, PSD assets and the Gradle wrapper should stay.
 ## Proposed default — no history rewrite (safest)
 
 1. Stop committing new distributable ZIPs and mod JARs where practicable;
-   publish binaries via GitHub Releases with tags, checksums, and provenance.
+   publish binaries via GitHub Releases with tags, checksums, and provenance,
+   following the separately documented, human-approved
+   [release procedure](../RELEASING.md).
 2. Keep existing Git history untouched and document historical release locations.
 3. Optionally remove current checked-in release binaries in a normal reviewed
    commit *only if* distribution/build behaviour and public links are addressed.

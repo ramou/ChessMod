@@ -9,6 +9,7 @@ status. Refresh issue snapshots before prioritising work.
 | --- | --- | --- | --- |
 | 0 | Context scripts, handoff docs, ADR process, reviewed issue writes | [WORKFLOW.md](WORKFLOW.md), [ISSUE_MANAGEMENT.md](ISSUE_MANAGEMENT.md) | Initial workflow; issue writes proposed |
 | Next | Baseline builds/tests per Minecraft branch | [TESTING.md](TESTING.md), GitHub issue to create | Not started |
+| Next | Migrate future binaries to GitHub Releases (no rewrite) | [RELEASING.md](RELEASING.md), [ADR-0002](decisions/0002-history-cleanup.md) | Procedure documented; migration not begun |
 | Next | Chess rules regression bugs, targeted JUnit cases | Existing/new GitHub issues | Not yet selected |
 | Later | Branch compatibility inventory and migration effort | [ARCHITECTURE.md](ARCHITECTURE.md), GitHub issue to create | Investigation |
 | Later | Unified loader/version API proof of concept | [ADR-0001](decisions/0001-unified-modding-api.md) | Proposed only |

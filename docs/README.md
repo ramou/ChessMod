@@ -12,6 +12,7 @@ for GitHub issues or the public [project README](../README.md). Begin with
 | [WORKFLOW.md](WORKFLOW.md) | Issue → patch → review → validation → commit protocol | Initial draft |
 | [ISSUE_MANAGEMENT.md](ISSUE_MANAGEMENT.md) | Review-and-run GitHub CLI issue write protocol | Initial draft |
 | [CONTEXT_EXPORT.md](CONTEXT_EXPORT.md) | Git bundles, worktree/stash ZIPs and GitHub issue snapshots | Initial draft |
+| [RELEASING.md](RELEASING.md) | Versioned Git tags, binary release assets and migration checklist | Documented; not yet adopted |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Current structural map; verified facts vs hypotheses | Initial inventory |
 | [TESTING.md](TESTING.md) | Verification responsibilities and build baselines | Initial draft |
 | [ROADMAP.md](ROADMAP.md) | Linked process roadmap and architectural investigations | Proposed |

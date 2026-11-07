@@ -30,6 +30,10 @@ the resulting issue number(s), and manually removes the file. The AI never
 asserts that merely drafting a script has written to GitHub. Check existing
 open/closed issues and live identity before any create/edit operation.
 
+Publishing releases is a separate, human-approved operation described in
+[RELEASING.md](RELEASING.md). Draft/review/publish stages and Git tag pushes
+are never implied by an accepted code patch.
+
 No automatic GitHub writes, commits, cherry-picks or pushes are part of this
 workflow. Issue exports are snapshots, not synchronisation.
 
