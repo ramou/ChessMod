@@ -1,0 +1,6 @@
+# Generated, local AI handoff artefacts; never commit snapshots of GitHub issues.
+/.ai-exports/
+
+# Python script/test byproducts.
+__pycache__/
+*.py[cod]
