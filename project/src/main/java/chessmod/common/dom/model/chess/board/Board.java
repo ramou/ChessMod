@@ -16,6 +16,7 @@ import chessmod.common.dom.model.chess.Side;
 import chessmod.common.dom.model.chess.piece.InvalidMoveException;
 import chessmod.common.dom.model.chess.piece.King;
 import chessmod.common.dom.model.chess.piece.Piece;
+import chessmod.common.dom.model.chess.piece.Pawn;
 
 
 public class Board {
@@ -180,7 +181,14 @@ public class Board {
 			for(int x = 0; x < 8; x++) {
 				Piece piece = pieces[y][x];
 				if(piece != null && piece.getSide().equals(s)) {
-					if(piece.getPossibleThreat(this).contains(p)) return true;
+					// A pawn attacks diagonally even when the target square is empty.
+					// Pawn.getPossibleThreat() reports only occupied capture squares,
+					// so castling transit checks must handle pawns independently.
+					if(piece instanceof Pawn) {
+						Pawn pawn = (Pawn) piece;
+						if(p.equals(Point.create(pawn.getPosition(), -1, pawn.getSingleAdvance())) ||
+								p.equals(Point.create(pawn.getPosition(), 1, pawn.getSingleAdvance()))) return true;
+					} else if(piece.getPossibleThreat(this).contains(p)) return true;
 				}
 			}
 		}

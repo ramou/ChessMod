@@ -23,7 +23,9 @@ public class King extends Piece {
 	public Set<Move> getMovesFinalThreatNotwithstanding(Board b) throws InvalidMoveException {
 		Set<Move> possible = super.getMovesFinalThreatNotwithstanding(b);
 		
-		if(!hasMoved()) {
+		// Castling cannot get a king out of check. The transit and destination
+		// squares are checked separately below and by getAllowedMoves().
+		if(!hasMoved() && !b.isUnderThreatBy(getPosition(), getSide().other())) {
 			
 			//Check left castle
 			final Piece leftRook = b.pieceAt(Point.create(getPosition(), -4, 0));
