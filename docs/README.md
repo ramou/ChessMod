@@ -10,12 +10,14 @@ for GitHub issues or the public [project README](../README.md). Begin with
 | --- | --- | --- |
 | [AI_HANDOFF.md](AI_HANDOFF.md) | Minimal orientation and mandatory working constraints | Initial draft |
 | [WORKFLOW.md](WORKFLOW.md) | Issue → patch → review → validation → commit protocol | Initial draft |
+| [ISSUE_MANAGEMENT.md](ISSUE_MANAGEMENT.md) | Review-and-run GitHub CLI issue write protocol | Initial draft |
 | [CONTEXT_EXPORT.md](CONTEXT_EXPORT.md) | Git bundles, worktree/stash ZIPs and GitHub issue snapshots | Initial draft |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Current structural map; verified facts vs hypotheses | Initial inventory |
 | [TESTING.md](TESTING.md) | Verification responsibilities and build baselines | Initial draft |
 | [ROADMAP.md](ROADMAP.md) | Linked process roadmap and architectural investigations | Proposed |
 | [decisions/README.md](decisions/README.md) | Architectural decision record (ADR) index and conventions | Initial draft |
 | [decisions/0001-unified-modding-api.md](decisions/0001-unified-modding-api.md) | Cross-version/loader abstraction: **proposal only** | Proposed |
+| [decisions/0002-history-cleanup.md](decisions/0002-history-cleanup.md) | Prune historical release binaries: alternatives and experiment | Proposed |
 | [decisions/TEMPLATE.md](decisions/TEMPLATE.md) | Template for recording future decisions | Template |
 
 ## Sources of truth

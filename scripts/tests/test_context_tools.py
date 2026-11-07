@@ -19,6 +19,7 @@ sys.path.insert(0, str(SCRIPTS))
 import build_ai_context as builder  # noqa: E402
 import export_worktree as worktree  # noqa: E402
 import export_issues as exporter  # noqa: E402
+import experiment_history_cleanup as history  # noqa: E402
 
 
 def sample_issue(number=13, *, state="open", labels=("bug",), comments=1, pr=False):
@@ -55,10 +56,22 @@ class FakeClient:
         self.calls.append((path, params))
         if path.endswith("/comments"):
             return [sample_comment()]
+        if path.endswith("/labels"):
+            return [{"name": "bug", "description": "A defect", "color": "ff0000",
+                     "default": True, "url": "https://api.github.com/repos/ramou/ChessMod/labels/bug"},
+                    {"name": "enhancement", "description": "New feature", "color": "22ff11"}]
+        if path.endswith("/milestones"):
+            return [{"number": 4, "title": "Version 1.0", "state": "open",
+                     "description": "Future release", "due_on": None, "open_issues": 12,
+                     "closed_issues": 3},
+                    {"number": 2, "title": "Historical", "state": "closed"}]
         return self.issues
 
     def get(self, path, params=None):
         self.calls.append((path, params))
+        if path == "/repos/ramou/ChessMod":
+            return {"full_name": "ramou/ChessMod", "html_url": "https://github.com/ramou/ChessMod",
+                    "default_branch": "1.20.1", "has_issues": True, "archived": False}
         return next(i for i in self.issues if path.endswith("/" + str(i["number"])))
 
 
@@ -71,14 +84,47 @@ class IssueExportTests(unittest.TestCase):
                 path = exporter.export_to_zip(args, client)
             with zipfile.ZipFile(path) as archive:
                 names = archive.namelist()
-                self.assertEqual(names, ["manifest.json", "issues/000013.md", "issues/000084.md"])
+                self.assertEqual(names, ["manifest.json", "issue_catalogue.md", "issues/000013.md", "issues/000084.md"])
                 manifest = json.loads(archive.read("manifest.json"))
                 self.assertEqual(manifest["source_commit"], "abcdef1234")
                 self.assertEqual(manifest["issue_count"], 2)
+                self.assertEqual(manifest["schema_version"], 2)
+                self.assertEqual(manifest["issue_creation_catalogue"]["repository"]["default_branch"], "1.20.1")
+                self.assertEqual([m["number"] for m in manifest["issue_creation_catalogue"]["milestones"]], [2, 4])
+                self.assertIn("Version 1.0", archive.read("issue_catalogue.md").decode())
                 self.assertEqual(manifest["issues"][0]["comments"][0]["author"], "contributor")
                 markdown = archive.read("issues/000013.md").decode("utf-8")
                 self.assertIn("Observed on 1.20.1", markdown)
                 self.assertIn("- Labels: bug", markdown)
+
+    def test_filtered_export_keeps_full_catalogue_and_no_catalogue_is_opt_in(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            client = FakeClient()
+            args = exporter.make_parser().parse_args([
+                "--output-dir", tmp, "--number", "13", "--state", "open",
+                "--label", "bug", "--no-comments",
+            ])
+            with redirect_stderr(StringIO()):
+                output = exporter.export_to_zip(args, client)
+            with zipfile.ZipFile(output) as archive:
+                manifest = json.loads(archive.read("manifest.json"))
+                self.assertEqual(manifest["issue_count"], 1)
+                self.assertEqual(len(manifest["issue_creation_catalogue"]["labels"]), 2)
+                self.assertEqual(len(manifest["issue_creation_catalogue"]["milestones"]), 2)
+                self.assertIn(("/repos/ramou/ChessMod/milestones", {"state": "all"}), client.calls)
+
+            args = exporter.make_parser().parse_args([
+                "--output", str(Path(tmp) / "no-catalogue.zip"), "--no-catalogue",
+            ])
+            client = FakeClient()
+            with redirect_stderr(StringIO()):
+                output = exporter.export_to_zip(args, client)
+            with zipfile.ZipFile(output) as archive:
+                manifest = json.loads(archive.read("manifest.json"))
+                self.assertIsNone(manifest["issue_creation_catalogue"])
+                self.assertFalse(manifest["catalogue_included"])
+                self.assertNotIn("issue_catalogue.md", archive.namelist())
+            self.assertFalse(any(path.endswith("/milestones") for path, _ in client.calls))
 
     def test_filters_by_label_state_since_and_numbers(self):
         args = exporter.make_parser().parse_args([
@@ -211,6 +257,23 @@ class ContextBundleTests(unittest.TestCase):
         self.assertIn("--source-ref", issued_commands[0])
         self.assertIn("--number", issued_commands[0])
         self.assertIn("--label", issued_commands[0])
+
+    def test_issue_no_catalogue_option_forwarding(self):
+        real_run = subprocess.run
+        captured = []
+        def fake_run(command, *args, **kwargs):
+            if len(command) > 1 and str(command[1]).endswith("export_issues.py"):
+                captured.append(command)
+                output = Path(command[command.index("--output") + 1])
+                with zipfile.ZipFile(output, "x") as archive:
+                    archive.writestr("manifest.json", "{}")
+                return subprocess.CompletedProcess(command, 0)
+            return real_run(command, *args, **kwargs)
+        with patch.object(builder.subprocess, "run", side_effect=fake_run):
+            with redirect_stdout(StringIO()):
+                self.assertEqual(builder.main(["--with-issues", "--issue-no-catalogue",
+                                               "--output-dir", str(self.root / "exports")]), 0)
+        self.assertIn("--no-catalogue", captured[0])
 
     def test_dirty_worktree_automatically_exports_separate_snapshot(self):
         (self.root / "uncommitted.txt").write_text("not in a bundle\n")
@@ -435,6 +498,37 @@ class ContextBundleTests(unittest.TestCase):
     def test_bad_branch_rejected(self):
         with redirect_stdout(StringIO()), redirect_stderr(StringIO()):
             self.assertEqual(builder.main(["--branch", "no-such-branch"]), 1)
+
+
+class HistoryExperimentTests(unittest.TestCase):
+    def test_release_globs_do_not_remove_gradle_wrapper(self):
+        self.assertTrue(history.selected("modpack/ChessMod_0.605.zip"))
+        self.assertTrue(history.selected("project/mod/chessmod-1.20.1.jar"))
+        self.assertTrue(history.selected("forge-1.14.4-28.2.0-mdk/mod/ChessMod-0.56.jar"))
+        self.assertFalse(history.selected("project/gradle/wrapper/gradle-wrapper.jar"))
+        self.assertFalse(history.selected("psd/chessboard.psd"))
+        self.assertFalse(history.selected("project/src/main/java/Board.java"))
+
+    def test_dry_run_against_temporary_git_bundle(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "source"
+            repo.mkdir()
+            def git(*args):
+                return subprocess.run(["git", "-C", str(repo), *args],
+                                      check=True, capture_output=True, text=True)
+            git("init", "-q")
+            git("config", "user.name", "Test")
+            git("config", "user.email", "test@example.invalid")
+            (repo / "README.md").write_text("sample repo\n")
+            git("add", ".")
+            git("commit", "-qm", "Initial")
+            git("branch", "1.21")
+            bundle = Path(tmp) / "snapshot.bundle"
+            git("bundle", "create", str(bundle), "--all")
+            with redirect_stdout(StringIO()) as stdout:
+                self.assertEqual(history.main(["--bundle", str(bundle), "--dry-run"]), 0)
+            self.assertIn("1.21", stdout.getvalue())
+            self.assertFalse(list(Path(tmp).glob("ChessMod-history-*")))
 
 
 if __name__ == "__main__":

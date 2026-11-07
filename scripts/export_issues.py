@@ -147,6 +147,82 @@ def compact_issue(issue: dict, comments: list[dict]) -> dict:
     }
 
 
+
+
+def collect_catalogue(client: GitHubClient, repo: str) -> dict:
+    """Capture repository-wide issue creation choices, independent of filters.
+
+    GitHub uses *labels* for issue categorisation (not Git tags). Milestones
+    are addressed by title with gh CLI, but include numbers for stable review.
+    Organization issue types and Projects V2 are not universally available and
+    are deliberately not assumed to be covered by this catalogue.
+    """
+    owner, repository = repo.split("/")
+    base = f"/repos/{quote(owner)}/{quote(repository)}"
+    repository_info = client.get(base)
+    if not isinstance(repository_info, dict):
+        raise ExportError("Expected an object from GitHub repository endpoint")
+    labels = client.list(f"{base}/labels")
+    milestones = client.list(f"{base}/milestones", {"state": "all"})
+    return {
+        "repository": {
+            "full_name": repository_info.get("full_name", repo),
+            "url": repository_info.get("html_url"),
+            "description": repository_info.get("description"),
+            "default_branch": repository_info.get("default_branch"),
+            "has_issues": repository_info.get("has_issues"),
+            "archived": repository_info.get("archived"),
+            "disabled": repository_info.get("disabled"),
+        },
+        "labels": sorted(({
+            "name": label.get("name"), "description": label.get("description"),
+            "color": label.get("color"), "default": label.get("default"),
+            "url": label.get("url"),
+        } for label in labels), key=lambda x: (x["name"] or "").casefold()),
+        "milestones": sorted(({
+            "number": milestone.get("number"), "title": milestone.get("title"),
+            "state": milestone.get("state"), "description": milestone.get("description"),
+            "due_on": milestone.get("due_on"), "open_issues": milestone.get("open_issues"),
+            "closed_issues": milestone.get("closed_issues"),
+            "html_url": milestone.get("html_url"),
+        } for milestone in milestones), key=lambda x: x["number"] or 0),
+        "not_included": [
+            "Git tags (not issue labels)",
+            "GitHub Projects V2 and project-specific fields",
+            "Organization issue types and forms",
+            "Repository write permissions and user-specific assignee eligibility",
+        ],
+    }
+
+
+def render_catalogue(catalogue: dict) -> str:
+    def cell(value: object) -> str:
+        if value is None or value == "":
+            return "—"
+        return str(value).replace("|", "\\|").replace("\n", " ")
+
+    repo = catalogue["repository"]
+    lines = ["# GitHub issue creation catalogue", "",
+             "Snapshot of repository-wide options, independent of issue filters.",
+             "Recheck GitHub before making any write: labels and milestones may change.", "",
+             f"- Repository: {cell(repo['full_name'])}",
+             f"- Default branch: {cell(repo['default_branch'])}",
+             f"- Issues enabled: {cell(repo['has_issues'])}",
+             f"- Archived: {cell(repo['archived'])}", "",
+             f"## Labels ({len(catalogue['labels'])})", "",
+             "| Label | Description | Colour |", "| --- | --- | --- |"]
+    for label in catalogue["labels"]:
+        lines.append(f"| {cell(label['name'])} | {cell(label['description'])} | {cell(label['color'])} |")
+    lines.extend(["", f"## Milestones ({len(catalogue['milestones'])})", "",
+                  "| # | Milestone title (`gh --milestone` argument) | State | Due | Description |",
+                  "| --- | --- | --- | --- | --- |"])
+    for milestone in catalogue["milestones"]:
+        lines.append("| " + " | ".join(cell(milestone[k]) for k in
+                     ("number", "title", "state", "due_on", "description")) + " |")
+    lines.extend(["", "Not captured: " + "; ".join(catalogue["not_included"]) + ".", ""])
+    return "\n".join(lines)
+
+
 def render_markdown(issue: dict, includes_comments: bool) -> str:
     def printable(value: object) -> str:
         return str(value) if value is not None else "—"
@@ -240,6 +316,7 @@ def collect(client: GitHubClient, args: argparse.Namespace) -> list[dict]:
 def export_to_zip(args: argparse.Namespace, client: GitHubClient | None = None) -> Path:
     client = client or GitHubClient(os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN"))
     issues = collect(client, args)
+    catalogue = None if args.no_catalogue else collect_catalogue(client, args.repo)
     label_segment = "-" + "-".join(slug(label, 20) for label in args.label) if args.label else ""
     suffix = f"{args.state}{label_segment}-{timestamp()}"
     if args.source_commit:
@@ -250,7 +327,7 @@ def export_to_zip(args: argparse.Namespace, client: GitHubClient | None = None) 
         raise ExportError(f"Won't overwrite existing export: {output}")
     output.parent.mkdir(parents=True, exist_ok=True)
     manifest = {
-        "schema_version": 1,
+        "schema_version": 2,
         "kind": "github_issue_snapshot",
         "repository": args.repo,
         "exported_at": datetime.now(timezone.utc).isoformat(),
@@ -265,9 +342,13 @@ def export_to_zip(args: argparse.Namespace, client: GitHubClient | None = None) 
         "limit_requested": args.limit is not None,
         "may_be_partial_due_to_limit": args.limit is not None,
         "issue_count": len(issues),
+        "catalogue_included": catalogue is not None,
+        "issue_creation_catalogue": catalogue,
         "issues": issues,
     }
     documents = [("manifest.json", json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")]
+    if catalogue is not None:
+        documents.append(("issue_catalogue.md", render_catalogue(catalogue)))
     documents.extend((f"issues/{issue['number']:06d}.md", render_markdown(issue, not args.no_comments))
                      for issue in issues)
     # Cap uncompressed output to avoid accidental huge exports; fail without partial ZIP.
@@ -294,9 +375,14 @@ def make_parser() -> argparse.ArgumentParser:
   python scripts/export_issues.py --state open --label bug --since 2026-11-01
   python scripts/export_issues.py --number 13 --number 84
   python scripts/export_issues.py --no-comments --limit 10
+  python scripts/export_issues.py --number 13  # still includes ALL available labels/milestones
+  python scripts/export_issues.py --no-catalogue  # smaller snapshot
 
 Uses GH_TOKEN or GITHUB_TOKEN when present; public repositories need no token.
 Snapshots are read-only and do not record the full issue-state change history.
+A repository-wide label/milestone catalogue is included by default, independently
+of issue filters; --no-catalogue omits it. Projects and organisation issue types
+are not captured. Verify choices live before running a proposed gh write script.
 Defaults to all open and closed issues, including all their comments, but not PRs.
 """,
     )
@@ -309,6 +395,7 @@ Defaults to all open and closed issues, including all their comments, but not PR
     parser.add_argument("--limit", type=positive_int, metavar="N", help="Maximum selected issues (explicitly partial export)")
     parser.add_argument("--no-comments", action="store_true", help="Skip fetching issue comments (faster, less context)")
     parser.add_argument("--include-prs", action="store_true", help="Also export pull requests returned by the issues API")
+    parser.add_argument("--no-catalogue", action="store_true", help="Omit repository-wide issue label/milestone catalogue (included by default)")
     parser.add_argument("--output-dir", type=Path, default=ROOT / ".ai-exports", metavar="DIR", help="Directory for timestamped ZIP (default: .ai-exports/)")
     parser.add_argument("--output", type=Path, metavar="ZIP", help="Exact output filename (used by the context coordinator)")
     parser.add_argument("--source-commit", metavar="SHA", help="Optional corresponding Git commit recorded in manifest")

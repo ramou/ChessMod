@@ -40,3 +40,8 @@ we should measure actual duplication and migration costs first.
 
 Capture answers as evidence in issues and/or ADRs. Do **not** infer production
 compatibility from matching Java filenames.
+
+## Repository history and artefact policy
+
+Historical release ZIP/JAR bloat is documented in [ADR-0002](decisions/0002-history-cleanup.md).
+Its status is **Proposed**; current history and distributables remain unchanged.

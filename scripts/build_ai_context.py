@@ -143,6 +143,7 @@ Review exports for private data before sharing. Issues are read-only snapshots.
     parser.add_argument("--issue-number", type=int, action="append", metavar="N", help="Select issue by number; repeat")
     parser.add_argument("--issue-limit", type=int, metavar="N", help="Limit number of issues; partial export")
     parser.add_argument("--issue-no-comments", action="store_true", help="Do not fetch comments")
+    parser.add_argument("--issue-no-catalogue", action="store_true", help="Omit repository-wide labels/milestones metadata")
     parser.add_argument("--issue-max-mb", type=int, default=64, metavar="N", help="Max issue ZIP uncompressed MiB (default: 64)")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, metavar="DIR", help="Output directory (default: .ai-exports/)")
     parser.add_argument("--max-bundle-mb", type=int, default=256, metavar="N", help="Max bundle file MiB (default: 256)")
@@ -171,7 +172,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--issue-number values must be positive")
     if not args.with_issues and (args.issue_label or args.issue_number or args.issue_since or
                                   args.issue_milestone or args.issue_limit is not None or
-                                  args.issue_no_comments or args.issue_state != "all"):
+                                  args.issue_no_comments or args.issue_no_catalogue or args.issue_state != "all"):
         parser.error("--issue-* filters require --with-issues")
     if args.allow_dirty and args.worktree != "auto":
         parser.error("--allow-dirty cannot be combined with --worktree (use --worktree skip)")
@@ -261,6 +262,8 @@ def main(argv: list[str] | None = None) -> int:
                         command.extend((option, str(item)))
                 if args.issue_no_comments:
                     command.append("--no-comments")
+                if args.issue_no_catalogue:
+                    command.append("--no-catalogue")
                 subprocess.run(command, check=True)
         except (ContextError, export_worktree.SnapshotError, subprocess.CalledProcessError, OSError) as exc:
             bundle.unlink(missing_ok=True)

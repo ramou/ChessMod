@@ -8,6 +8,7 @@ and link the old record to the new one.
 | ADR | Title | Status |
 | --- | --- | --- |
 | [0001](0001-unified-modding-api.md) | Unified API across Minecraft versions and loaders | **Proposed** |
+| [0002](0002-history-cleanup.md) | Historical release binaries and history rewrite policy | **Proposed** |
 
 Copy [TEMPLATE.md](TEMPLATE.md) for future decisions. Suggested status values:
 `Proposed`, `Accepted`, `Rejected`, `Superseded`. Include context, alternatives,

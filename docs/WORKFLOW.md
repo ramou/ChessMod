@@ -23,6 +23,13 @@
    Minecraft-version branch may only reference the issue; the maintainer may
    need to close it explicitly after accepting the fix.
 
+GitHub issue creation/edits use the human-operated, ignored root `run.sh`
+protocol in [ISSUE_MANAGEMENT.md](ISSUE_MANAGEMENT.md). The AI drafts guarded
+`gh` commands; the maintainer reviews the script, invokes `bash run.sh`, reports
+the resulting issue number(s), and manually removes the file. The AI never
+asserts that merely drafting a script has written to GitHub. Check existing
+open/closed issues and live identity before any create/edit operation.
+
 No automatic GitHub writes, commits, cherry-picks or pushes are part of this
 workflow. Issue exports are snapshots, not synchronisation.
 

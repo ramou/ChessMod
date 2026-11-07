@@ -20,8 +20,11 @@ python scripts/build_ai_context.py --with-issues
 python scripts/build_ai_context.py --branch 1.20.1 --branch 1.21 \
   --with-issues --issue-number 13 --issue-number 84
 
-# Alternative issue-only view:
+# Alternative issue-only view (also contains every available label/milestone):
 python scripts/export_issues.py --state open --label bug
+
+# Deliberately omit repository metadata when minimising the issue snapshot:
+python scripts/build_ai_context.py --with-issues --issue-no-catalogue
 
 # Only the local working state, without a Git bundle:
 python scripts/export_worktree.py
@@ -49,7 +52,8 @@ The context builder understands `--all-branches`, repeated `--branch`,
 `--worktree auto|always|skip`, `--no-untracked`, `--no-stashes`,
 `--stash-ref` (repeatable), `--all-stash-contents`, and
 issue filters (`--issue-state`, `--issue-label`, `--issue-since`,
-`--issue-milestone`, `--issue-number`, `--issue-limit`, `--issue-no-comments`).
+`--issue-milestone`, `--issue-number`, `--issue-limit`, `--issue-no-comments`,
+`--issue-no-catalogue`).
 Run `--help` for complete descriptions. Issue labels use AND filtering when
 repeated; timestamps are UTC. A limited export is explicitly marked as partial.
 
@@ -66,9 +70,16 @@ Example paired snapshot (actual timestamp/SHA will differ):
 └── ChessMod-context-1.20.1-20261107T120000Z-a6bfb9574da3-stash-0-<sha>.zip  # opt-in
 ```
 
-The issue ZIP includes `manifest.json` with selected issue metadata, comments,
-filter conditions, export timestamp and (in paired exports) source Git SHA, plus
-`issues/000013.md` etc. Markdown is for reading; JSON is for precise state,
+The issue ZIP includes `manifest.json` (schema version 2) with selected issue
+metadata, comments, filter conditions, export timestamp and (in paired exports)
+source Git SHA, plus `issues/000013.md` etc. By default it also includes
+`issue_catalogue.md` and `issue_creation_catalogue` in the manifest: **all**
+repository labels and open/closed milestones (regardless of issue filters),
+plus the repository's default branch and issue availability. Use
+`--no-catalogue` in `export_issues.py` or `--issue-no-catalogue` in the
+coordinator only when you intentionally omit this context. Projects V2 and
+organisation-specific issue types are not enumerated. See
+[ISSUE_MANAGEMENT.md](ISSUE_MANAGEMENT.md) for guarded `gh` writes. Markdown is for reading; JSON is for precise state,
 labels, milestones, timestamps, and machine processing. A snapshot is **not**
 a live view or a full state-transition audit log.
 
