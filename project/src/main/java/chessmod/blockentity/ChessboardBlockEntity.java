@@ -5,8 +5,8 @@ import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.board.BoardFactory;
 import chessmod.common.dom.model.chess.board.SerializedBoard;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvent;
@@ -60,8 +60,8 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag pTag) {
-		super.saveAdditional(pTag);
+	protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookup) {
+		super.saveAdditional(pTag, lookup);
 		SerializedBoard sb = SerializedBoard.serialize(board);
 		pTag.putLong("piece_mask", sb.piece_mask);
 		pTag.putLongArray("pieces", sb.pieces);
@@ -69,8 +69,8 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 	}
 	
 	@Override
-	public void load(CompoundTag pTag) {
-		super.load(pTag);
+	protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookup) {
+		super.loadAdditional(pTag, lookup);
 		long pieceMask = pTag.getLong("piece_mask");
 		long[] pieces = pTag.getLongArray("pieces");
 		long[] moves = pTag.getLongArray("moves");
@@ -88,24 +88,11 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 	}
 
 
+	// Forge's default onDataPacket/handleUpdateTag call loadWithComponents,
+	// which in turn dispatches to loadAdditional with the registry provider.
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-		super.onDataPacket(net, pkt);
-		load(pkt.getTag());
-	}
-
-	@Override
-	public CompoundTag getUpdateTag() {
-		CompoundTag tag = super.getUpdateTag();
-		saveAdditional(tag);
-		return tag;
-	}
-
-
-	@Override
-	public void handleUpdateTag(CompoundTag tag) {
-		super.handleUpdateTag(tag);
-		load(tag);
+	public CompoundTag getUpdateTag(HolderLookup.Provider lookup) {
+		return saveWithoutMetadata(lookup);
 	}
 
 	public void notifyClientOfBoardChange() {

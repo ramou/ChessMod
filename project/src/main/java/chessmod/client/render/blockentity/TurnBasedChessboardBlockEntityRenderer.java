@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 public class TurnBasedChessboardBlockEntityRenderer<T extends GoldChessboardBlockEntity> extends ChessboardBlockEntityRenderer<T>  {
@@ -67,11 +66,10 @@ public class TurnBasedChessboardBlockEntityRenderer<T extends GoldChessboardBloc
 
     private void draw2DRect(VertexConsumer  bufferbuilder, PoseStack pPoseStack, Point2f p1, Point2f p2, float r, float g, float b, float a, int pPackedLight, int pPackedOverlay) {
         Matrix4f model = pPoseStack.last().pose() ;
-        Matrix3f matrix3f = pPoseStack.last().normal();
-        bufferbuilder.vertex(model, p2.x, 1.001f, p1.y).color(r, g, b, a).uv(0, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
-        bufferbuilder.vertex(model, p1.x, 1.001f, p1.y).color(r, g, b, a).uv(0, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
-        bufferbuilder.vertex(model, p1.x, 1.001f, p2.y).color(r, g, b, a).uv(0, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
-        bufferbuilder.vertex(model, p2.x, 1.001f, p2.y).color(r, g, b, a).uv(0, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
+                bufferbuilder.addVertex(model, p2.x, 1.001f, p1.y).setColor(r, g, b, a).setUv(0, 0).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0, 1, 0);
+        bufferbuilder.addVertex(model, p1.x, 1.001f, p1.y).setColor(r, g, b, a).setUv(0, 0).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0, 1, 0);
+        bufferbuilder.addVertex(model, p1.x, 1.001f, p2.y).setColor(r, g, b, a).setUv(0, 0).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0, 1, 0);
+        bufferbuilder.addVertex(model, p2.x, 1.001f, p2.y).setColor(r, g, b, a).setUv(0, 0).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0, 1, 0);
     }
 
 }

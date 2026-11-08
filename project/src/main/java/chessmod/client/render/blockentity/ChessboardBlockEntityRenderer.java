@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import org.joml.Matrix4f;
-import org.joml.Matrix3f;
 
 import chessmod.block.ChessboardBlock;
 import chessmod.blockentity.ChessboardBlockEntity;
@@ -18,8 +17,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public class ChessboardBlockEntityRenderer<T extends ChessboardBlockEntity> implements BlockEntityRenderer<T> {
-	public static final ResourceLocation black = new ResourceLocation("chessmod", "textures/block/black.png");
-	public static final ResourceLocation white = new ResourceLocation("chessmod", "textures/block/white.png");
+	public static final ResourceLocation black = ResourceLocation.fromNamespaceAndPath("chessmod", "textures/block/black.png");
+	public static final ResourceLocation white = ResourceLocation.fromNamespaceAndPath("chessmod", "textures/block/white.png");
 
 	public ChessboardBlockEntityRenderer(BlockEntityRendererProvider.Context context) { }
 
@@ -172,43 +171,42 @@ public class ChessboardBlockEntityRenderer<T extends ChessboardBlockEntity> impl
 		float scaledTextureOffset  = (2 - UnitPieceSize/size)/2*PieceTileBorderSize/PieceTileSize;
 
 		Matrix4f model = pPoseStack.last().pose();
-		Matrix3f matrix3f = pPoseStack.last().normal();
-		//bufferbuilder.vertex(model, p2.x, 1.001f, p1.y).color(r, g, b, a).uv(5, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
+				//bufferbuilder.vertex(model, p2.x, 1.001f, p1.y).color(r, g, b, a).uv(5, 0).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0, 1, 0).endVertex();
         //south side [pos z] [parent x]
-        bufferbuilder.vertex(model, xOff+size, yOff-size, zOff+size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,0,1).endVertex();
-        bufferbuilder.vertex(model, xOff+size, yOff+size, zOff+size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,0,1).endVertex();
-        bufferbuilder.vertex(model, xOff-size, yOff+size, zOff+size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,0,1).endVertex();
-        bufferbuilder.vertex(model, xOff-size, yOff-size, zOff+size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,0,1).endVertex();
+        bufferbuilder.addVertex(model, xOff+size, yOff-size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,0,1);
+        bufferbuilder.addVertex(model, xOff+size, yOff+size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,0,1);
+        bufferbuilder.addVertex(model, xOff-size, yOff+size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,0,1);
+        bufferbuilder.addVertex(model, xOff-size, yOff-size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,0,1);
 
         //north side [neg z] [parent x]
-        bufferbuilder.vertex(model, xOff-size, yOff-size, zOff-size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,0,-1).endVertex();
-        bufferbuilder.vertex(model, xOff-size, yOff+size, zOff-size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,0,-1).endVertex();
-        bufferbuilder.vertex(model, xOff+size, yOff+size, zOff-size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,0,-1).endVertex();
-        bufferbuilder.vertex(model, xOff+size, yOff-size, zOff-size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,0,-1).endVertex();
+        bufferbuilder.addVertex(model, xOff-size, yOff-size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,0,-1);
+        bufferbuilder.addVertex(model, xOff-size, yOff+size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,0,-1);
+        bufferbuilder.addVertex(model, xOff+size, yOff+size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,0,-1);
+        bufferbuilder.addVertex(model, xOff+size, yOff-size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,0,-1);
 
         //east side [pos x] [parent z]
-        bufferbuilder.vertex(model, xOff+size, yOff-size, zOff-size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 1,0,0).endVertex();
-        bufferbuilder.vertex(model, xOff+size, yOff+size, zOff-size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 1,0,0).endVertex();
-        bufferbuilder.vertex(model, xOff+size, yOff+size, zOff+size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 1,0,0).endVertex();
-        bufferbuilder.vertex(model, xOff+size, yOff-size, zOff+size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 1,0,0).endVertex();
+        bufferbuilder.addVertex(model, xOff+size, yOff-size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 1,0,0);
+        bufferbuilder.addVertex(model, xOff+size, yOff+size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 1,0,0);
+        bufferbuilder.addVertex(model, xOff+size, yOff+size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 1,0,0);
+        bufferbuilder.addVertex(model, xOff+size, yOff-size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 1,0,0);
 
         //west side [neg x] [parent z]
-        bufferbuilder.vertex(model, xOff-size, yOff-size, zOff+size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, -1,0,0).endVertex();
-        bufferbuilder.vertex(model, xOff-size, yOff+size, zOff+size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, -1,0,0).endVertex();
-        bufferbuilder.vertex(model, xOff-size, yOff+size, zOff-size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, -1,0,0).endVertex();
-        bufferbuilder.vertex(model, xOff-size, yOff-size, zOff-size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, -1,0,0).endVertex();
+        bufferbuilder.addVertex(model, xOff-size, yOff-size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), -1,0,0);
+        bufferbuilder.addVertex(model, xOff-size, yOff+size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), -1,0,0);
+        bufferbuilder.addVertex(model, xOff-size, yOff+size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), -1,0,0);
+        bufferbuilder.addVertex(model, xOff-size, yOff-size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), -1,0,0);
 
         //top [pos y] [parent x & y]
-        bufferbuilder.vertex(model, xOff+size, yOff+size, zOff-size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,1,0).endVertex();
-        bufferbuilder.vertex(model, xOff-size, yOff+size, zOff-size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,1,0).endVertex();
-        bufferbuilder.vertex(model, xOff-size, yOff+size, zOff+size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,1,0).endVertex();
-        bufferbuilder.vertex(model, xOff+size, yOff+size, zOff+size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,1,0).endVertex();
+        bufferbuilder.addVertex(model, xOff+size, yOff+size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,1,0);
+        bufferbuilder.addVertex(model, xOff-size, yOff+size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,1,0);
+        bufferbuilder.addVertex(model, xOff-size, yOff+size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,1,0);
+        bufferbuilder.addVertex(model, xOff+size, yOff+size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,1,0);
 
         //bottom [neg y] [parent x & y]
-        bufferbuilder.vertex(model, xOff-size, yOff-size, zOff-size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,-1,0).endVertex();
-        bufferbuilder.vertex(model, xOff+size, yOff-size, zOff-size).color(1, 1, 1, 0.5f).uv(1-scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,-1,0).endVertex();
-        bufferbuilder.vertex(model, xOff+size, yOff-size, zOff+size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,-1,0).endVertex();
-        bufferbuilder.vertex(model, xOff-size, yOff-size, zOff+size).color(1, 1, 1, 0.5f).uv(scaledTextureOffset,1-scaledTextureOffset).overlayCoords(pPackedOverlay).uv2(pPackedLight).normal(matrix3f, 0,-1,0).endVertex();
+        bufferbuilder.addVertex(model, xOff-size, yOff-size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,-1,0);
+        bufferbuilder.addVertex(model, xOff+size, yOff-size, zOff-size).setColor(1, 1, 1, 0.5f).setUv(1-scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,-1,0);
+        bufferbuilder.addVertex(model, xOff+size, yOff-size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,-1,0);
+        bufferbuilder.addVertex(model, xOff-size, yOff-size, zOff+size).setColor(1, 1, 1, 0.5f).setUv(scaledTextureOffset,1-scaledTextureOffset).setOverlay(pPackedOverlay).setLight(pPackedLight).setNormal(pPoseStack.last(), 0,-1,0);
            
 	}
 

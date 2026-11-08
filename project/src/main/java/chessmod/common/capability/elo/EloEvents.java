@@ -13,7 +13,7 @@ public class EloEvents {
     public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event){
         if (event.getObject() instanceof Player) {
             if (!event.getObject().getCapability(EloProvider.capability).isPresent()) {
-                event.addCapability(new ResourceLocation(ChessMod.MODID, "playerelo"), new EloProvider());
+                event.addCapability(ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "playerelo"), new EloProvider());
             }
         }
     }

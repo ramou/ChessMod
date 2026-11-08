@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -41,14 +42,14 @@ public class EloProvider implements ICapabilityProvider, INBTSerializable<Compou
 	
 	
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookup) {
         CompoundTag nbt = new CompoundTag();
         createElo().saveNBTData(nbt);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookup, CompoundTag nbt) {
     	createElo().loadNBTData(nbt);
     }
 

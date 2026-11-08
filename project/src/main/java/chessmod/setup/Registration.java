@@ -8,6 +8,7 @@ import chessmod.common.network.ChessPlay;
 import chessmod.common.network.PacketHandler;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item.TooltipContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.*;
@@ -85,7 +86,7 @@ public class Registration {
 		ITEMS.register(QUANTUM_CHESSBOARD.getId().getPath(), () -> new BlockItem(QUANTUM_CHESSBOARD.get(), new Item.Properties()) {
 			//ItemStack p_40572_, @Nullable Level p_40573_, List<Component> p_40574_, TooltipFlag p_40575_
 			@Override
-			public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+			public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
 				tooltip.add(Component.translatable ("tooltip.chessmod.quantum_chessboard"));
 			}
 		}
@@ -94,16 +95,16 @@ public class Registration {
 
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_SOUND =
 			SOUNDS.register("slide_piece",
-					() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ChessMod.MODID, "slide_piece")));
+					() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "slide_piece")));
 	public static final RegistryObject<SoundEvent> SLIDE_PIECE_TAKE_SOUND =
 			SOUNDS.register("slide_piece_take",
-					() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ChessMod.MODID, "slide_piece_take")));
+					() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "slide_piece_take")));
 	public static final RegistryObject<SoundEvent> PLACE_PIECE_SOUND =
 			SOUNDS.register("place_piece",
-					() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ChessMod.MODID, "place_piece")));
+					() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "place_piece")));
 	public static final RegistryObject<SoundEvent> PLACE_PIECE_TAKE_SOUND =
 			SOUNDS.register("place_piece_take",
-					() -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ChessMod.MODID, "place_piece_take")));
+					() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "place_piece_take")));
 
 
 	public static void init() {

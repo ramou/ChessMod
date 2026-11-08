@@ -12,7 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class ArbitraryPlacement {
 	private final int point;
@@ -55,14 +55,14 @@ public class ArbitraryPlacement {
 	}
 
 	public static class Handler {
-		public static void handle(final ArbitraryPlacement message, final Supplier<NetworkEvent.Context> ctx) {
-			if (ctx.get().getDirection().getReceptionSide().isServer()) {
-				ctx.get().enqueueWork(new Runnable() {
+		public static void handle(final ArbitraryPlacement message, final CustomPayloadEvent.Context ctx) {
+			if (ctx.isServerSide()) {
+				ctx.enqueueWork(new Runnable() {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
 
-						Level level = ctx.get().getSender().level();
+						Level level = ctx.getSender().level();
 						BlockPos pos = new BlockPos((int) message.x, (int) message.y, (int) message.z);
 						
 						if(level.isLoaded(pos)) {
@@ -81,7 +81,7 @@ public class ArbitraryPlacement {
 				});
 			}
 
-			ctx.get().setPacketHandled(true);
+			ctx.setPacketHandled(true);
 		}
 	}
 }

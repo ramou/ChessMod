@@ -7,13 +7,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -26,7 +28,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 
-public abstract class ChessboardBlock extends GlassBlock implements EntityBlock {
+public abstract class ChessboardBlock extends TransparentBlock implements EntityBlock {
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 	public ChessboardBlock() {
 		super(BlockBehaviour.Properties.of().noOcclusion());
@@ -54,25 +56,25 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 		return false;
 	}
 
+	// Minecraft 1.21 splits item-in-hand interactions from empty/default block use.
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-			BlockHitResult pHit) {
-
-		if(!level.isClientSide && player.getMainHandItem().is(Registration.CHESS_WRENCH.get())){
-			Direction currentFacing = state.getValue(FACING);
-			Direction newFacing = currentFacing.getClockWise();
-			level.setBlockAndUpdate(pos, state.setValue(FACING,newFacing));
-
-			return InteractionResult.PASS;
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
+			BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (stack.is(Registration.CHESS_WRENCH.get())) {
+			if (!level.isClientSide) {
+				Direction newFacing = state.getValue(FACING).getClockWise();
+				level.setBlockAndUpdate(pos, state.setValue(FACING, newFacing));
+			}
+			return ItemInteractionResult.SUCCESS;
 		}
-		else if(level.isClientSide && !player.getMainHandItem().is(Registration.CHESS_WRENCH.get())) {
-			/*
-			 * We want to know how much to rotate the screen by based on what direction they're facing.
-			 */
-			openGui(level, pos);
-		}
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+	}
 
-		return InteractionResult.SUCCESS;
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
+			Player player, BlockHitResult hit) {
+		if (level.isClientSide) openGui(level, pos);
+		return InteractionResult.sidedSuccess(level.isClientSide);
 	}
 
 	protected abstract void openGui(final Level level, final BlockPos pos);

@@ -5,6 +5,7 @@ import chessmod.common.dom.model.chess.board.Board;
 import chessmod.common.dom.model.chess.board.SerializedBoard;
 import chessmod.setup.Registration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.level.BlockEvent;
@@ -91,8 +92,8 @@ public class QuantumChessBoardBlockEntity extends GoldChessboardBlockEntity{
      * block entity's data (serialization? encoding?)
      * stores the linked board position coordinates as an integer array
      * within the NBT data (linkedBoardPos) */
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookup) {
+        super.saveAdditional(pTag, lookup);
         if(linkedBoardPos != null) {
             pTag.putIntArray("linkedBoardPos", new int[]{linkedBoardPos.getX(), linkedBoardPos.getY(), linkedBoardPos.getZ()});
             pTag.putString("linkedDimension", linkedDimension);
@@ -103,8 +104,8 @@ public class QuantumChessBoardBlockEntity extends GoldChessboardBlockEntity{
      * block entity's data from NBT (deserialization? decoding?)
      * returns the stored linked board position from linkedBoardPos
      */
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookup) {
+        super.loadAdditional(pTag, lookup);
         int[] lbp = pTag.getIntArray("linkedBoardPos");
         if(lbp.length != 3) {
             linkedBoardPos = null;

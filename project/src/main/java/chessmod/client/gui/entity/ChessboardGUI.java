@@ -28,28 +28,28 @@ public abstract class ChessboardGUI extends Screen {
 	protected ChessboardBlockEntity board;
 	protected Point selected = null;
 
-	public static ResourceLocation SELECTED = new ResourceLocation(ChessMod.MODID, "textures/gui/shadeselected.png");
-	public static ResourceLocation POSSIBLE = new ResourceLocation(ChessMod.MODID, "textures/gui/shadepossible.png");
-	public static ResourceLocation CHECK = new ResourceLocation(ChessMod.MODID, "textures/gui/shadecheck.png");
-	public static ResourceLocation CHECKMATE = new ResourceLocation(ChessMod.MODID, "textures/gui/shadecheckmate.png");
-	public static ResourceLocation WHITE = new ResourceLocation(ChessMod.MODID, "textures/gui/shadewhite.png");
-	public static ResourceLocation BLACK = new ResourceLocation(ChessMod.MODID, "textures/gui/shadeblack.png");
+	public static ResourceLocation SELECTED = ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/shadeselected.png");
+	public static ResourceLocation POSSIBLE = ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/shadepossible.png");
+	public static ResourceLocation CHECK = ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/shadecheck.png");
+	public static ResourceLocation CHECKMATE = ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/shadecheckmate.png");
+	public static ResourceLocation WHITE = ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/shadewhite.png");
+	public static ResourceLocation BLACK = ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/shadeblack.png");
 	
 	protected static HashMap<Character, TilePiece> pieceMap = new HashMap<>();
 
 	protected enum TilePiece {
-		WHITE_KING(0, Side.WHITE, PieceInitializer.nmK, 'K', new ResourceLocation(ChessMod.MODID, "textures/gui/wk.png")),
-		WHITE_QUEEN(1, Side.WHITE, PieceInitializer.Q, 'Q', new ResourceLocation(ChessMod.MODID, "textures/gui/wq.png")),
-		WHITE_ROOK(2, Side.WHITE, PieceInitializer.nmR, 'R', new ResourceLocation(ChessMod.MODID, "textures/gui/wr.png")),
-		WHITE_KNIGHT(3, Side.WHITE, PieceInitializer.N, 'N', new ResourceLocation(ChessMod.MODID, "textures/gui/wn.png")),
-		WHITE_BISHOP(4, Side.WHITE, PieceInitializer.B, 'B', new ResourceLocation(ChessMod.MODID, "textures/gui/wb.png")),
-		WHITE_PAWN(5, Side.WHITE, PieceInitializer.P, 'P', new ResourceLocation(ChessMod.MODID, "textures/gui/wp.png")),
-		BLACK_KING(0, Side.BLACK, PieceInitializer.nmK, 'k', new ResourceLocation(ChessMod.MODID, "textures/gui/bk.png")),
-		BLACK_QUEEN(1, Side.BLACK, PieceInitializer.Q, 'q', new ResourceLocation(ChessMod.MODID, "textures/gui/bq.png")),
-		BLACK_ROOK(2, Side.BLACK, PieceInitializer.nmR, 'r', new ResourceLocation(ChessMod.MODID, "textures/gui/br.png")),
-		BLACK_KNIGHT(3, Side.BLACK, PieceInitializer.N, 'n', new ResourceLocation(ChessMod.MODID, "textures/gui/bn.png")),
-		BLACK_BISHOP(4, Side.BLACK, PieceInitializer.B, 'b', new ResourceLocation(ChessMod.MODID, "textures/gui/bb.png")),
-		BLACK_PAWN(5, Side.BLACK, PieceInitializer.P, 'p', new ResourceLocation(ChessMod.MODID, "textures/gui/bp.png"));
+		WHITE_KING(0, Side.WHITE, PieceInitializer.nmK, 'K', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/wk.png")),
+		WHITE_QUEEN(1, Side.WHITE, PieceInitializer.Q, 'Q', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/wq.png")),
+		WHITE_ROOK(2, Side.WHITE, PieceInitializer.nmR, 'R', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/wr.png")),
+		WHITE_KNIGHT(3, Side.WHITE, PieceInitializer.N, 'N', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/wn.png")),
+		WHITE_BISHOP(4, Side.WHITE, PieceInitializer.B, 'B', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/wb.png")),
+		WHITE_PAWN(5, Side.WHITE, PieceInitializer.P, 'P', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/wp.png")),
+		BLACK_KING(0, Side.BLACK, PieceInitializer.nmK, 'k', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/bk.png")),
+		BLACK_QUEEN(1, Side.BLACK, PieceInitializer.Q, 'q', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/bq.png")),
+		BLACK_ROOK(2, Side.BLACK, PieceInitializer.nmR, 'r', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/br.png")),
+		BLACK_KNIGHT(3, Side.BLACK, PieceInitializer.N, 'n', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/bn.png")),
+		BLACK_BISHOP(4, Side.BLACK, PieceInitializer.B, 'b', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/bb.png")),
+		BLACK_PAWN(5, Side.BLACK, PieceInitializer.P, 'p', ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/bp.png"));
 	
 		public void draw(GuiGraphics guiGraphics, ChessboardGUI current, int x, int y) {
 			current.drawPiece(guiGraphics, x, y, tile);
@@ -94,7 +94,7 @@ public abstract class ChessboardGUI extends Screen {
 
 	public ChessboardGUI(ChessboardBlockEntity board) {
 		super(Component.empty());
-		background = new ResourceLocation(ChessMod.MODID, "textures/gui/chessboard.png");
+		background = ResourceLocation.fromNamespaceAndPath(ChessMod.MODID, "textures/gui/chessboard.png");
 		this.board = board;
 	}
 

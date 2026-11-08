@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
@@ -37,7 +36,7 @@ public class LinkedChessboardBlockEntityRenderer extends TurnBasedChessboardBloc
         pPoseStack.popPose();
     }
 
-    private static final ResourceLocation BEAM_TEXTURE = new ResourceLocation("chessmod", "textures/entity/beam_texture.png");
+    private static final ResourceLocation BEAM_TEXTURE = ResourceLocation.fromNamespaceAndPath("chessmod", "textures/entity/beam_texture.png");
 
     public void renderBeam(BlockPos startPos, BlockPos endPos, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         Vec3 start = new Vec3(startPos.getX() + 0.5, startPos.getY() + 0.5, startPos.getZ() + 0.5);
@@ -47,17 +46,16 @@ public class LinkedChessboardBlockEntityRenderer extends TurnBasedChessboardBloc
         VertexConsumer buffer = pBufferSource.getBuffer(RenderType.entityTranslucent(BEAM_TEXTURE, false));
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        Matrix4f matrix = pPoseStack.last().pose();
-        Matrix3f normalMatrix = pPoseStack.last().normal();
 
         float[] color = {1.0f, 1.0f, 1.0f};
 
         // render the beam as a quad
-        renderBeamQuad(buffer, matrix, normalMatrix, start, end, color, pPackedLight, pPackedOverlay);
+        renderBeamQuad(buffer, pPoseStack.last(), start, end, color, pPackedLight, pPackedOverlay);
         RenderSystem.disableBlend();
     }
 
-    private void renderBeamQuad(VertexConsumer buffer, Matrix4f matrix, Matrix3f normalMatrix, Vec3 start, Vec3 end, float[] color, int light, int overlay) {
+    private void renderBeamQuad(VertexConsumer buffer, PoseStack.Pose pose, Vec3 start, Vec3 end, float[] color, int light, int overlay) {
+        Matrix4f matrix = pose.pose();
 
         int brightlight = (15 << 20) | (15 << 4);
 
@@ -93,136 +91,136 @@ public class LinkedChessboardBlockEntityRenderer extends TurnBasedChessboardBloc
 
 
         //1 top half main part
-        buffer.vertex(matrix, (float) (0.5), (float) (0.5), (float) (0.5))
-                .color(color[0], color[1], color[2], initialalpha)
-                .uv(0.0f, offset)
-                .overlayCoords(overlay)
-                .uv2(brightlight)
-                .normal(normalMatrix, (float) -right.x(), (float) -right.y(), (float) -right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5), (float) (0.5), (float) (0.5))
+                .setColor(color[0], color[1], color[2], initialalpha)
+                .setUv(0.0f, offset)
+                .setOverlay(overlay)
+                .setLight(brightlight)
+                .setNormal(pose, (float) -right.x(), (float) -right.y(), (float) -right.z())
+                ;
         //2 top half main part
-        buffer.vertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + direction.y), (float) (0.5 + direction.z))
-                .color(color[0], color[1], color[2], centeralphamidway)
-                .uv(0.0f, offset + beamlength / texturewidth)
-                .overlayCoords(overlay)
-                .uv2(light)
-                .normal(normalMatrix, (float) right.x(), (float) right.y(), (float) right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + direction.y), (float) (0.5 + direction.z))
+                .setColor(color[0], color[1], color[2], centeralphamidway)
+                .setUv(0.0f, offset + beamlength / texturewidth)
+                .setOverlay(overlay)
+                .setLight(light)
+                .setNormal(pose, (float) right.x(), (float) right.y(), (float) right.z())
+                ;
         //3 top half main part
-        buffer.vertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + beamwidthoffset + direction.y), (float) (0.5 + direction.z))
-                .color(color[0], color[1], color[2], outteralphamidway)
-                .uv(beamwidth / texturewidth, offset + beamlength / texturewidth)
-                .overlayCoords(overlay)
-                .uv2(light)
-                .normal(normalMatrix, (float) -right.x(), (float) -right.y(), (float) -right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + beamwidthoffset + direction.y), (float) (0.5 + direction.z))
+                .setColor(color[0], color[1], color[2], outteralphamidway)
+                .setUv(beamwidth / texturewidth, offset + beamlength / texturewidth)
+                .setOverlay(overlay)
+                .setLight(light)
+                .setNormal(pose, (float) -right.x(), (float) -right.y(), (float) -right.z())
+                ;
         //4 top half main part
-        buffer.vertex(matrix, (float) (0.5), (float) (0.5 + beamwidthoffset), (float) (0.5))
-                .color(color[0], color[1], color[2], initialalpha)
-                .uv(beamwidth / texturewidth, offset)
-                .overlayCoords(overlay)
-                .uv2(brightlight)
-                .normal(normalMatrix, (float) right.x(), (float) right.y(), (float) right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5), (float) (0.5 + beamwidthoffset), (float) (0.5))
+                .setColor(color[0], color[1], color[2], initialalpha)
+                .setUv(beamwidth / texturewidth, offset)
+                .setOverlay(overlay)
+                .setLight(brightlight)
+                .setNormal(pose, (float) right.x(), (float) right.y(), (float) right.z())
+                ;
 
         //1 bottom half main part
-        buffer.vertex(matrix, (float) (0.5), (float) (0.5), (float) (0.5))
-                .color(color[0], color[1], color[2], initialalpha)
-                .uv(0.0f, beamlength / texturewidth - offset)
-                .overlayCoords(overlay)
-                .uv2(brightlight)
-                .normal(normalMatrix, (float) right.x(), (float) -right.y(), (float) -right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5), (float) (0.5), (float) (0.5))
+                .setColor(color[0], color[1], color[2], initialalpha)
+                .setUv(0.0f, beamlength / texturewidth - offset)
+                .setOverlay(overlay)
+                .setLight(brightlight)
+                .setNormal(pose, (float) right.x(), (float) -right.y(), (float) -right.z())
+                ;
         //2 bottom half main part
-        buffer.vertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + direction.y), (float) (0.5 + direction.z))
-                .color(color[0], color[1], color[2], centeralphamidway)
-                .uv(0.0f, -offset)
-                .overlayCoords(overlay)
-                .uv2(light)
-                .normal(normalMatrix, (float) right.x(), (float) right.y(), (float) right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + direction.y), (float) (0.5 + direction.z))
+                .setColor(color[0], color[1], color[2], centeralphamidway)
+                .setUv(0.0f, -offset)
+                .setOverlay(overlay)
+                .setLight(light)
+                .setNormal(pose, (float) right.x(), (float) right.y(), (float) right.z())
+                ;
         //3 bottom half main part
-        buffer.vertex(matrix, (float) (0.5 + direction.x), (float) (0.5 - beamwidthoffset + direction.y), (float) (0.5 + direction.z))
-                .color(color[0], color[1], color[2], outteralphamidway)
-                .uv(beamwidth / texturewidth, -offset)
-                .overlayCoords(overlay)
-                .uv2(light)
-                .normal(normalMatrix, (float) right.x(), (float) right.y(), (float) right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x), (float) (0.5 - beamwidthoffset + direction.y), (float) (0.5 + direction.z))
+                .setColor(color[0], color[1], color[2], outteralphamidway)
+                .setUv(beamwidth / texturewidth, -offset)
+                .setOverlay(overlay)
+                .setLight(light)
+                .setNormal(pose, (float) right.x(), (float) right.y(), (float) right.z())
+                ;
         //4 bottom half main part
-        buffer.vertex(matrix, (float) (0.5), (float) (0.5 - beamwidthoffset), (float) (0.5))
-                .color(color[0], color[1], color[2], initialalpha)
-                .uv(beamwidth / texturewidth, beamlength / texturewidth - offset)
-                .overlayCoords(overlay)
-                .uv2(brightlight)
-                .normal(normalMatrix, (float) right.x(), (float) right.y(), (float) right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5), (float) (0.5 - beamwidthoffset), (float) (0.5))
+                .setColor(color[0], color[1], color[2], initialalpha)
+                .setUv(beamwidth / texturewidth, beamlength / texturewidth - offset)
+                .setOverlay(overlay)
+                .setLight(brightlight)
+                .setNormal(pose, (float) right.x(), (float) right.y(), (float) right.z())
+                ;
 
         //1 top half fade part
-        buffer.vertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + direction.y), (float) (0.5 + direction.z))
-                .color(color[0], color[1], color[2], centeralphamidway)
-                .uv(0.0f, offset)
-                .overlayCoords(overlay)
-                .uv2(light)
-                .normal(normalMatrix, (float) right.x(), (float) right.y(), (float) right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + direction.y), (float) (0.5 + direction.z))
+                .setColor(color[0], color[1], color[2], centeralphamidway)
+                .setUv(0.0f, offset)
+                .setOverlay(overlay)
+                .setLight(light)
+                .setNormal(pose, (float) right.x(), (float) right.y(), (float) right.z())
+                ;
         //2 top half fade part
-        buffer.vertex(matrix, (float) (0.5 + direction.x * 2), (float) (0.5 + direction.y * 2), (float) (0.5 + direction.z * 2))
-                .color(color[0], color[1], color[2], minalpha)
-                .uv(0.0f, offset + beamlength / texturewidth)
-                .overlayCoords(overlay)
-                .uv2(0)
-                .normal(normalMatrix, (float) right.x(), (float) right.y(), (float) right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x * 2), (float) (0.5 + direction.y * 2), (float) (0.5 + direction.z * 2))
+                .setColor(color[0], color[1], color[2], minalpha)
+                .setUv(0.0f, offset + beamlength / texturewidth)
+                .setOverlay(overlay)
+                .setLight(0)
+                .setNormal(pose, (float) right.x(), (float) right.y(), (float) right.z())
+                ;
         //3 top half fade part
-        buffer.vertex(matrix, (float) (0.5 + direction.x * 2), (float) (0.5 + beamwidthoffset + direction.y * 2), (float) (0.5 + direction.z * 2))
-                .color(color[0], color[1], color[2], minalpha)
-                .uv(beamwidth / texturewidth, offset + beamlength / texturewidth)
-                .overlayCoords(overlay)
-                .uv2(0)
-                .normal(normalMatrix, (float) -right.x(), (float) -right.y(), (float) -right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x * 2), (float) (0.5 + beamwidthoffset + direction.y * 2), (float) (0.5 + direction.z * 2))
+                .setColor(color[0], color[1], color[2], minalpha)
+                .setUv(beamwidth / texturewidth, offset + beamlength / texturewidth)
+                .setOverlay(overlay)
+                .setLight(0)
+                .setNormal(pose, (float) -right.x(), (float) -right.y(), (float) -right.z())
+                ;
         //4 top half fade part (same as 3 main)
-        buffer.vertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + beamwidthoffset + direction.y), (float) (0.5 + direction.z))
-                .color(color[0], color[1], color[2], outteralphamidway)
-                .uv(beamwidth / texturewidth, offset)
-                .overlayCoords(overlay)
-                .uv2(light)
-                .normal(normalMatrix, (float) -right.x(), (float) -right.y(), (float) -right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + beamwidthoffset + direction.y), (float) (0.5 + direction.z))
+                .setColor(color[0], color[1], color[2], outteralphamidway)
+                .setUv(beamwidth / texturewidth, offset)
+                .setOverlay(overlay)
+                .setLight(light)
+                .setNormal(pose, (float) -right.x(), (float) -right.y(), (float) -right.z())
+                ;
 
         //1 bottom half fade part
-        buffer.vertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + direction.y), (float) (0.5 + direction.z))
-                .color(color[0], color[1], color[2], centeralphamidway)
-                .uv(0.0f, beamlength / texturewidth - offset)
-                .overlayCoords(overlay)
-                .uv2(light)
-                .normal(normalMatrix, (float) right.x(), (float) right.y(), (float) right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x), (float) (0.5 + direction.y), (float) (0.5 + direction.z))
+                .setColor(color[0], color[1], color[2], centeralphamidway)
+                .setUv(0.0f, beamlength / texturewidth - offset)
+                .setOverlay(overlay)
+                .setLight(light)
+                .setNormal(pose, (float) right.x(), (float) right.y(), (float) right.z())
+                ;
         //2 bottom half fade part
-        buffer.vertex(matrix, (float) (0.5 + direction.x * 2), (float) (0.5 + direction.y * 2), (float) (0.5 + direction.z * 2))
-                .color(color[0], color[1], color[2], minalpha)
-                .uv(0.0f, -offset)
-                .overlayCoords(overlay)
-                .uv2(0)
-                .normal(normalMatrix, (float) right.x(), (float) right.y(), (float) right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x * 2), (float) (0.5 + direction.y * 2), (float) (0.5 + direction.z * 2))
+                .setColor(color[0], color[1], color[2], minalpha)
+                .setUv(0.0f, -offset)
+                .setOverlay(overlay)
+                .setLight(0)
+                .setNormal(pose, (float) right.x(), (float) right.y(), (float) right.z())
+                ;
         //3 bottom half fade part
-        buffer.vertex(matrix, (float) (0.5 + direction.x * 2), (float) (0.5 - beamwidthoffset + direction.y * 2), (float) (0.5 + direction.z * 2))
-                .color(color[0], color[1], color[2], minalpha)
-                .uv(beamwidth / texturewidth, -offset)
-                .overlayCoords(overlay)
-                .uv2(0)
-                .normal(normalMatrix, (float) right.x(), (float) right.y(), (float) right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x * 2), (float) (0.5 - beamwidthoffset + direction.y * 2), (float) (0.5 + direction.z * 2))
+                .setColor(color[0], color[1], color[2], minalpha)
+                .setUv(beamwidth / texturewidth, -offset)
+                .setOverlay(overlay)
+                .setLight(0)
+                .setNormal(pose, (float) right.x(), (float) right.y(), (float) right.z())
+                ;
         //4 bottom half fade part (same as 3 main)
-        buffer.vertex(matrix, (float) (0.5 + direction.x), (float) (0.5 - beamwidthoffset + direction.y), (float) (0.5 + direction.z))
-                .color(color[0], color[1], color[2], outteralphamidway)
-                .uv(beamwidth / texturewidth, beamlength / texturewidth - offset)
-                .overlayCoords(overlay)
-                .uv2(light)
-                .normal(normalMatrix, (float) -right.x(), (float) -right.y(), (float) -right.z())
-                .endVertex();
+        buffer.addVertex(matrix, (float) (0.5 + direction.x), (float) (0.5 - beamwidthoffset + direction.y), (float) (0.5 + direction.z))
+                .setColor(color[0], color[1], color[2], outteralphamidway)
+                .setUv(beamwidth / texturewidth, beamlength / texturewidth - offset)
+                .setOverlay(overlay)
+                .setLight(light)
+                .setNormal(pose, (float) -right.x(), (float) -right.y(), (float) -right.z())
+                ;
 
     }
 }

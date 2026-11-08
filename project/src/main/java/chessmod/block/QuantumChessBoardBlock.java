@@ -9,12 +9,14 @@ import chessmod.client.gui.entity.GoldChessboardGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -70,17 +72,16 @@ public class QuantumChessBoardBlock extends GoldChessboardBlock {
         }
     }
 
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
-
-        ItemStack heldItem = player.getMainHandItem();
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
 
         if(!heldItem.is(Items.ENDER_PEARL)) {
-            return super.use(state, level, pos, player, hand, pHit);
+            return super.useItemOn(heldItem, state, level, pos, player, hand, pHit);
         }
 
         if (!level.isClientSide && heldItem.is(Items.ENDER_PEARL)) {
             try {
-                CompoundTag nbtData = heldItem.getOrCreateTag();
+                CompoundTag nbtData = heldItem.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 
                 if (nbtData.getInt("BlockPosX") == 0) {
                     // first board selection
@@ -90,7 +91,7 @@ public class QuantumChessBoardBlock extends GoldChessboardBlock {
                         nbtData.putInt("BlockPosY", pos.getY());
                         nbtData.putInt("BlockPosZ", pos.getZ());
                         nbtData.putString("Dimension", level.dimension().location().toString());
-                        heldItem.setTag(nbtData);
+                        CustomData.set(DataComponents.CUSTOM_DATA, heldItem, nbtData);
                         player.displayClientMessage(Component.translatable("chessmod.quantum.first_notification", pos.getX(), pos.getY(), pos.getZ(), level.dimension().location().toString()), false);
                     }
                 } else {
@@ -111,7 +112,7 @@ public class QuantumChessBoardBlock extends GoldChessboardBlock {
                         nbtData.remove("BlockPosY");
                         nbtData.remove("BlockPosZ");
                         nbtData.remove("Dimension");
-                        heldItem.setTag(nbtData);
+                        CustomData.set(DataComponents.CUSTOM_DATA, heldItem, nbtData);
                     } else {
                         // Handle error if Ids don't match or not a chessboard block
                         player.displayClientMessage(Component.translatable("chessmod.quantum.unmatched_board_notification"), false);
@@ -121,12 +122,10 @@ public class QuantumChessBoardBlock extends GoldChessboardBlock {
                 player.displayClientMessage(Component.translatable(e.getMessage()), false);
             }
 
-            return InteractionResult.PASS;
-        } else if (level.isClientSide && !heldItem.is(Items.ENDER_PEARL)) {
-            super.use(state, level, pos, player, hand, pHit);
+            return ItemInteractionResult.SUCCESS;
         }
 
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     private void linkChessboards(Player player,

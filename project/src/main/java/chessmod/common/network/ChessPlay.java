@@ -17,7 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 
 public class ChessPlay {
@@ -56,14 +56,14 @@ public class ChessPlay {
 	}
 
 	public static class Handler {
-		public static boolean handle(final ChessPlay message, final Supplier<NetworkEvent.Context> ctx) {
+		public static void handle(final ChessPlay message, final CustomPayloadEvent.Context ctx) {
 
-			if (ctx.get().getDirection().getReceptionSide().isServer()) {
-				ctx.get().enqueueWork(new Runnable() {
+			if (ctx.isServerSide()) {
+				ctx.enqueueWork(new Runnable() {
 					// Use anon - lambda causes classloading issues
 					@Override
 					public void run() {
-						Level world = ctx.get().getSender().level();
+						Level world = ctx.getSender().level();
 						BlockPos pos = new BlockPos((int) message.x, (int) message.y, (int) message.z);
 						if(world.isLoaded(pos)) {
 
@@ -91,14 +91,14 @@ public class ChessPlay {
 										board.moveSafely(m);
 
 										if (board.getCheckMate() != null) {
-											Logger.getGlobal().info(ctx.get().getSender().getName().getString() + " has won a chess game with themselves!");
-											Elo.updateElo(ctx.get().getSender(), ctx.get().getSender(), true);
+											Logger.getGlobal().info(ctx.getSender().getName().getString() + " has won a chess game with themselves!");
+											Elo.updateElo(ctx.getSender(), ctx.getSender(), true);
 										}
 										if (chessBlockEntity instanceof QuantumChessBoardBlockEntity qcbe) {
 											if(qcbe.getLinkedBoardEntity() == null) {
-												Logger.getGlobal().info(ctx.get().getSender().getName().getString() + " played on an unlinked board!");
+												Logger.getGlobal().info(ctx.getSender().getName().getString() + " played on an unlinked board!");
 											} else {
-												Logger.getGlobal().info(ctx.get().getSender().getName().getString() + " played on an linked board!");
+												Logger.getGlobal().info(ctx.getSender().getName().getString() + " played on an linked board!");
 												qcbe.getLinkedBoardEntity().getBoard().moveSafely(m);
 											}
 										}
@@ -127,8 +127,7 @@ public class ChessPlay {
 				});
 			}
 
-			ctx.get().setPacketHandled(true);
-			return true;
+			ctx.setPacketHandled(true);
 		}
 	}
 }
