@@ -523,3 +523,42 @@ class RemoteTagDiscoveryTests(unittest.TestCase):
                     rm.remote_tag(tag, "origin")
 if __name__=='__main__':
     unittest.main()
+
+
+class ForgeFeedFormatTests(unittest.TestCase):
+    def setUp(self):
+        self.cfg = {"minecraft":"1.21", "version":"1.21-0.702",
+                    "tag":"mc1.21-forge-v0.702"}
+        self.expected = ("ChessMod 1.21-0.702 — "
+                         "https://github.com/ramou/ChessMod/releases/tag/mc1.21-forge-v0.702")
+
+    def test_nested_changelog_and_promotion(self):
+        old = {"homepage":"https://old.invalid/", "promos":{
+                   "1.20.1-latest":"1.20.1-0.701"},
+               "1.20.1":{"1.20.1-0.701":"previous"}}
+        new = rm.updated_forge_feed(old,self.cfg,"ramou/ChessMod")
+        self.assertEqual(new["1.21"]["1.21-0.702"],self.expected)
+        self.assertEqual(new["promos"]["1.21-latest"],"1.21-0.702")
+        self.assertEqual(new["promos"]["1.21-recommended"],"1.21-0.702")
+        self.assertEqual(new["1.20.1"],old["1.20.1"])
+        self.assertEqual(old["homepage"],"https://old.invalid/")  # pure function
+        self.assertNotIn("1.21-0.702",new)
+        self.assertEqual(rm.updated_forge_feed(new,self.cfg,"ramou/ChessMod"),new)
+
+    def test_migrates_original_top_level_bug(self):
+        previous = {"homepage":"https://github.com/ramou/ChessMod/releases",
+                    "promos":{"1.21-latest":"1.21-0.702",
+                              "1.21-recommended":"1.21-0.702"},
+                    "1.21-0.702":self.expected}
+        new = rm.updated_forge_feed(previous,self.cfg,"ramou/ChessMod")
+        self.assertNotIn("1.21-0.702",new)
+        self.assertEqual(new["1.21"]["1.21-0.702"],self.expected)
+
+    def test_conflict_and_downgrade_fail_closed(self):
+        with self.assertRaisesRegex(rm.ReleaseError,"Conflicting"):
+            rm.updated_forge_feed({"1.21-0.702":"wrong"}, self.cfg,"ramou/ChessMod")
+        with self.assertRaisesRegex(rm.ReleaseError,"Conflicting"):
+            rm.updated_forge_feed({"1.21":{"1.21-0.702":"wrong"}},self.cfg,"ramou/ChessMod")
+        with self.assertRaisesRegex(rm.ReleaseError,"downgrade"):
+            rm.updated_forge_feed({"promos":{"1.21-latest":"1.21-0.703"}},self.cfg,"ramou/ChessMod")
+

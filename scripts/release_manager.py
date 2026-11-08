@@ -765,6 +765,40 @@ def draft_one(cfg, base, repository, remote):
     print(f"DRAFT CREATED: {tag} — review it before publication")
 
 
+def updated_forge_feed(data, cfg, repository):
+    """Return a copy using Forge's required per-Minecraft-version changelog buckets.
+
+    Promo keys contain the MC version while the changelog is nested below it.
+    Remove the legacy top-level full-version entry written by earlier versions of
+    the release manager, but reject unexpected content rather than discard it.
+    """
+    result = json.loads(json.dumps(data))
+    require(isinstance(result, dict), "Forge update feed must be a JSON object")
+    promos = result.setdefault("promos", {})
+    require(isinstance(promos, dict), "Forge update feed promos must be a JSON object")
+    name = cfg["minecraft"]
+    for key in (f"{name}-latest", f"{name}-recommended"):
+        old = promos.get(key)
+        if old and old != cfg["version"]:
+            require(version_num(old) <= version_num(cfg["version"]),
+                    f"Refusing to downgrade {key}: {old} -> {cfg['version']}")
+        promos[key] = cfg["version"]
+    result["homepage"] = f"https://github.com/{repository}/releases"
+    changelog = f"ChessMod {cfg['version']} — https://github.com/{repository}/releases/tag/{cfg['tag']}"
+    bucket = result.setdefault(name, {})
+    require(isinstance(bucket, dict), f"Invalid Forge changelog for Minecraft {name}")
+    previous = bucket.get(cfg["version"])
+    require(previous is None or previous == changelog,
+            f"Conflicting Forge changelog for {cfg['version']}")
+    bucket[cfg["version"]] = changelog
+    # Migrate the 0.702-era writer's erroneous root-level entry, if present.
+    if cfg["version"] in result:
+        require(result[cfg["version"]] == changelog,
+                f"Conflicting legacy Forge changelog for {cfg['version']}")
+        del result[cfg["version"]]
+    return result
+
+
 def release_version_feed(registry, cfg, remote, repository, release_issue):
     """Post-publication bookkeeping on the canonical shared feed branch.
 
@@ -782,19 +816,8 @@ def release_version_feed(registry, cfg, remote, repository, release_issue):
         try:
             path=wt/registry["update_feed_path"]
             require(path.is_file(),f"Canonical update feed missing: {path}")
-            data=json.loads(path.read_text(encoding="utf8"))
-            promos=data.setdefault("promos",{})
-            name=cfg["minecraft"]
-            # Never demote a newer published version or quietly replace different metadata.
-            for key in (f"{name}-latest",f"{name}-recommended"):
-                old=promos.get(key)
-                if old and old != cfg["version"]:
-                    require(version_num(old)<=version_num(cfg["version"]),
-                            f"Refusing to downgrade {key}: {old} -> {cfg['version']}")
-            promos[f"{name}-latest"]=cfg["version"]
-            promos[f"{name}-recommended"]=cfg["version"]
-            data["homepage"]=f"https://github.com/{repository}/releases"
-            data[cfg["version"]]=f"ChessMod {cfg['version']} — https://github.com/{repository}/releases/tag/{cfg['tag']}"
+            data=updated_forge_feed(
+                json.loads(path.read_text(encoding="utf8")),cfg,repository)
             result=json.dumps(data,indent=2,ensure_ascii=False)+"\n"
             if path.read_text(encoding="utf8")==result:
                 print(f"UPDATE FEED ALREADY CURRENT: {cfg['version']}")
