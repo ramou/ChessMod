@@ -84,17 +84,39 @@ class JavaTests(unittest.TestCase):
             fake_jdk(root/'jdk 21',21)
             registry=rm.load_registry(Path(__file__).resolve().parents[1]/'release_targets.json')
             all_targets=rm.select_targets(registry,[])
-            assignments,errors=rm.discover_java(all_targets,[],[str(root)])
-            self.assertFalse(errors)
-            self.assertEqual(len(assignments),8)
-            self.assertEqual(assignments['1.17.1']['launcher'].major,16)
-            self.assertEqual(assignments['1.21']['compiler'].major,21)
-            # Removing a JDK blocks all-target preflight but not a selected target.
-            for filename in (root/'jdk 16'/'bin').iterdir(): filename.unlink()
-            assignments,errors=rm.discover_java(all_targets,[],[str(root)])
-            self.assertTrue(any('1.17.1' in e and '16' in e for e in errors))
-            assignments,errors=rm.discover_java(rm.select_targets(registry,['1.21']),[],[str(root)])
-            self.assertFalse(errors)
+            # Isolate discovery from this machine's real JDKs. In production,
+            # discovery intentionally falls back to system installations.
+            candidates = [root / f'jdk {major}' for major in (8,16,17,21)]
+            with patch.object(rm, 'java_candidates', return_value=candidates):
+                assignments,errors=rm.discover_java(all_targets,[],[str(root)])
+                self.assertFalse(errors)
+                self.assertEqual(len(assignments),8)
+                self.assertEqual(assignments['1.17.1']['launcher'].major,16)
+                self.assertEqual(assignments['1.21']['compiler'].major,21)
+                # Removing the only discoverable JDK 16 blocks all-target
+                # preflight, but not a selected 1.21-only run.
+                for filename in (root/'jdk 16'/'bin').iterdir(): filename.unlink()
+                assignments,errors=rm.discover_java(all_targets,[],[str(root)])
+                self.assertTrue(any('1.17.1' in e and '16' in e for e in errors))
+                assignments,errors=rm.discover_java(rm.select_targets(registry,['1.21']),[],[str(root)])
+                self.assertFalse(errors)
+
+    @unittest.skipIf(sys.platform == 'win32', 'POSIX fake JDK sh scripts')
+    def test_discovery_uses_alternate_java_when_primary_disappears(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)
+            primary=fake_jdk(root/'primary 16',16)
+            alternate=fake_jdk(root/'alternate 16',16)
+            target={'id':'1.17.1','gradle_jvm':16,'compiler_jdk':16}
+            with patch.object(rm, 'java_candidates', return_value=[primary,alternate]):
+                assignments,errors=rm.discover_java([target],[],[str(root)])
+                self.assertFalse(errors)
+                self.assertEqual(assignments['1.17.1']['launcher'].path,primary.resolve())
+                for filename in (primary/'bin').iterdir(): filename.unlink()
+                assignments,errors=rm.discover_java([target],[],[str(root)])
+                self.assertFalse(errors)
+                self.assertEqual(assignments['1.17.1']['launcher'].path,alternate.resolve())
+                self.assertEqual(assignments['1.17.1']['compiler'].path,alternate.resolve())
 
     @unittest.skipIf(sys.platform == 'win32', 'POSIX fake JDK sh scripts')
     def test_override_rejects_mismatch(self):
