@@ -9,6 +9,7 @@ and link the old record to the new one.
 | --- | --- | --- |
 | [0001](0001-unified-modding-api.md) | Unified API across Minecraft versions and loaders | **Proposed** |
 | [0002](0002-history-cleanup.md) | Historical release binaries and history rewrite policy | **Proposed** |
+| [0003](0003-version-neutral-default-branch.md) | Version-neutral default branch for governance and tooling | **Proposed** |
 
 Copy [TEMPLATE.md](TEMPLATE.md) for future decisions. Suggested status values:
 `Proposed`, `Accepted`, `Rejected`, `Superseded`. Include context, alternatives,
