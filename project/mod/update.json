@@ -18,5 +18,7 @@
     "1.21-latest": "1.21-0.702",
     "1.21-recommended": "1.21-0.702"
   },
-  "1.21-0.702": "ChessMod 1.21-0.702 — https://github.com/ramou/ChessMod/releases/tag/mc1.21-forge-v0.702"
+  "1.21": {
+    "1.21-0.702": "ChessMod 1.21-0.702 — https://github.com/ramou/ChessMod/releases/tag/mc1.21-forge-v0.702"
+  }
 }
