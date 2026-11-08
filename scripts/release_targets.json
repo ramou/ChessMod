@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "repository": "ramou/ChessMod",
+  "update_feed_branch": "1.20.1",
+  "update_feed_path": "project/mod/update.json",
+  "targets": [
+    {
+      "id": "1.14.4",
+      "branch": "1.14.4",
+      "minecraft": "1.14.4",
+      "loader": "forge",
+      "gradle": "4.9",
+      "gradle_jvm": 8,
+      "compiler_jdk": 8,
+      "release_eligible": true,
+      "launcher_zip": true
+    },
+    {
+      "id": "1.15.2",
+      "branch": "1.15.2",
+      "minecraft": "1.15.2",
+      "loader": "forge",
+      "gradle": "4.10.3",
+      "gradle_jvm": 8,
+      "compiler_jdk": 8,
+      "release_eligible": true,
+      "launcher_zip": true
+    },
+    {
+      "id": "1.16.5",
+      "branch": "1.16.5",
+      "minecraft": "1.16.5",
+      "loader": "forge",
+      "gradle": "7.3.3",
+      "gradle_jvm": 8,
+      "compiler_jdk": 8,
+      "release_eligible": true,
+      "launcher_zip": true
+    },
+    {
+      "id": "1.17.1",
+      "branch": "1.17.1",
+      "minecraft": "1.17.1",
+      "loader": "forge",
+      "gradle": "7.2",
+      "gradle_jvm": 16,
+      "compiler_jdk": 16,
+      "release_eligible": true,
+      "launcher_zip": true
+    },
+    {
+      "id": "1.18.2",
+      "branch": "1.18.2",
+      "minecraft": "1.18.2",
+      "loader": "forge",
+      "gradle": "7.4",
+      "gradle_jvm": 17,
+      "compiler_jdk": 17,
+      "release_eligible": true,
+      "launcher_zip": true
+    },
+    {
+      "id": "1.19.4",
+      "branch": "1.19.4",
+      "minecraft": "1.19.4",
+      "loader": "forge",
+      "gradle": "7.5.1",
+      "gradle_jvm": 17,
+      "compiler_jdk": 17,
+      "release_eligible": true,
+      "launcher_zip": true
+    },
+    {
+      "id": "1.20.1",
+      "branch": "1.20.1",
+      "minecraft": "1.20.1",
+      "loader": "forge",
+      "gradle": "8.1.1",
+      "gradle_jvm": 17,
+      "compiler_jdk": 17,
+      "release_eligible": true,
+      "launcher_zip": true
+    },
+    {
+      "id": "1.21",
+      "branch": "1.21",
+      "minecraft": "1.21",
+      "loader": "forge",
+      "gradle": "8.9",
+      "gradle_jvm": 21,
+      "compiler_jdk": 21,
+      "release_eligible": true,
+      "launcher_zip": true
+    }
+  ],
+  "defaults": {
+    "project_dir": "project",
+    "mod_metadata": "project/src/main/resources/META-INF/mods.toml",
+    "wrapper_properties": "project/gradle/wrapper/gradle-wrapper.properties",
+    "jar_glob": "project/build/libs/*.jar",
+    "test_task": "test",
+    "build_task": "build",
+    "licence_path": "LICENSE"
+  }
+}

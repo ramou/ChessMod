@@ -6,6 +6,17 @@ changing public download links requires separate maintainer approval. See
 [ADR-0002](decisions/0002-history-cleanup.md) for the distinct question of
 whether old Git history should ever be rewritten.
 
+The permanent branch-aware release manager is specified in
+[RELEASE_TOOL.md](RELEASE_TOOL.md) (issue #205). Release preparation uses an
+explicit requested version such as `--version 0.702`: it validates the
+committed version across every selected Minecraft branch (all eligible
+branches by default), reports already-published identical releases as no-ops,
+and blocks conflicting tags/assets. It never auto-bumps or overwrites a
+published release. It is deliberately separate
+from the human-approved 0.702 release and binary-removal work (issue #209).
+The legacy `gh` commands below are illustrative, not an instruction to
+bypass its Java, test, provenance or release-issue safeguards.
+
 ## Model: branch, commit, tag, release and asset
 
 - A **branch** (for example `1.20.1`) is the ongoing Minecraft-version line.
