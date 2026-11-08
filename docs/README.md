@@ -16,6 +16,8 @@ for GitHub issues or the public [project README](../README.md). Begin with
 | [RELEASE_TOOL.md](RELEASE_TOOL.md) | Branch-aware Java preflight, verified builds, draft/publication safeguards (#205) | Implemented; pending real release validation |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Current structural map; verified facts vs hypotheses | Initial inventory |
 | [TESTING.md](TESTING.md) | Verification responsibilities and build baselines | Initial draft |
+| [ACCEPTANCE_TESTING.md](ACCEPTANCE_TESTING.md) | Manual feature scenarios, evidence rules and GTF mapping (#210) | Initial implementation |
+| [ACCEPTANCE_MATRIX.md](ACCEPTANCE_MATRIX.md) | Canonical cross-version, feature-by-release acceptance matrix (#210) | Unverified baseline |
 | [ROADMAP.md](ROADMAP.md) | Linked process roadmap and architectural investigations | Proposed |
 | [decisions/README.md](decisions/README.md) | Architectural decision record (ADR) index and conventions | Initial draft |
 | [decisions/0001-unified-modding-api.md](decisions/0001-unified-modding-api.md) | Cross-version/loader abstraction: **proposal only** | Proposed |
