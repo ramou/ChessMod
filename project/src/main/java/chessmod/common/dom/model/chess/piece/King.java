@@ -28,7 +28,8 @@ public class King extends Piece {
 		if(!hasMoved() && !b.isUnderThreatBy(getPosition(), getSide().other())) {
 			
 			//Check left castle
-			final Piece leftRook = b.pieceAt(Point.create(getPosition(), -4, 0));
+			final Point leftRookPoint = Point.create(getPosition(), -4, 0);
+			final Piece leftRook = leftRookPoint instanceof Point.InvalidPoint ? null : b.pieceAt(leftRookPoint);
 			if(leftRook != null && !leftRook.hasMoved()) {
 				b.findTargettablePoint(this, MoveType.MOVE_ONLY, -1, 0).forEach(
 						p1 -> b.findTargettablePoint(this, MoveType.MOVE_ONLY, -2, 0).forEach(
@@ -44,7 +45,8 @@ public class King extends Piece {
 			}
 			
 			//Check right castle
-			final Piece rightRook = b.pieceAt(Point.create(getPosition(), 3, 0));
+			final Point rightRookPoint = Point.create(getPosition(), 3, 0);
+			final Piece rightRook = rightRookPoint instanceof Point.InvalidPoint ? null : b.pieceAt(rightRookPoint);
 			if(rightRook != null && !rightRook.hasMoved()) {
 				b.findTargettablePoint(this, MoveType.MOVE_ONLY, 1, 0).forEach(
 						p1 -> b.findTargettablePoint(this, MoveType.MOVE_ONLY, 2, 0).forEach(
@@ -85,7 +87,7 @@ public class King extends Piece {
 	
 	@Override
 	public Move createMove(Board b, Point t) {
-		if(getPosition().toX(-2).x == t.x || getPosition().toX(2).x == t.x) { //Castle
+		if(getPosition().y == t.y && Math.abs(getPosition().x - t.x) == 2) { //Castle
 			return Move.createCastle(this, t);
 		} else { //Regular Move
 			return super.createMove(b, t);
