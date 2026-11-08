@@ -205,9 +205,29 @@ def local_head(branch):
 
 
 def remote_tag(tag, remote):
-    out = git("ls-remote", "--tags", remote, f"refs/tags/{tag}", f"refs/tags/{tag}^{{}}")
-    refs = dict(line.split() for line in out.splitlines() if line.strip())
-    return refs.get(f"refs/tags/{tag}^{{}}") or refs.get(f"refs/tags/{tag}")
+    """Return the commit SHA of a remote tag (annotated or lightweight).
+
+    `git ls-remote` outputs SHA followed by ref name. An annotated tag has
+    both the tag-object ref and a peeled `^{}` commit ref. Never compare its
+    tag-object SHA to the source commit, and never silently accept bad output.
+    """
+    direct = f"refs/tags/{tag}"
+    peeled = f"{direct}^{{}}"
+    out = git("ls-remote", "--tags", remote, direct, peeled)
+    refs = {}
+    for line in out.splitlines():
+        if not line.strip():
+            continue
+        fields = line.split()
+        require(len(fields) == 2, f"Malformed remote tag listing for {tag}: {line!r}")
+        sha, ref = fields  # ls-remote reports SHA first, then ref.
+        require(SHA_RE.fullmatch(sha) and ref in (direct, peeled),
+                f"Unexpected remote tag listing for {tag}: {line!r}")
+        require(ref not in refs, f"Duplicate remote ref for {tag}: {ref}")
+        refs[ref] = sha
+    require(peeled not in refs or direct in refs,
+            f"Remote tag {tag} has a peeled commit but no tag-object ref")
+    return refs.get(peeled) or refs.get(direct)
 
 
 def tag_for(target, version):
@@ -731,7 +751,10 @@ def draft_one(cfg, base, repository, remote):
         require(remote_head(cfg["branch"], remote) == cfg["source_sha"],
                 f"{cfg['id']}: remote branch moved during draft preparation")
         git("push",remote,f"refs/tags/{tag}")
-        require(remote_tag(tag,remote)==cfg["source_sha"],"Tag push succeeded but remote verification failed")
+        observed = remote_tag(tag, remote)
+        require(observed == cfg["source_sha"],
+                f"Tag push succeeded, but remote {tag} resolves to {observed or 'no tag'}; "
+                f"expected {cfg['source_sha']}. Do not delete or force-update the tag.")
     # This command can be safely retried after tag push; never overwrite an existing draft.
     assets=[str(dest/n) for n in sorted(manifest["assets"])]+[str(dest/"PROVENANCE.json"),str(dest/"SHA256SUMS")]
     gh("release","create",tag,*assets,"--repo",repository,"--verify-tag","--draft", "--latest=false",

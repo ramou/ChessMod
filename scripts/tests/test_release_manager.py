@@ -450,5 +450,76 @@ class PublishedReleaseIdentityTests(unittest.TestCase):
             self.assertEqual(rm.classify_remote_release(cfg,"origin","ramou/ChessMod"),"DRAFT")
 
 
+
+
+class RemoteTagDiscoveryTests(unittest.TestCase):
+    """Exercise real git ls-remote output, including annotated peeled refs."""
+
+    @unittest.skipUnless(shutil.which("git"), "Git executable required")
+    def test_annotated_tag_is_discovered_and_retry_classifies_tag_only(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bare = root / "origin.git"
+            work = root / "checkout"
+
+            def run_git(*args, cwd=root):
+                p = subprocess.run(["git", *args], cwd=cwd, capture_output=True,
+                                   text=True, check=True)
+                return p.stdout.strip()
+
+            run_git("init", "--quiet", "--bare", str(bare))
+            run_git("init", "--quiet", str(work))
+            run_git("config", "user.name", "ChessMod Test", cwd=work)
+            run_git("config", "user.email", "chessmod-test@example.invalid", cwd=work)
+            (work / "test.txt").write_text("source commit\n", encoding="utf8")
+            run_git("add", "test.txt", cwd=work)
+            run_git("commit", "--quiet", "-m", "Test source", cwd=work)
+            commit = run_git("rev-parse", "HEAD", cwd=work)
+            run_git("remote", "add", "origin", str(bare), cwd=work)
+            run_git("push", "--quiet", "origin", "HEAD:refs/heads/1.21", cwd=work)
+
+            tag = "mc1.21-forge-v0.702"
+            run_git("tag", "-a", tag, "-m", "Annotated release tag", cwd=work)
+            run_git("push", "--quiet", "origin", f"refs/tags/{tag}", cwd=work)
+            raw = run_git("ls-remote", "--tags", "origin",
+                          f"refs/tags/{tag}", f"refs/tags/{tag}^{{}}", cwd=work)
+            self.assertEqual(len(raw.splitlines()), 2)
+            tag_object = raw.splitlines()[0].split()[0]
+            self.assertNotEqual(tag_object, commit)
+            self.assertIn(f"{commit}\trefs/tags/{tag}^{{}}", raw)
+
+            lightweight = "mc1.21-forge-v0.703"
+            run_git("tag", lightweight, cwd=work)
+            run_git("push", "--quiet", "origin", f"refs/tags/{lightweight}", cwd=work)
+
+            def local_git(*args, **kwargs):
+                return run_git(*args, cwd=work)
+
+            cfg = {"tag": tag, "source_sha": commit}
+            with patch.object(rm, "git", side_effect=local_git):
+                self.assertEqual(rm.remote_tag(tag, "origin"), commit)
+                self.assertEqual(rm.remote_tag(lightweight, "origin"), commit)
+                self.assertIsNone(rm.remote_tag("mc1.21-forge-v0.999", "origin"))
+                with patch.object(rm, "release_view", return_value=None):
+                    self.assertEqual(
+                        rm.classify_remote_release(cfg, "origin", "ramou/ChessMod"),
+                        "TAG_ONLY")
+                with self.assertRaisesRegex(rm.ReleaseError, "Existing tag"):
+                    rm.check_remote_tag({"tag": tag, "source_sha": "0" * 40}, "origin")
+
+    def test_invalid_remote_tag_listing_fails_closed(self):
+        tag = "mc1.21-forge-v0.702"
+        direct = f"refs/tags/{tag}"
+        peeled = f"{direct}^{{}}"
+        for raw in (
+            f"not-a-sha\t{direct}",
+            f"{'a' * 40}\trefs/tags/another-tag",
+            f"{'a' * 40}\t{direct}\n{'b' * 40}\t{direct}",
+            f"{'a' * 40}\t{peeled}",
+            f"{'a' * 40}\t{direct}\textra",
+        ):
+            with self.subTest(raw=raw), patch.object(rm, "git", return_value=raw):
+                with self.assertRaises(rm.ReleaseError):
+                    rm.remote_tag(tag, "origin")
 if __name__=='__main__':
     unittest.main()
