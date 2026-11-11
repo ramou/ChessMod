@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "created": "2026-11-08T02:53:33+00:00",
+  "repository": "ramou/ChessMod",
+  "release_issue": 209,
+  "target": "1.21",
+  "branch": "1.21",
+  "minecraft": "1.21",
+  "loader": "forge",
+  "mod_version": "1.21-0.702",
+  "forge": "51.0.26",
+  "gradle": "8.9",
+  "tag": "mc1.21-forge-v0.702",
+  "source_sha": "fe7303061a56a8ac8620806877f8ff41a9483e28",
+  "tests": {
+    "executed": 28,
+    "failures": 0,
+    "reports": 4
+  },
+  "runtime_smoke_test": "NOT AUTOMATED; MAINTAINER REVIEW REQUIRED",
+  "java": {
+    "launcher": {
+      "home": "/usr/lib/jvm/java-21-openjdk-amd64",
+      "major": 21
+    },
+    "compiler": {
+      "home": "/usr/lib/jvm/java-21-openjdk-amd64",
+      "major": 21
+    }
+  },
+  "assets": {
+    "chessmod-1.21-0.702.jar": {
+      "sha256": "aabab26a5d5bea682c8c8e2099f6457518d46b92d866777f79a7a74615d012c4",
+      "bytes": 348693
+    },
+    "ChessMod-1.21-0.702.zip": {
+      "sha256": "f64517c6ca901f8be07de3f840c2c42671a8a5252590d814262b6b441ee4930c",
+      "bytes": 312320
+    }
+  }
+}

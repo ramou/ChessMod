@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "created": "2026-11-11T16:13:32+00:00",
+  "repository": "ramou/ChessMod",
+  "release_issue": 209,
+  "target": "1.19.4",
+  "branch": "1.19.4",
+  "minecraft": "1.19.4",
+  "loader": "forge",
+  "mod_version": "1.19.4-0.702",
+  "forge": "45.1.0",
+  "gradle": "7.5.1",
+  "tag": "mc1.19.4-forge-v0.702",
+  "source_sha": "4d83309ba8c882dc29909143365250acb4f436a8",
+  "tests": {
+    "executed": 30,
+    "failures": 0,
+    "reports": 5
+  },
+  "runtime_smoke_test": "NOT AUTOMATED; MAINTAINER REVIEW REQUIRED",
+  "java": {
+    "launcher": {
+      "home": "/usr/lib/jvm/java-17-openjdk-amd64",
+      "major": 17
+    },
+    "compiler": {
+      "home": "/usr/lib/jvm/java-17-openjdk-amd64",
+      "major": 17
+    }
+  },
+  "assets": {
+    "ChessMod-1.19.4-0.702.jar": {
+      "sha256": "ff9e507accf29feb62ac4194a699f80c1ce8f4b1d4f6faaddaced4013d42624f",
+      "bytes": 395335
+    },
+    "ChessMod-1.19.4-0.702.zip": {
+      "sha256": "174c300c82a8cfaebfd9583e7ef83fb70204d9648985da6e4af409c52ffd3b37",
+      "bytes": 352277
+    }
+  }
+}

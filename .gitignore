@@ -1,0 +1,6 @@
+
+
+# Workstation-local JDK settings and fetched canonical Java tooling.
+/.conf/*
+!/.conf/app.conf.example
+/scripts/transient/
