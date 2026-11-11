@@ -155,6 +155,54 @@ class IssueExportTests(unittest.TestCase):
             with self.assertRaisesRegex(exporter.ExportError, "overwrite"):
                 exporter.export_to_zip(args, FakeClient())
 
+    def test_gh_cli_transport_and_pagination(self):
+        with patch.object(exporter.shutil, "which", return_value="/usr/bin/gh"), \
+             patch.object(exporter.subprocess, "run") as run:
+            # A full first page demands a second page, without --slurp.
+            first_page = [{"number": n} for n in range(100)]
+            run.side_effect = [
+                subprocess.CompletedProcess([], 0, json.dumps(first_page), ''),
+                subprocess.CompletedProcess([], 0, '[{"number": 100}]', ''),
+                subprocess.CompletedProcess([], 0, '{"number": 13}', ''),
+            ]
+            client = exporter.GhClient()
+            result = client.list("/repos/ramou/ChessMod/issues", {"state": "all"})
+            self.assertEqual(len(result), 101)
+            self.assertEqual(result[-1]["number"], 100)
+            first_command = run.call_args_list[0].args[0]
+            second_command = run.call_args_list[1].args[0]
+            self.assertNotIn("--slurp", first_command)
+            self.assertNotIn("--paginate", first_command)
+            self.assertIn("--method", first_command)
+            self.assertIn("/repos/ramou/ChessMod/issues?state=all&per_page=100&page=1", first_command)
+            self.assertIn("/repos/ramou/ChessMod/issues?state=all&per_page=100&page=2", second_command)
+            self.assertEqual(client.get("/repos/ramou/ChessMod/issues/13")["number"], 13)
+            self.assertNotIn("page=", run.call_args.args[0][-1])
+
+    def test_gh_list_limit_stops_pagination(self):
+        with patch.object(exporter.shutil, "which", return_value="/usr/bin/gh"), \
+             patch.object(exporter.subprocess, "run") as run:
+            run.return_value = subprocess.CompletedProcess([], 0,
+                json.dumps([{"number": n} for n in range(100)]), '')
+            self.assertEqual(len(exporter.GhClient().list("/repos/ramou/ChessMod/issues", limit=4)), 4)
+            self.assertEqual(run.call_count, 1)
+
+    def test_gh_errors_and_default_selection(self):
+        self.assertEqual(exporter.make_parser().parse_args([]).transport, "gh")
+        with patch.object(exporter.shutil, "which", return_value=None):
+            with self.assertRaisesRegex(exporter.ExportError, "not found"):
+                exporter.GhClient()
+        with patch.object(exporter.shutil, "which", return_value="/usr/bin/gh"), \
+             patch.object(exporter.subprocess, "run", return_value=subprocess.CompletedProcess(
+                 [], 1, '', 'HTTP 403: API rate limit exceeded')):
+            with self.assertRaisesRegex(exporter.ExportError, "rate limit"):
+                exporter.GhClient().list("/repos/ramou/ChessMod/issues")
+        with patch.object(exporter.shutil, "which", return_value="/usr/bin/gh"), \
+             patch.object(exporter.subprocess, "run", return_value=subprocess.CompletedProcess(
+                 [], 0, '{"not": "pages"}', '')):
+            with self.assertRaisesRegex(exporter.ExportError, "array of objects"):
+                exporter.GhClient().list("/repos/ramou/ChessMod/issues")
+
     def test_github_pagination(self):
         client = exporter.GitHubClient()
         calls = []

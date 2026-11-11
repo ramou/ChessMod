@@ -9,6 +9,8 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
+import subprocess
 import sys
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode, urlsplit
@@ -108,6 +110,61 @@ class GitHubClient:
             if limit is not None and len(items) >= limit:
                 return items[:limit]
         return items
+
+
+
+class GhClient:
+    """Read GitHub REST endpoints with the locally authenticated gh CLI."""
+
+    def __init__(self, timeout: int = 120):
+        self.timeout = timeout
+        if not shutil.which("gh"):
+            raise ExportError("GitHub CLI (gh) not found on PATH; install/authenticate gh or use --transport rest")
+
+    def _request(self, path: str, params: dict | None = None) -> object:
+        # Use query parameters in the URL, not -f/-F: those switches cause gh
+        # api to choose POST rather than GET unless --method GET is specified.
+        endpoint = path + ("?" + urlencode(params) if params else "")
+        command = ["gh", "api", "--method", "GET", "--header",
+                   f"X-GitHub-Api-Version: {API_VERSION}"]
+        command.append(endpoint)
+        try:
+            response = subprocess.run(command, capture_output=True, text=True,
+                                      timeout=self.timeout, check=False)
+        except FileNotFoundError as exc:
+            raise ExportError("GitHub CLI (gh) not found on PATH") from exc
+        except subprocess.TimeoutExpired as exc:
+            raise ExportError(f"GitHub CLI request timed out after {self.timeout}s") from exc
+        if response.returncode:
+            detail = response.stderr.strip() or "unknown error"
+            raise ExportError(f"gh api failed ({response.returncode}): {detail}. "
+                              "Check 'gh auth status', access permissions and API rate limits.")
+        try:
+            return json.loads(response.stdout)
+        except ValueError as exc:
+            raise ExportError("gh api returned invalid JSON") from exc
+
+    def get(self, path: str, params: dict | None = None) -> object:
+        return self._request(path, params)
+
+    def list(self, path: str, params: dict | None = None, limit: int | None = None) -> list[dict]:
+        # Explicit page requests work with older gh versions that lack --slurp.
+        # They also let us stop promptly when a caller specifies a limit.
+        if limit is not None and limit <= 0:
+            return []
+        query = {**(params or {}), "per_page": 100}
+        page_number = 1
+        items: list[dict] = []
+        while True:
+            page = self._request(path, {**query, "page": page_number})
+            if not isinstance(page, list) or any(not isinstance(item, dict) for item in page):
+                raise ExportError("Expected an array of objects from gh api list endpoint")
+            items.extend(page)
+            if limit is not None and len(items) >= limit:
+                return items[:limit]
+            if len(page) < 100:
+                return items
+            page_number += 1
 
 
 def compact_issue(issue: dict, comments: list[dict]) -> dict:
@@ -314,7 +371,8 @@ def collect(client: GitHubClient, args: argparse.Namespace) -> list[dict]:
 
 
 def export_to_zip(args: argparse.Namespace, client: GitHubClient | None = None) -> Path:
-    client = client or GitHubClient(os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN"))
+    client = client or (GhClient() if args.transport == "gh" else
+                        GitHubClient(os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")))
     issues = collect(client, args)
     catalogue = None if args.no_catalogue else collect_catalogue(client, args.repo)
     label_segment = "-" + "-".join(slug(label, 20) for label in args.label) if args.label else ""
@@ -378,7 +436,9 @@ def make_parser() -> argparse.ArgumentParser:
   python scripts/export_issues.py --number 13  # still includes ALL available labels/milestones
   python scripts/export_issues.py --no-catalogue  # smaller snapshot
 
-Uses GH_TOKEN or GITHUB_TOKEN when present; public repositories need no token.
+Uses locally authenticated gh CLI by default (run gh auth login first).
+Use --transport rest for direct REST API access with GH_TOKEN/GITHUB_TOKEN,
+or anonymously for public repositories (subject to lower rate limits).
 Snapshots are read-only and do not record the full issue-state change history.
 A repository-wide label/milestone catalogue is included by default, independently
 of issue filters; --no-catalogue omits it. Projects and organisation issue types
@@ -386,6 +446,8 @@ are not captured. Verify choices live before running a proposed gh write script.
 Defaults to all open and closed issues, including all their comments, but not PRs.
 """,
     )
+    parser.add_argument("--transport", choices=("gh", "rest"), default="gh",
+                        help="GitHub API transport (default: authenticated gh CLI; rest: direct urllib)")
     parser.add_argument("--repo", default=DEFAULT_REPO, metavar="OWNER/REPO", help=f"GitHub repository (default: {DEFAULT_REPO})")
     parser.add_argument("--state", choices=("all", "open", "closed"), default="all", help="Issue state to include (default: all)")
     parser.add_argument("--label", action="append", default=[], metavar="NAME", help="Require this label; repeat for AND filtering")
