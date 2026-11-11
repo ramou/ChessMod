@@ -10,9 +10,18 @@ _chessmod_env() {
   local requested="${1:-}"
   script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)" || return 1
   root="$(cd -- "$script_dir/../.." && pwd -P)" || return 1
-  config="$root/.conf/app.conf"
-  if [[ ! -r "$config" ]]; then
-    printf 'ChessMod: configure local JDK paths: cp %q %q (then edit).\n' "$root/.conf/app.conf.example" "$config" >&2
+  local source_config="$root/.conf/app.conf" temp_config
+  config="$script_dir/app.conf"
+  if [[ ! -r "$source_config" ]]; then
+    printf 'ChessMod: configure local JDK paths: cp %q %q (then edit).\n' "$root/.conf/app.conf.example" "$source_config" >&2
+    return 1
+  fi
+  # Keep the implementation and its machine-local configuration together.
+  # mktemp creates a private file; rename only after the copy succeeds.
+  temp_config="$(mktemp "$script_dir/.app.conf.XXXXXXXX")" || return 1
+  if ! cp -- "$source_config" "$temp_config" || ! mv -f -- "$temp_config" "$config"; then
+    rm -f -- "$temp_config"
+    echo 'ChessMod: could not refresh transient app.conf.' >&2
     return 1
   fi
   if ! command -v python3 >/dev/null 2>&1; then

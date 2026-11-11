@@ -44,6 +44,11 @@ class EnvHelperTest(unittest.TestCase):
             self.assertIn('LAST:'+tmp+'/jdk21',result.stdout)
             self.assertIn('unknown target branch',result.stderr)
             self.assertNotIn('transient',result.stdout)
+            transient_config = repo / 'scripts/transient/app.conf'
+            self.assertEqual(transient_config.read_text(), ''.join(config))
+            self.assertEqual(transient_config.stat().st_mode & 0o077, 0,
+                             'transient config should not be group/world readable')
+            self.assertEqual(run('git', 'status', '--porcelain').stdout.strip(), '')
 
 if __name__ == '__main__':
     unittest.main()

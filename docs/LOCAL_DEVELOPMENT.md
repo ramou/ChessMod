@@ -6,6 +6,8 @@ The **single** implementation (`scripts/env_core.sh`) and Java registry
 
 On every invocation, `scripts/env.sh` reads those files from the **committed local**
 `1.20.1` Git branch into ignored `scripts/transient/` and sources the implementation.
+The implementation refreshes `scripts/transient/app.conf` from this checkout's
+ignored `.conf/app.conf` and reads JDK paths from the transient copy.
 No network, additional worktree or Git working-tree changes to tracked files are
 required. The local `1.20.1` branch must exist and must contain the committed
 implementation: `git fetch` alone may only update `origin/1.20.1`, not your
