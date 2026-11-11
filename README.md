@@ -5,9 +5,9 @@ Adding Pippin Barr's Chesses to minecraft.
 If you'd like to support ChessMod and my various projects, check out my [Patreon page](https://www.patreon.com/ramoucurious). Your support gives you early access to new features, exclusive behind-the-scenes content, and a direct role in shaping future updates. Special Discord roles for members are coming soon (along with a Discord server, because who doesn't need more of those?)!
 
 ## Playing it
-You can grab the current version of the mod in the [mod folder](/ramou/ChessMod/raw/1.19.4/modpack/ChessMod-1.19.4-0.616.zip).
+Download ChessMod for your Minecraft version from [GitHub Releases](https://github.com/ramou/ChessMod/releases).
 
-You cab grab the current version as an instance that can be imported with something like MultiMC in the [modpack folder](modpack)
+Releases provide a Forge mod JAR and, where available, an importable PrismLauncher/MultiMC instance ZIP. For Minecraft 1.19.4, use a release explicitly labelled for 1.19.4; the 1.19.4 port targets Forge 45.x and Java 17.
 
 ## Roadmap
 So many things to take us to a solid 1.0. Lots of cool features suggested by the TAG game-design crew and the main goals I started this mod with. I'll try to map it up, but I'm open to being flexible.
