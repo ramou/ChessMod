@@ -64,6 +64,10 @@ On older versions without usable GTF support, perform steps manually. Do not alt
 - Feature: [FRCA](FRCA.md). Candidate step IDs: `FRCA-04`.
 - Verified GTF implementations: **none yet** (1.21, 1.20.1, 1.19.4–1.18.2, 1.17.1–1.14.4).
 
+### ZHCN
+- Feature: [ZHCN](ZHCN.md). Candidate step IDs: `ZHCN-05`.
+- Verified GTF implementations: **none yet** (1.21, 1.20.1, 1.19.4–1.18.2, 1.17.1–1.14.4). Static JSON/resource checks are not GTF acceptance evidence.
+
 ### ELO
 - Feature: [ELO](ELO.md). Candidate step IDs: `ELO-04`.
 - Verified GTF implementations: **none yet** (1.21, 1.20.1, 1.19.4–1.18.2, 1.17.1–1.14.4).

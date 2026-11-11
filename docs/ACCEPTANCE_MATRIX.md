@@ -4,81 +4,100 @@ This is the **single canonical matrix** for supported Forge Minecraft lines, mai
 
 ## Reading the matrix
 
-- **Rows** are branch tips, newest Minecraft first. Left row header shows `Minecraft version · declared ChessMod version`; the shortened SHA records the Git snapshot used for this initial *source* inventory, **not** an acceptance test. These values must be refreshed from a new bundle before entering test outcomes.
-- **Columns** are features. Click their ID header for the canonical acceptance instructions. Feature groups are ordered by introductory **ChessMod release series**, newest first. The 0.6/0.7 grouping is a **provisional planning classification**, particularly for long-lived features such as French-Canadian localisation, Elo and the wrench; verify historical introductions before treating any threshold as a firm claim.
-- `UNTESTED` means no auditable end-to-end acceptance run is recorded, even if a user informally saw something working or unit tests passed.
-- `BELOW-0.700` / `BELOW-0.702` means **version lag**, not an impossible feature and not a failed test. It calls for forward-porting or backporting the feature into that older branch, then testing it.
-- `GAP-SOURCE` means a static source inventory shows the required implementation absent **despite the nominal release family**. It is *not* the result of an executed gameplay test. Do not infer a gap merely because a particular Java class is missing: `1.16.5` registers the wrench as a regular item and handles its behaviour inside `ChessboardBlock`.
-- Record completed outcomes as linked evidence, e.g. `[2026-11-08-PASS-ramou](acceptance/runs/2026-11-08-RULES-1.21-ramou.md)`, `[2026-11-08-FAIL-ramou](...)`, `[2026-11-08-PARTIAL-GTF](...)` or `[2026-11-08-BLOCKED-ramou](...)`. `PASS-GTF` is legitimate only if GTF covers **all mandatory steps** of the feature. Never use `N/A` merely because the Minecraft version is old.
-- A feature with a supported-version promise that fails acceptance is `FAIL`, with a linked bug; missing implementations are a *different* backlog/gap. Record no `PASS` without complete mandatory step coverage.
-- When the branch tip advances and previous acceptance was for a different SHA/version, **retain the tested baseline as an additional labelled row**, and reset the new tip's cells to `UNTESTED` or `PARTIAL` until covered. Don't rewrite a historical result to pretend it tested newer code. See [recording protocol](ACCEPTANCE_TESTING.md).
+- **Rows** identify a **specific published ChessMod release**, newest Minecraft first; click the release/version label to open its GitHub release or legacy CurseForge file. A row stays valid when the corresponding source branch gains later commits. The table never needs a Git SHA refresh merely because someone committed to a branch.
+- **Columns** are features; click each ID header for canonical acceptance instructions. Feature groups are ordered by introductory **ChessMod release series**, newest first. The 0.6/0.7 grouping is provisional, particularly for long-lived features such as French-Canadian localisation, Elo and the wrench.
+- `UNTESTED` means no auditable end-to-end acceptance run is recorded for that release, even if an informal smoke test or JUnit run succeeded.
+- `BELOW-0.700` / `BELOW-0.701` / `BELOW-0.702` means **release-version lag**, not an impossible feature or test failure. That feature is still a porting target.
+- `GAP-SOURCE` means the most recent audited source or release inventory found an expected implementation absent; it is **not an executed gameplay failure**. The linked release is the intended acceptance target. Recheck static findings if that release and the audited source differ. For example, `1.16.5` implements the wrench inside `ChessboardBlock`, not a dedicated wrench class.
+- Record full outcomes by linking the cell to an **evidence run file**: e.g. `2026-11-08-PASS-ramou`, `2026-11-08-FAIL-ramou`, `2026-11-08-PARTIAL-GTF`. `PASS-GTF` requires coverage of all mandatory steps. Never use `N/A` merely because a Minecraft version is old.
+- An observed failure is `FAIL` with a bug link. A missing implementation is a backlog gap, not a test result. Don't infer success from a published release.
+- **Update a row only when a new release is published or new evidence is recorded.** When a newer release supersedes one with useful acceptance evidence, retain the older release as an additional labelled row. Never copy its PASS into the new release without testing. Unreleased development builds may be tracked in a clearly separate provisional row, labelled `UNRELEASED`, and should not link to a future/nonexistent release.
 
-**Bundle inventory:** 2026-11-08 (`ChessMod-context-multi-15`, exported at 13:19Z). This version snapshot does not prove GitHub is currently at these SHAs. Minecraft **1.21.1** has been tried as a compatibility runtime for the 1.21 binary, but isn't a dedicated branch; record its runtime version in a run rather than inventing a branch row.
+**Release inventory:** recorded 2026-11-11 from the supplied Git bundle, shared update feed and release history. The links identify the intended **published binaries**, not mutable branch heads. The three `0.702` rows use the release-manager GitHub tag naming convention; the older `0.616` distributions are on CurseForge. For legacy versions where a direct file link was not verified, the link leads to the version-filtered CurseForge files listing instead. Replace those with exact release-file links when handy, but **do not change a row for routine code commits**. Minecraft 1.21.1 runtime compatibility belongs to #212, not an extra branch row here.
+
+### 1.19.4 evidence boundary
+
+The earlier quantum-board backport was smoke-tested by the maintainer before the `0.702` release-preparation commit. The reported basics included a cross-dimensional quantum-board interaction; see the [retrospective, limited smoke-test record](acceptance/runs/2026-11-11-QUANTUM-SMOKE-1.19.4-ramou.md). That report describes an **unreleased pre-bump build**, not a step-complete acceptance run on the published `1.19.4-0.702` artefact. Accordingly **no cell for the published release is promoted to PARTIAL or PASS solely from that report**. A documented run against the released JAR can populate the appropriate cells.
+
+**Localisation inventory:** Simplified Chinese was introduced on `1.20.1` while the declared mod version was `0.701` (commit `da8c6ef`), and `zh_cn.json` is present on the 1.20.1 and 1.19.4 tips. The 1.21 tip lacks this resource: `GAP-SOURCE` is a static inventory finding, **not** a failed in-game test. This is a feature parity defect to address separately from release/loader compatibility (#212).
 
 ## 0.7 series — linked boards
 
 | Minecraft branch · ChessMod version | [QBOARD](acceptance/QBOARD.md) | [QLINK](acceptance/QLINK.md) | [QSYNC](acceptance/QSYNC.md) | [QLIFE](acceptance/QLIFE.md) |
 |:--|:--:|:--:|:--:|:--:|
-| **1.21 · 1.21-0.702** (`fe7303061a56`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.20.1 · 1.20.1-0.702** (`778c8d506117`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.19.4 · 1.19.4-0.616** (`a9b4e40464c3`) | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
-| **1.18.2 · 1.18.2-0.616** (`89ee3aa13433`) | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
-| **1.17.1 · 1.17.1-0.616** (`7d322671e54f`) | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
-| **1.16.5 · 1.16.5-0.616** (`9ba9d266fb84`) | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
-| **1.15.2 · 1.15.2-0.616** (`1737d188dd06`) | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
-| **1.14.4 · 1.14.4-0.616** (`04a61d8841e0`) | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
+| **[1.21 · 1.21-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.21-forge-v0.702)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.20.1 · 1.20.1-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.20.1-forge-v0.702)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.19.4 · 1.19.4-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.19.4-forge-v0.702)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.18.2 · 1.18.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/3821844)** | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
+| **[1.17.1 · 1.17.1-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.17.1)** | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
+| **[1.16.5 · 1.16.5-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.16.5)** | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
+| **[1.15.2 · 1.15.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.15.2)** | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
+| **[1.14.4 · 1.14.4-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/4658508)** | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` | `BELOW-0.700` |
 
 ## 0.7 series — delivery and notifications
 
 | Minecraft branch · ChessMod version | [UPDATE](acceptance/UPDATE.md) | [IMPORT](acceptance/IMPORT.md) |
 |:--|:--:|:--:|
-| **1.21 · 1.21-0.702** (`fe7303061a56`) | `UNTESTED` | `UNTESTED` |
-| **1.20.1 · 1.20.1-0.702** (`778c8d506117`) | `UNTESTED` | `UNTESTED` |
-| **1.19.4 · 1.19.4-0.616** (`a9b4e40464c3`) | `BELOW-0.702` | `BELOW-0.702` |
-| **1.18.2 · 1.18.2-0.616** (`89ee3aa13433`) | `BELOW-0.702` | `BELOW-0.702` |
-| **1.17.1 · 1.17.1-0.616** (`7d322671e54f`) | `BELOW-0.702` | `BELOW-0.702` |
-| **1.16.5 · 1.16.5-0.616** (`9ba9d266fb84`) | `BELOW-0.702` | `BELOW-0.702` |
-| **1.15.2 · 1.15.2-0.616** (`1737d188dd06`) | `BELOW-0.702` | `BELOW-0.702` |
-| **1.14.4 · 1.14.4-0.616** (`04a61d8841e0`) | `BELOW-0.702` | `BELOW-0.702` |
+| **[1.21 · 1.21-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.21-forge-v0.702)** | `UNTESTED` | `UNTESTED` |
+| **[1.20.1 · 1.20.1-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.20.1-forge-v0.702)** | `UNTESTED` | `UNTESTED` |
+| **[1.19.4 · 1.19.4-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.19.4-forge-v0.702)** | `UNTESTED` | `UNTESTED` |
+| **[1.18.2 · 1.18.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/3821844)** | `BELOW-0.702` | `BELOW-0.702` |
+| **[1.17.1 · 1.17.1-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.17.1)** | `BELOW-0.702` | `BELOW-0.702` |
+| **[1.16.5 · 1.16.5-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.16.5)** | `BELOW-0.702` | `BELOW-0.702` |
+| **[1.15.2 · 1.15.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.15.2)** | `BELOW-0.702` | `BELOW-0.702` |
+| **[1.14.4 · 1.14.4-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/4658508)** | `BELOW-0.702` | `BELOW-0.702` |
+
+## 0.7 series — additional localisation
+
+| Minecraft branch · ChessMod version | [ZHCN](acceptance/ZHCN.md) |
+|:--|:--:|
+| **[1.21 · 1.21-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.21-forge-v0.702)** | `GAP-SOURCE` |
+| **[1.20.1 · 1.20.1-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.20.1-forge-v0.702)** | `UNTESTED` |
+| **[1.19.4 · 1.19.4-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.19.4-forge-v0.702)** | `UNTESTED` |
+| **[1.18.2 · 1.18.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/3821844)** | `BELOW-0.701` |
+| **[1.17.1 · 1.17.1-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.17.1)** | `BELOW-0.701` |
+| **[1.16.5 · 1.16.5-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.16.5)** | `BELOW-0.701` |
+| **[1.15.2 · 1.15.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.15.2)** | `BELOW-0.701` |
+| **[1.14.4 · 1.14.4-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/4658508)** | `BELOW-0.701` |
 
 ## 0.6 series — boards and controls
 
 | Minecraft branch · ChessMod version | [WOOD](acceptance/WOOD.md) | [RULES](acceptance/RULES.md) | [STUBS](acceptance/STUBS.md) | [WRENCH](acceptance/WRENCH.md) |
 |:--|:--:|:--:|:--:|:--:|
-| **1.21 · 1.21-0.702** (`fe7303061a56`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.20.1 · 1.20.1-0.702** (`778c8d506117`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.19.4 · 1.19.4-0.616** (`a9b4e40464c3`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.18.2 · 1.18.2-0.616** (`89ee3aa13433`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.17.1 · 1.17.1-0.616** (`7d322671e54f`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.16.5 · 1.16.5-0.616** (`9ba9d266fb84`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.15.2 · 1.15.2-0.616** (`1737d188dd06`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.14.4 · 1.14.4-0.616** (`04a61d8841e0`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.21 · 1.21-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.21-forge-v0.702)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.20.1 · 1.20.1-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.20.1-forge-v0.702)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.19.4 · 1.19.4-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.19.4-forge-v0.702)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.18.2 · 1.18.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/3821844)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.17.1 · 1.17.1-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.17.1)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.16.5 · 1.16.5-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.16.5)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.15.2 · 1.15.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.15.2)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.14.4 · 1.14.4-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/4658508)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
 
 ## 0.6 series — experience and persistence
 
 | Minecraft branch · ChessMod version | [GUI](acceptance/GUI.md) | [AUDIO](acceptance/AUDIO.md) | [SAVE](acceptance/SAVE.md) | [MULTI](acceptance/MULTI.md) |
 |:--|:--:|:--:|:--:|:--:|
-| **1.21 · 1.21-0.702** (`fe7303061a56`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.20.1 · 1.20.1-0.702** (`778c8d506117`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.19.4 · 1.19.4-0.616** (`a9b4e40464c3`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.18.2 · 1.18.2-0.616** (`89ee3aa13433`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.17.1 · 1.17.1-0.616** (`7d322671e54f`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.16.5 · 1.16.5-0.616** (`9ba9d266fb84`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.15.2 · 1.15.2-0.616** (`1737d188dd06`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
-| **1.14.4 · 1.14.4-0.616** (`04a61d8841e0`) | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.21 · 1.21-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.21-forge-v0.702)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.20.1 · 1.20.1-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.20.1-forge-v0.702)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.19.4 · 1.19.4-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.19.4-forge-v0.702)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.18.2 · 1.18.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/3821844)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.17.1 · 1.17.1-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.17.1)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.16.5 · 1.16.5-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.16.5)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.15.2 · 1.15.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.15.2)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
+| **[1.14.4 · 1.14.4-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/4658508)** | `UNTESTED` | `UNTESTED` | `UNTESTED` | `UNTESTED` |
 
 ## 0.6 series — localisation and progression
 
 | Minecraft branch · ChessMod version | [FRCA](acceptance/FRCA.md) | [ELO](acceptance/ELO.md) |
 |:--|:--:|:--:|
-| **1.21 · 1.21-0.702** (`fe7303061a56`) | `UNTESTED` | `UNTESTED` |
-| **1.20.1 · 1.20.1-0.702** (`778c8d506117`) | `UNTESTED` | `UNTESTED` |
-| **1.19.4 · 1.19.4-0.616** (`a9b4e40464c3`) | `UNTESTED` | `UNTESTED` |
-| **1.18.2 · 1.18.2-0.616** (`89ee3aa13433`) | `UNTESTED` | `UNTESTED` |
-| **1.17.1 · 1.17.1-0.616** (`7d322671e54f`) | `UNTESTED` | `UNTESTED` |
-| **1.16.5 · 1.16.5-0.616** (`9ba9d266fb84`) | `UNTESTED` | `UNTESTED` |
-| **1.15.2 · 1.15.2-0.616** (`1737d188dd06`) | `UNTESTED` | `UNTESTED` |
-| **1.14.4 · 1.14.4-0.616** (`04a61d8841e0`) | `UNTESTED` | `UNTESTED` |
+| **[1.21 · 1.21-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.21-forge-v0.702)** | `UNTESTED` | `UNTESTED` |
+| **[1.20.1 · 1.20.1-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.20.1-forge-v0.702)** | `UNTESTED` | `UNTESTED` |
+| **[1.19.4 · 1.19.4-0.702](https://github.com/ramou/ChessMod/releases/tag/mc1.19.4-forge-v0.702)** | `UNTESTED` | `UNTESTED` |
+| **[1.18.2 · 1.18.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/3821844)** | `UNTESTED` | `UNTESTED` |
+| **[1.17.1 · 1.17.1-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.17.1)** | `UNTESTED` | `UNTESTED` |
+| **[1.16.5 · 1.16.5-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.16.5)** | `UNTESTED` | `UNTESTED` |
+| **[1.15.2 · 1.15.2-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/all?version=1.15.2)** | `UNTESTED` | `UNTESTED` |
+| **[1.14.4 · 1.14.4-0.616](https://www.curseforge.com/minecraft/mc-mods/chessmod/files/4658508)** | `UNTESTED` | `UNTESTED` |
 
 ## Feature index and tracking
 
@@ -98,6 +117,7 @@ This is the **single canonical matrix** for supported Forge Minecraft lines, mai
 | [AUDIO](acceptance/AUDIO.md) | Piece moves, captures, sound and subtitles | 0.6 / threshold 0.600 | #187 |
 | [SAVE](acceptance/SAVE.md) | Single-board persistence and chunk lifecycle | 0.6 / threshold 0.600 | #92 |
 | [MULTI](acceptance/MULTI.md) | Two-player and dedicated-server behaviour | 0.6 / threshold 0.600 | #202, #207 |
+| [ZHCN](acceptance/ZHCN.md) | Simplified Chinese localisation | 0.7 / observed in 0.701 | #210 |
 | [FRCA](acceptance/FRCA.md) | French-Canadian localisation | 0.6 / threshold 0.600 | #161, #180 |
 | [ELO](acceptance/ELO.md) | Elo ratings and persistence | 0.6 / threshold 0.600 | #82, #83 |
 

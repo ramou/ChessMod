@@ -10,20 +10,20 @@ The matrix answers **which player-facing features work in which supported Minecr
 
 Maintain **one** version-by-feature matrix on the default branch (currently `1.20.1`). Branches contain version-dependent Minecraft/Forge code and may contain individual GTF implementations, but must not each maintain an independent copy of this matrix. If the repository later adds a metadata-only default branch, move the canonical documents through an explicit design issue/ADR; that is **not part of #210**.
 
-The matrix has Minecraft/version rows (newest first) and linked feature columns, grouped by proposed ChessMod introduction family, with an index of features at the bottom. Record source SHA, mod version and game runtime in each run. Add an extra **known-working baseline** row when a branch has advanced beyond its last fully-tested build: keep the old result attached to its original SHA and do not transfer it to the new tip by assumption.
+The matrix has **published-release rows** (newest Minecraft first) linking to immutable GitHub releases or historic CurseForge files, and linked feature columns grouped by proposed ChessMod introduction family. The release is the matrix's unit of identity; **ordinary branch commits do not require matrix maintenance**. Record the Minecraft runtime, mod version and release URL in each run. Build SHA and checksum are useful optional details for investigations and unreleased builds, not routine fields you must chase for published releases. Keep an old release row if it has useful passing evidence when a new version ships; do not transfer PASS to the new release without testing.
 
 ## Manual procedure
 
-1. Choose the branch/head or a previously tested published release. Verify MC runtime, ChessMod version, loader/Forge version, SHA and package checksum. Use a fresh test world or a **copy** of the save for destructive steps.
+1. Choose a published release from the matrix, confirm the Minecraft runtime, loader/Forge version and packaged ChessMod version, and link its release page. Only record a source SHA or asset checksum when it is readily available or necessary to investigate a defect. If testing an unreleased development build, label it explicitly and capture its source revision or unique artefact identifier. Use a fresh test world or a **copy** of the save for destructive steps.
 2. Open the linked `docs/acceptance/<FEATURE>.md`; follow its steps *in order*. The document is canonical; record any branch-specific actions or constraints in the run. Perform every step not covered by an actually verified GTF test manually.
 3. Store a run under `docs/acceptance/runs/` using the provided template. Record date, tester, run mode, per-step observations, exact input, logs/screenshots when useful and bugs/blocked conditions. Include test discovery/count and failing-gate evidence for GTF runs.
 4. Only after reviewing evidence, update the matching cell with `YYYY-MM-DD-PASS-<tester>`, `FAIL`, `BLOCKED` or `PARTIAL`, linking to the committed run. For a mixed run, use a human tester if human validation completes the final checks; GTF-only `PASS` requires complete feature coverage.
 5. If a test fails, open/link an appropriate issue and record the observed defect. If feature code is absent, record the development gap separately. Neither outcome should silently block the entire matrix from tracking other features.
-6. When a branch tip moves, leave the old run untouched and mark the **new** version row untested; add a baseline row with old version/SHA where useful. No inferred passing statuses.
+6. **Do nothing when a branch tip moves.** On a **new release**, add a new release-linked row with `UNTESTED` cells (or known source gaps) and retain older rows only when their evidence is useful. Never carry forward PASS by assumption. Do not create release-labelled rows for unpublished code.
 
 ## GTF is a mechanism, not the acceptance authority
 
-The **feature file** defines the expected behaviour and is the canonical test specification. A GTF class may implement its server-observable steps differently in each Minecraft/Forge version. Add a mapping to branch-specific GTF implementation path at a pinned SHA, registered test name, the fixture and the exact step IDs covered; see [GTF map](acceptance/GTF_MAP.md). A successful Java unit test or merely having `gameTestServer` configured is **not** GTF evidence.
+The **feature file** defines the expected behaviour and is the canonical test specification. A GTF class may implement its server-observable steps differently in each Minecraft/Forge version. Add a mapping to the release tag or pinned branch-specific GTF implementation when available, registered test name, fixture and exact step IDs covered; see [GTF map](acceptance/GTF_MAP.md). A successful Java unit test or merely having `gameTestServer` configured is **not** GTF evidence.
 
 For GTF-capable branches, run with the branch's own Forge/Gradle toolchain (often `./gradlew runGameTestServer`). Verify actual test discovery, nonzero count, pass/fail output, and a deliberate failing test making the command fail; do not mark PASS from a zero-test run. On pre-GTF branches, or where registration/instrumentation is unavailable, execute the same spec manually. GUI pixels, sound audibility, launcher import and real multi-client behaviour remain human responsibilities.
 
@@ -35,7 +35,7 @@ For GTF-capable branches, run with the branch's own Forge/Gradle toolchain (ofte
 
 | Status | Meaning | Evidence requirement |
 |---|---|---|
-| `UNTESTED` | No full acceptance run for this version/SHA | None; never a PASS |
+| `UNTESTED` | No full acceptance run for this published release | None; never a PASS |
 | `BELOW-0.700` / `BELOW-0.702` | Feature introduced in later ChessMod release family | Source/release-history evidence for threshold, target remains universal |
 | `GAP-SOURCE` | Expected feature has no source implementation in this branch | Linked inventory; not a claimed in-game failure |
 | `YYYY-MM-DD-PASS-ramou` | Complete acceptance by named human tester | Linked run with all required steps |

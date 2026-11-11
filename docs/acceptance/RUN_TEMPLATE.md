@@ -5,10 +5,12 @@ Copy to `docs/acceptance/runs/YYYY-MM-DD-<ID>-<MC>-<tester>.md` once a run has h
 - Feature/spec revision: `<ID>`, link to `../<ID>.md` at tested source revision
 - Date (UTC or local with zone):
 - Tester (`ramou`, etc.) / method (`HUMAN`, `GTF`, or `MIXED`):
-- Minecraft runtime version / branch / loader / Forge version:
-- ChessMod packaged mod version / full source commit SHA:
+- Minecraft runtime version / loader / Forge version:
+- ChessMod packaged mod version:
+- **Published release URL (preferred):**
+- If not a published release: `UNRELEASED`, branch and source commit or unique artefact ID:
+- Optional provenance (source SHA, JAR SHA-256, asset name), especially for bug investigations:
 - Java (if relevant), OS, launcher, single-player / integrated / dedicated / multiplayer:
-- Source of binary (release tag/asset/SHA-256 or local build):
 - World/save fixture and preconditions (use a **copy** for destructive cases):
 - GameTest implementation ref and exact test IDs (if used):
 - Command, number discovered/passed/failed and failing-test gate evidence (if used):
