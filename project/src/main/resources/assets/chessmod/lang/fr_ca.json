@@ -2,19 +2,22 @@
   "itemGroup.chessmod": "Mod Échecs",
   "chessmod.landing": "Aimez-vous jouer aux échecs? Ce mod permet de jouer aux échecs dans Minecraft de différentes façons.",
   "chessmod.desc": "Un mod intégrant les échecs dans Minecraft.",
-
   "chessmod.subtitle.slide_piece": "Pièce d'échecs glisse",
   "chessmod.subtitle.slide_piece_take": "Pièce d'échecs glisse dans pièce",
   "chessmod.subtitle.place_piece": "Pièce d'échecs placée",
   "chessmod.subtitle.place_piece_take": "Pièce d'échecs placée contre pièce",
-
   "block.chessmod.wood_chessboard": "Un échiquier en bois",
   "block.chessmod.gold_chessboard": "Un échiquier en or",
   "block.chessmod.chesses_chessboard": "Un échiquier pour Chesses",
   "block.chessmod.ai_chessboard": "Un échiquier IA",
   "block.chessmod.puzzle_chessboard": "Un échiquier casse-tête",
-
   "item.chessmod.chess_wrench": "Une clé à échecs",
   "advancement.chessmod:woodChessboardPickup": "Ça devient sérieux!",
-  "advancement.chessmod:woodChessboardPickup.desc": "Ramassez un échiquier du monde"
+  "advancement.chessmod:woodChessboardPickup.desc": "Ramassez un échiquier du monde",
+  "chessmod.quantum.first_notification": "Premier échiquier sélectionné à (x:%d, y:%d, z:%d, dim:%s)",
+  "chessmod.quantum.second_notification": "L'échiquier à (x:%d, y:%d, z:%d, dim:%s) est maintenant lié quantiquement à l'échiquier à (x:%d, y:%d, z:%d, dim:%s)",
+  "chessmod.quantum.unmatched_board_notification": "Les deux échiquiers liés doivent être des Échiquiers Quantiques.",
+  "chessmod.quantum.circular_linkage_notification": "Impossible de lier à l'échiquier d'origine.",
+  "block.chessmod.quantum_chessboard": "Un échiquier quantique",
+  "tooltip.chessmod.quantum_chessboard": "Peut être lié avec des Ender perles."
 }

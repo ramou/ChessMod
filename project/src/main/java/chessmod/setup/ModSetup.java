@@ -1,6 +1,7 @@
 package chessmod.setup;
 
 import chessmod.ChessMod;
+import chessmod.blockentity.QuantumChessBoardBlockEntity;
 import chessmod.common.capability.elo.EloEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,6 +17,7 @@ public class ModSetup {
         bus.addGenericListener(Entity.class, EloEvents::onAttachCapabilitiesPlayer);
         bus.addListener(EloEvents::onPlayerCloned);
         bus.addListener(EloEvents::onRegisterCapabilities);
+        bus.addListener(QuantumChessBoardBlockEntity::onBlockBreak);
     }
 
 }

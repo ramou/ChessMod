@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,is_linked=false": { "model": "chessmod:block/quantum_chessboard", "x": 0, "y": 0},
+    "facing=north,is_linked=true":  { "model": "chessmod:block/quantum_chessboard_linked" },
+    "facing=east,is_linked=false":  { "model": "chessmod:block/quantum_chessboard", "x": 0, "y": 90 },
+    "facing=east,is_linked=true":   { "model": "chessmod:block/quantum_chessboard_linked", "x": 0, "y": 90 },
+    "facing=south,is_linked=false": { "model": "chessmod:block/quantum_chessboard", "x": 0, "y": 180 },
+    "facing=south,is_linked=true":  { "model": "chessmod:block/quantum_chessboard_linked", "x": 0, "y": 180 },
+    "facing=west,is_linked=false":  { "model": "chessmod:block/quantum_chessboard", "x": 0, "y": 270 },
+    "facing=west,is_linked=true":   { "model": "chessmod:block/quantum_chessboard_linked", "x": 0, "y": 270 }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "itemGroup.chessmod": "国际象棋模组",
+  "chessmod.landing": "你喜欢下国际象棋吗？你喜欢玩国际象棋吗？此模组可实现各种 Minecraft 的象棋玩法",
+  "chessmod.desc": "一个将国际象棋融入 Minecraft 的模组",
+  
+  "chessmod.subtitle.slide_piece": "棋子滑动",
+  "chessmod.subtitle.slide_piece_take": "棋子滑入棋子",
+  "chessmod.subtitle.place_piece": "棋子放置",
+  "chessmod.subtitle.place_piece_take": "棋子对着棋子放置",
+
+  "chessmod.quantum.first_notification": "选择的第一个棋盘位于 (x:%d, y:%d, z:%d, dim:%s)",
+  "chessmod.quantum.second_notification": "位于 (x:%d, y:%d, z:%d, dim:%s) 的棋盘现在与位于 (x:%d, y:%d, z:%d, dim:%s) 的棋盘量子关联",
+  "chessmod.quantum.unmatched_board_notification": "两个链接的棋盘都必须是量子棋盘",
+  "chessmod.quantum.circular_linkage_notification": "无法链接到初始棋盘",
+
+  "block.chessmod.wood_chessboard": "木棋盘",
+  "block.chessmod.gold_chessboard": "金棋盘",
+  "block.chessmod.chesses_chessboard": "国际象棋棋盘",
+  "block.chessmod.ai_chessboard": "AI棋盘",
+  "block.chessmod.puzzle_chessboard": "拼图棋盘",
+  "block.chessmod.quantum_chessboard": "量子棋盘",
+  "tooltip.chessmod.quantum_chessboard": "可用末影珍珠链接",
+
+  "item.chessmod.chess_wrench": "国际象棋扳手",
+  "advancement.chessmod:woodChessboardPickup": "获取棋盘",
+  "advancement.chessmod:woodChessboardPickup.desc": "从世界中拾取棋盘"
+}

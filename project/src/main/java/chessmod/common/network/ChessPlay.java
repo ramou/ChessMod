@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import chessmod.ChessMod;
 import chessmod.blockentity.ChessboardBlockEntity;
 import chessmod.blockentity.GoldChessboardBlockEntity;
+import chessmod.blockentity.QuantumChessBoardBlockEntity;
 import chessmod.common.capability.elo.Elo;
 import chessmod.common.dom.model.chess.Move;
 import chessmod.common.dom.model.chess.board.Board;
@@ -99,8 +100,19 @@ public class ChessPlay {
 									} else {
 										board.move(m);
 									}
-									((ChessboardBlockEntity)blockEntity).notifyClientOfBoardChange();
-									world.playSound(null, pos, sound, SoundSource.BLOCKS, 1F, 1F);
+									((ChessboardBlockEntity) blockEntity).notifyClientOfBoardChange();
+                                    world.playSound(null, pos, sound, SoundSource.BLOCKS, 1F, 1F);
+                                    if (blockEntity instanceof QuantumChessBoardBlockEntity quantum) {
+                                        QuantumChessBoardBlockEntity linked = quantum.getLinkedBoardEntity();
+                                        if (linked != null) {
+                                            linked.getBoard().moveSafely(m);
+                                            linked.notifyClientOfBoardChange();
+                                            if (linked.getLevel() != null) {
+                                                linked.getLevel().playSound(null, linked.getBlockPos(), sound,
+                                                        SoundSource.BLOCKS, 1F, 1F);
+                                            }
+                                        }
+                                    }
 								} catch (InvalidMoveException e) {
 									ChessMod.LOGGER.debug(e.getMessage());
 									e.printStackTrace();
