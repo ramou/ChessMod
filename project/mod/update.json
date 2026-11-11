@@ -3,8 +3,8 @@
   "promos": {
     "1.20.1-latest": "1.20.1-0.702",
     "1.20.1-recommended": "1.20.1-0.702",
-    "1.19.4-latest": "1.19.4-0.616",
-    "1.19.4-recommended": "1.19.4-0.616",
+    "1.19.4-latest": "1.19.4-0.702",
+    "1.19.4-recommended": "1.19.4-0.702",
     "1.18.2-latest": "1.18.2-0.616",
     "1.18.2-recommended": "1.18.2-0.616",
     "1.17.2-latest": "1.17.1-0.616",
@@ -25,5 +25,8 @@
   },
   "1.20.1": {
     "1.20.1-0.702": "ChessMod 1.20.1-0.702 — https://github.com/ramou/ChessMod/releases/tag/mc1.20.1-forge-v0.702"
+  },
+  "1.19.4": {
+    "1.19.4-0.702": "ChessMod 1.19.4-0.702 — https://github.com/ramou/ChessMod/releases/tag/mc1.19.4-forge-v0.702"
   }
 }
