@@ -38,9 +38,17 @@ public abstract class ChessboardBlock extends GlassBlock implements EntityBlock 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 	
 	public ChessboardBlock() {
-		super(BlockBehaviour.Properties.of(Material.STONE));
-		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-	}
+        this(BlockBehaviour.Properties.of(Material.STONE));
+    }
+
+    public ChessboardBlock(BlockBehaviour.Properties properties) {
+        super(properties.noOcclusion());
+        doRegisterDefaultState();
+    }
+
+    protected void doRegisterDefaultState() {
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
 	 
 	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, net.minecraft.core.BlockPos pPos, CollisionContext pContext) {

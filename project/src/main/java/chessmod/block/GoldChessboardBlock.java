@@ -14,9 +14,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GoldChessboardBlock extends ChessboardBlock {
-	public GoldChessboardBlock() {
-		super();	
-	}
+    public GoldChessboardBlock() {
+        super();
+    }
+
+    public GoldChessboardBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties properties) {
+        super(properties);
+    }
 	
 	@Nullable
 	@Override

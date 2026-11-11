@@ -1,6 +1,7 @@
 package chessmod.setup;
 
 import chessmod.client.render.blockentity.ChessboardBlockEntityRenderer;
+import chessmod.client.render.blockentity.LinkedChessboardBlockEntityRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.ItemEntityRenderer;
@@ -18,6 +19,7 @@ public class ClientSetup {
             BlockEntityRenderers.register(Registration.AI_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer :: new);
             BlockEntityRenderers.register(Registration.CHESSES_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer :: new);
             BlockEntityRenderers.register(Registration.PUZZLE_CHESSBOARD_BE.get(), ChessboardBlockEntityRenderer::new);
+            BlockEntityRenderers.register(Registration.QUANTUM_CHESSBOARD_BE.get(), LinkedChessboardBlockEntityRenderer::new);
         });
     }
 }

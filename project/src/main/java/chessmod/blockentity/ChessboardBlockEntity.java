@@ -21,9 +21,18 @@ public abstract class ChessboardBlockEntity extends BlockEntity {
 		this.board = BoardFactory.createBoard();
 	}
 
-	public Board getBoard() {
-		return board;
-	}
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board next) {
+        this.board = next;
+        setChanged();
+    }
+
+    public String getDimension() {
+        return level == null ? "" : level.dimension().location().toString();
+    }
 
 	@Override
 	public void onLoad() {

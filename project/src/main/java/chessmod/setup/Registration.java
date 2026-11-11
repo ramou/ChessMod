@@ -5,11 +5,13 @@ import chessmod.setup.ModSetup;
 import chessmod.block.AIChessboardBlock;
 import chessmod.block.ChessesChessboardBlock;
 import chessmod.block.GoldChessboardBlock;
+import chessmod.block.QuantumChessBoardBlock;
 import chessmod.block.PuzzleChessboardBlock;
 import chessmod.block.WoodChessboardBlock;
 import chessmod.blockentity.AIChessboardBlockEntity;
 import chessmod.blockentity.ChessesChessboardBlockEntity;
 import chessmod.blockentity.GoldChessboardBlockEntity;
+import chessmod.blockentity.QuantumChessBoardBlockEntity;
 import chessmod.blockentity.PuzzleChessboardBlockEntity;
 import chessmod.blockentity.WoodChessboardBlockEntity;
 import chessmod.common.network.ArbitraryPlacement;
@@ -75,6 +77,12 @@ public class Registration {
 	public static final RegistryObject<BlockEntityType<PuzzleChessboardBlockEntity>> PUZZLE_CHESSBOARD_BE = 
 			BLOCK_ENTITIES.register("puzzle_chessboard", 
 					() -> BlockEntityType.Builder.of(PuzzleChessboardBlockEntity::new, PUZZLE_CHESSBOARD.get()).build(null));
+
+    public static final RegistryObject<Block> QUANTUM_CHESSBOARD = BLOCKS.register("quantum_chessboard", QuantumChessBoardBlock::new);
+    public static final RegistryObject<Item> QUANTUM_CHESSBOARD_ITEM = fromBlock(QUANTUM_CHESSBOARD);
+    public static final RegistryObject<BlockEntityType<QuantumChessBoardBlockEntity>> QUANTUM_CHESSBOARD_BE =
+            BLOCK_ENTITIES.register("quantum_chessboard",
+                    () -> BlockEntityType.Builder.of(QuantumChessBoardBlockEntity::new, QUANTUM_CHESSBOARD.get()).build(null));
 
 	public static final RegistryObject <Item> CHESS_WRENCH = ITEMS.register("chess_wrench", () -> new Item(new Item.Properties().tab(ModSetup.ITEM_GROUP)));
 

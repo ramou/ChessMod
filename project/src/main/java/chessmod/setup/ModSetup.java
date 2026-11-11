@@ -2,6 +2,7 @@ package chessmod.setup;
 
 import chessmod.ChessMod;
 import chessmod.common.capability.elo.EloEvents;
+import chessmod.blockentity.QuantumChessBoardBlockEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +23,7 @@ public class ModSetup {
         bus.addGenericListener(Entity.class, EloEvents::onAttachCapabilitiesPlayer);
         bus.addListener(EloEvents::onPlayerCloned);
         bus.addListener(EloEvents::onRegisterCapabilities);
+        bus.addListener(QuantumChessBoardBlockEntity::onBlockBreak);
     }
     
     public static final String TAB_NAME = "ChessMod";
@@ -29,7 +31,7 @@ public class ModSetup {
     public static final CreativeModeTab ITEM_GROUP = new CreativeModeTab(TAB_NAME) {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(Registration.CHESS_WRENCH.get());
+            return new ItemStack(Registration.WOOD_CHESSBOARD_ITEM.get());
         }
 
     };
