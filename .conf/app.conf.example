@@ -1,0 +1,8 @@
+# Copy to .conf/app.conf and adjust to your own workstation.
+# This file is sourced as trusted local shell code; never use an untrusted copy.
+# These are example maintainer paths, NOT portable defaults.
+JAVA_HOMES_DIR=/usr/lib/jvm
+JAVA_HOME_8=/usr/lib/jvm/java-8-openjdk-amd64
+JAVA_HOME_16=/usr/lib/jvm/temurin-16
+JAVA_HOME_17=/usr/lib/jvm/java-17-openjdk-amd64
+JAVA_HOME_21=/usr/lib/jvm/java-21-openjdk-amd64
