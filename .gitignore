@@ -6,3 +6,8 @@ __pycache__/
 *.py[cod]
 # Human-reviewed, ephemeral GitHub issue write script (manual deletion).
 /run.sh
+
+# Workstation-local JDK settings and fetched canonical Java tooling.
+/.conf/*
+!/.conf/app.conf.example
+/scripts/transient/
