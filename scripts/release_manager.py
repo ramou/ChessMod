@@ -161,7 +161,8 @@ def parse_branch_config(commit, target):
     raw_toml = git_show(commit, target["mod_metadata"])
     metadata = parse_mod_metadata(raw_toml)
     declared = metadata["version"].replace("${mod_version}", version)
-    require(declared == version and metadata["modId"] == "chessmod", f"{target['id']}: mods.toml disagrees with Gradle version/modId")
+    mod_id = metadata["modId"].replace("${mod_id}", props.get("mod_id", ""))
+    require(declared == version and mod_id == "chessmod", f"{target['id']}: mods.toml disagrees with Gradle version/modId")
     require(exists(commit, target["licence_path"]), f"{target['id']}: LICENSE missing")
     license_text = git_show(commit, target["licence_path"])
     require("MIT" in license_text or "Permission is hereby granted" in license_text,
