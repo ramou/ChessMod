@@ -15,8 +15,10 @@ something the AI performs automatically. We use the installed [GitHub CLI]
 2. Before drafting, search existing **open and closed** issues for an identical
    request and plausible duplicates. Read their bodies, comments, states,
    labels and milestones; decide to reuse, modify, reopen, or create. Never
-   create a duplicate solely because a title differs slightly. If uncertain,
-   show candidates to the maintainer and ask.
+   create a duplicate solely because a title differs slightly. Conversely, a
+   related or overlapping issue is **not automatically a duplicate**; evaluate
+   objectives and acceptance criteria, and report why candidates are distinct.
+   If uncertain, show candidates to the maintainer and ask.
 3. Verify the target repository explicitly: `ramou/ChessMod`, rather than the
    current Git remote. Check `gh auth status` and repository permissions; never
    embed tokens or secrets in scripts.

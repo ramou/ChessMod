@@ -87,6 +87,19 @@ on issues where applicable. If the same defect spans branches, plan a separate
 validated adaptation for each affected target rather than blindly transplanting
 files. Do not convert branches to a unified build system within unrelated fixes.
 
+## Backport acceptance gates
+
+Prefer a small build/config/localisation patch followed by a separate gameplay
+feature backport when aligning older Minecraft versions. Preserve the target
+branch's Java, Forge, Gradle and mapping compatibility unless migration is
+explicitly approved. Do not equate static source checks with successful
+compilation: report build failures and create narrowly scoped incremental
+fixes when the maintainer has already applied the larger uncommitted patch.
+Run the target branch's `clean test build` before manual `runClient` and
+feature scenarios. For quantum boards check same-dimension and cross-dimension
+linking, moves, world save/reload and unlinking. Document untested scenarios
+without implying acceptance.
+
 ## No opportunistic refactoring
 
 When new debt is discovered, describe it in the review/issue notes. A new issue

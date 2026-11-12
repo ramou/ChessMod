@@ -2,13 +2,12 @@
 
 Scripts in [`scripts/`](../scripts/) use Python 3.10+ standard library and
 `argparse` (`--help`). The context builder additionally requires `git` on PATH.
-Issue export uses GitHub's **read-only REST API** through the locally authenticated
-GitHub CLI (`gh`) by default. Install `gh` and run `gh auth login` once;
-`gh auth status` checks the active login. This avoids the low anonymous API
-rate limit but does not bypass authenticated GitHub rate limits. For environments
-without `gh`, standalone `export_issues.py --transport rest` uses direct REST
-access (`GH_TOKEN` / `GITHUB_TOKEN`, or anonymous access for public issues).
-Never put tokens on the command line or in exported files.
+Issue export defaults to authenticated `gh api` using the local GitHub CLI
+credentials (`gh auth status`); this avoids the low anonymous REST rate limit.
+The exporter also supports an explicit `--transport rest` fallback, using
+`GH_TOKEN`/`GITHUB_TOKEN` if set. Explicit page requests avoid depending on
+newer `gh api --slurp` support. Never put tokens on the command line or in
+exported files.
 
 ## Everyday commands (from repository root)
 

@@ -16,8 +16,10 @@ the Python unit tests pass.
 ## Policy and branch model
 
 - Run the manager from the `1.20.1` checkout, where `scripts/` is maintained.
-- Version sources remain the **committed** `project/build.gradle` on the six
-  older branches and `project/gradle.properties` on `1.20.1`/`1.21`.
+- Read the **committed** version source appropriate to each branch, whether
+  `project/build.gradle` or `project/gradle.properties`. `1.18.2` now uses
+  `gradle.properties` after its build alignment; never assume all older
+  branches share the same version-source format.
 - Supply **`--version 0.702`** on release-specific preflights and all
   `verify`, `draft` and `publish` commands. This is the **release version
   suffix**, not a Minecraft-prefixed string. Every selected branch must
@@ -45,6 +47,24 @@ the Python unit tests pass.
   `project/mod/update.json`. A successful publication is followed by a normal
   metadata commit there, not a rewritten release tag. The expected tag points
   to the tested source commit, intentionally before the metadata commit.
+
+### Draft replacement and historical update feeds
+
+An existing draft/tag is tied to its verified source commit. A subsequent
+source change (even metadata only) requires a fresh verification and draft
+assets; `draft --apply` will **not** overwrite a tag or draft pointing at a
+different SHA. If the release is still unpublished, explicitly inspect and
+retire the old draft, remote tag **and local tag** before reusing its version;
+never rewrite a published tag. `git ls-remote --tags origin TAG` checks the
+remote, while `git tag -l TAG` checks local state.
+
+The publish step updates the canonical feed. It does not automatically fix
+URLs embedded in historical JARs. When a previous release points to a legacy
+branch-specific `project/mod/update.json`, inspect that branch feed and, when
+appropriate, copy the canonical feed there **once** to advertise the migration
+release. Verify the JSON version keys against the actual Minecraft versions
+(e.g. avoid `1.17.2` keys for `1.17.1`). This is a separate reviewed metadata
+commit, not a reason to add permanent mirroring infrastructure.
 
 ## JDK selection and preflight
 
